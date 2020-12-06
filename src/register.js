@@ -20,9 +20,9 @@ import {
 import moment from 'moment';
 // import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
-import color from './config';
+import {colors} from './config';
 import { Route, Link, BrowserRouter } from 'react-router-dom'
-
+import Login from './login';
 
 export default function Register(){
   const styles = useStyles();
@@ -34,7 +34,11 @@ export default function Register(){
   const [role, setRole] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [dob, setDob] = useState(moment().format("DD/MM/YYYY"))
+  const [dob, setDob] = useState(moment().format("DD/MM/YYYY"));
+  const [street, setStreet] = useState('');
+  const [district, setDistrict] = useState('');
+  const [city, setCity] = useState('');
+  const [hover, setHover]=useState(false);
 
   return(
     <Grid container className={styles.root}>
@@ -57,6 +61,7 @@ export default function Register(){
                   fullWidth
                   id="firstName"
                   label="First Name"
+                  onChange={e => setFirstName(e.target.value)}
                 />
               </Grid>
               <Grid item xs={6} sm={5}>
@@ -67,6 +72,7 @@ export default function Register(){
                   fullWidth
                   id="lastName"
                   label="Last Name"
+                  onChange ={e => setLastName(e.target.value)}
                 />
               </Grid>
               <Grid item xs={2} sm={2}>
@@ -95,6 +101,7 @@ export default function Register(){
                   label="Phone"
                   name="phone"
                   autoComplete="phone"
+                  onChange={e=>setPhone(e.target.value)}
                 />
                 </Grid>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -112,10 +119,12 @@ export default function Register(){
               </MuiPickersUtilsProvider>
               <Grid item xs={8} sm={8}>
                 <TextField
+                  required
                   fullWidth
                   id="email"
                   label="Email"
                   name="email"
+                  onChange={e=>setEmail(e.target.value)}
                 />
               </Grid>
               <Grid item xs={4} sm={4}>
@@ -138,6 +147,7 @@ export default function Register(){
                   fullWidth
                   id="Street"
                   label="Street"
+                  onChange={e=>setStreet(e.target.value)}
                   />
               </Grid>
               <Grid item xs={4} sm={4}>
@@ -146,6 +156,7 @@ export default function Register(){
                   fullWidth
                   id="district"
                   label="District"
+                  onChange={e=>setDistrict(e.target.value)}
                 />
               </Grid>
               <Grid item xs={4} sm={4}>
@@ -154,6 +165,7 @@ export default function Register(){
                   required
                   id="city"
                   label="City"
+                  onChange = {e => setCity(e.target.value)}
                 />
               </Grid>
               <Grid item xs={6} sm={6}>
@@ -162,15 +174,17 @@ export default function Register(){
                   fullWidth
                   id="username"
                   label="Username"
+                  onChange={e=>setUsername(e.target.value)}
                   />
               </Grid>
-              <Grid item xs={5} sm={5}>
+              <Grid item xs={6} sm={6}>
                 <TextField
                   required
                   fullWidth
                   id="pass"
                   label="Password"
                   type="password"
+                  onChange={e=>setPassword(e.target.value)}
                 />
               </Grid>
             </Grid>
@@ -185,7 +199,10 @@ export default function Register(){
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link to="/login" variant="body2"
+                style={hover ? {textDecoration: 'none', color: '#555555'} : {textDecoration: 'none', color: '#81b3cb'}}
+                onMouseEnter={()=>setHover(true)} onMouseLeave={()=>setHover(false)}
+              >
                 Already have an account? Sign in
               </Link>
             </Grid>
@@ -193,6 +210,10 @@ export default function Register(){
           </form>
         </div>
       </Grid>
+      <BrowserRouter>
+        {/* <Route exact path="/" component={Register}/> */}
+        <Route path="/login" component={Login}/>
+      </BrowserRouter>
     </Grid>
   )
 }
