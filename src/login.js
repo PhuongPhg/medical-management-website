@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -16,7 +16,9 @@ import { colors } from './config.js';
 
 export default function Login() {
   const styles = useStyles();
-
+  const [email, setEmail] = useState(null);
+  const [pwd, setPwd] = useState(null);
+  
   return (
     <Grid container component="main" className={styles.root}>
       <CssBaseline />
@@ -35,10 +37,11 @@ export default function Login() {
               required
               fullWidth
               id="email"
-              label="Phone/Email address"
+              label="Email address"
               name="email"
               autoComplete="email"
               autoFocus
+              onTextChange={text => setEmail(text)}
             />
             <TextField
               margin="normal"
@@ -49,12 +52,13 @@ export default function Login() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onTextChange={text => setPwd(text)}
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               style={{justifyContent: 'left'}}
-              control={<Checkbox value="remember" color="primary" />}
+              control={<Checkbox value="remember" color={colors.primary} />}
               label="Remember me"
-            />
+            /> */}
             <Button
               type="submit"
               fullWidth
