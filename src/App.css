@@ -36,3 +36,7 @@
     transform: rotate(360deg);
   }
 }
+
+.MuiLink-underlineNone:hover{
+  color: #555555;
+}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './App.css';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -29,7 +30,7 @@ export default function Login() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign In
           </Typography>
           <form className={styles.form} noValidate>
             <TextField
@@ -67,14 +68,14 @@ export default function Login() {
             >
               Sign In
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
+            <Grid container justify="space-between">
+              <Grid item>
+                <Link href="#" variant="body2" underline="none">
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/" variant="body2">
+                <Link href="/" variant="body2" underline="none">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
@@ -117,4 +118,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: colors.primary,
     color: 'black',
   },
+  link: {
+    color: colors.primary,
+    textDecoration: 'none',
+  },
+  hover: {
+    color: colors.grey,
+  }
 }));
