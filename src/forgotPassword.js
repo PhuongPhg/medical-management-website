@@ -48,7 +48,7 @@ export default function ForgotPassword() {
             <LockOutlinedIcon />
           </Avatar>
           {done ? <Response/> : 
-          <Grid container>
+          <Grid container justify="center">
             <Typography component="h1" variant="h5" gutterBottom>
               Reset your password
             </Typography>
