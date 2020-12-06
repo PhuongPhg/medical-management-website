@@ -27,7 +27,13 @@ import { Route, Link, BrowserRouter } from 'react-router-dom'
 export default function Register(){
   const styles = useStyles();
   const [firstName, setFirstName]= useState('');
+  const [lastName, setLastName]= useState('');
   const [sex,setSex] = useState('');
+  const [phone, setPhone] =useState('');
+  const [email, setEmail] = useState('');
+  const [role, setRole] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [dob, setDob] = useState(moment().format("DD/MM/YYYY"))
 
   return(
@@ -105,70 +111,68 @@ export default function Register(){
                 </Grid>
               </MuiPickersUtilsProvider>
               <Grid item xs={8} sm={8}>
-              <TextField
-                fullWidth
-                id="email"
-                label="Email"
-                name="email"
-              />
-            </Grid>
-            <Grid xs={4} sm={4}>
-              <FormControl fullWidth className={styles.formControl}>
-                <InputLabel>Role</InputLabel>
-                  <Select
-                    id="role"
-                    value={role}
-                    onChange={e=>{setRole(e.target.value)}}
-                    label="role"
-                  >
-                  <MenuItem value="Patient">
-                    <em>Patient</em>
-                  </MenuItem>
-                  <MenuItem value={'Docter'}>Docter</MenuItem>
-                  <MenuItem value={'Admin'}>Admin</MenuItem>
-                </Select>
+                <TextField
+                  fullWidth
+                  id="email"
+                  label="Email"
+                  name="email"
+                />
+              </Grid>
+              <Grid item xs={4} sm={4}>
+                <FormControl fullWidth className={styles.formControl}>
+                  <InputLabel>Role</InputLabel>
+                    <Select
+                      id="role"
+                      value={role}
+                      onChange={e=>{setRole(e.target.value)}}
+                      label="role"
+                    >
+                    <MenuItem value={"Patient"}>Patient</MenuItem>
+                    <MenuItem value={'Docter'}>Docter</MenuItem>
+                    <MenuItem value={'Admin'}>Admin</MenuItem>
+                  </Select>
                 </FormControl>
-            </Grid>
-            <Grid item xs={4} sm={4}>
-              <TextField
-                fullWidth
-                id="Street"
-                label="Street"
+              </Grid>
+              <Grid item xs={4} sm={4}>
+                <TextField
+                  fullWidth
+                  id="Street"
+                  label="Street"
+                  />
+              </Grid>
+              <Grid item xs={4} sm={4}>
+                <TextField
+                  required
+                  fullWidth
+                  id="district"
+                  label="District"
                 />
-            </Grid>
-            <Grid item xs={4} sm={4}>
-              <TextField
-                required
-                fullWidth
-                id="district"
-                label="District"
+              </Grid>
+              <Grid item xs={4} sm={4}>
+                <TextField
+                  fullWidth
+                  required
+                  id="city"
+                  label="City"
                 />
-            </Grid>
-            <Grid item xs={4} sm={4}>
-              <TextField
-                fullWidth
-                required
-                id="city"
-                label="City"
+              </Grid>
+              <Grid item xs={6} sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  id="username"
+                  label="Username"
+                  />
+              </Grid>
+              <Grid item xs={5} sm={5}>
+                <TextField
+                  required
+                  fullWidth
+                  id="pass"
+                  label="Password"
+                  type="password"
                 />
-            </Grid>
-            <Grid xs={6} sm={6}>
-              <TextField
-                required
-                fullWidth
-                id="username"
-                label="Username"
-                />
-            </Grid>
-            <Grid xs={6} sm={6}>
-              <TextField
-                required
-                fullWidth
-                id="pass"
-                label="Password"
-                type="password"
-                />
-            </Grid>
+              </Grid>
             </Grid>
             <Button
             type="submit"
