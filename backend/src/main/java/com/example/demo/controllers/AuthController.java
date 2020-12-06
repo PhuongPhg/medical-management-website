@@ -1,6 +1,5 @@
 package com.example.demo.controllers;
 
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -90,12 +89,14 @@ public class AuthController {
 		// Create new user's account
 		User user = new User(signUpRequest.getUsername(), 
 							 signUpRequest.getEmail(),
-							 signUpRequest.getAddress(),
-							 signUpRequest.getPhone(),
-							 signUpRequest.getSex(),
 							 encoder.encode(signUpRequest.getPassword()),
+							 signUpRequest.getPhone(),
+							 signUpRequest.getAddress(),
+							 signUpRequest.getSex(),
 							 signUpRequest.getDob());
-
+		
+		System.out.println(user.getPassword());
+		
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<Role> roles = new HashSet<>();
 
