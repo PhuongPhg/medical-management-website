@@ -152,7 +152,23 @@ export default function Register(){
                 label="City"
                 />
             </Grid>
-            
+            <Grid xs={6} sm={6}>
+              <TextField
+                required
+                fullWidth
+                id="username"
+                label="Username"
+                />
+            </Grid>
+            <Grid xs={6} sm={6}>
+              <TextField
+                required
+                fullWidth
+                id="pass"
+                label="Password"
+                type="password"
+                />
+            </Grid>
             </Grid>
             <Button
             type="submit"
