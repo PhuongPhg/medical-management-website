@@ -15,11 +15,29 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { colors } from './config.js';
 
-export default function Login() {
+const Response = () => {
   const styles = useStyles();
+
+  return(
+    <Grid container xs="10" justify="center">
+      <Typography component="h1" variant="h5" align="center" paragraph>
+        Password reset request sent
+      </Typography>
+      <Typography variant ="body2" align="justify" paragraph>
+        A password message was sent to your email address. Please click the link in that message to reset your password.
+      </Typography>
+      <Typography variant ="body2" align="justify">
+        If you do not receive the password message within a few moments, please check your Spam folder or other filtering tools.
+      </Typography>
+    </Grid>
+  )
+}
+
+export default function ForgotPassword() {
+  const styles = useStyles();
+  const [done, setDone] = useState(false);
   const [email, setEmail] = useState(null);
-  const [pwd, setPwd] = useState(null);
-  
+
   return (
     <Grid container component="main" className={styles.root}>
       <CssBaseline />
@@ -29,58 +47,46 @@ export default function Login() {
           <Avatar className={styles.avatar}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign In
-          </Typography>
-          <form className={styles.form} noValidate>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              onTextChange={text => setEmail(text)}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              onTextChange={text => setPwd(text)}
-            />
-            {/* <FormControlLabel
-              style={{justifyContent: 'left'}}
-              control={<Checkbox value="remember" color={colors.primary} />}
-              label="Remember me"
-            /> */}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              className={styles.submit}
-            >
-              Sign In
-            </Button>
-            <Grid container justify="space-between">
-              <Grid item>
-                <Link href="/forgot" variant="body2" underline="none">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/" variant="body2" underline="none">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-          </form>
+          {done ? <Response/> : 
+          <Grid container>
+            <Typography component="h1" variant="h5" gutterBottom>
+              Reset your password
+            </Typography>
+            <Typography variant="body2" align="left">
+              Please enter your email address to recover your password.
+            </Typography>
+            <form className={styles.form} noValidate>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                onTextChange={text => setEmail(text)}
+              />
+      
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                className={styles.submit}
+                onClick={() => setDone(true)}
+              >
+                Reset password
+              </Button>
+              {/* <Grid container justify="center">
+                <Grid item>
+                  <Link href="/login" variant="body2" underline="none">
+                    {"Login"}
+                  </Link>
+                </Grid>
+              </Grid> */}
+            </form>
+          </Grid>
+          }
         </div>
       </Grid>
     </Grid>

@@ -3,6 +3,7 @@ import './App.css';
 import { Route, Link, BrowserRouter } from 'react-router-dom'
 import Register from './register';
 import Login from './login';
+import ForgotPassword from './forgotPassword';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <BrowserRouter>
         <Route exact path="/" component={Register}/>
         <Route path="/login" component={Login}/>
+        <Route path="/forgot" component={ForgotPassword}/>
       </BrowserRouter>
       {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
