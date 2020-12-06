@@ -1,7 +1,6 @@
 import React from 'react';
 import { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
@@ -18,7 +17,6 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-import './register.css';
 
 export default function Register(){
   const styles = useStyles();
@@ -43,7 +41,7 @@ export default function Register(){
               <Grid item xs={12} sm={6}>
                 <TextField 
                   name="firstName"
-                  variant="outlined"
+                  // variant="outlined"
                   required
                   fullWidth
                   id="firstName"
@@ -53,7 +51,7 @@ export default function Register(){
               <Grid item xs={12} sm={6}>
                 <TextField 
                   name="lastName"
-                  variant="outlined"
+                  // variant="outlined"
                   required
                   fullWidth
                   id="lastName"
@@ -63,14 +61,14 @@ export default function Register(){
               <Grid item xs={12} sm={6}>
                 <TextField 
                   name="firstName"
-                  variant="outlined"
+                  // variant="outlined"
                   fullWidth
                   id="firstName"
                   label="DOB"
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <FormControl variant="outlined" fullWidth className={styles.formControl}>
+                <FormControl fullWidth className={styles.formControl}>
                   <InputLabel>Sex</InputLabel>
                   <Select
                     id="sex"
@@ -88,7 +86,7 @@ export default function Register(){
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  variant="outlined"
+                  // variant="outlined"
                   required
                   fullWidth
                   id="email"
