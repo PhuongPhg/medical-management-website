@@ -73,7 +73,7 @@ export default function Register(){
                   <Select
                     id="sex"
                     value={sex}
-                    onChange={handleChange}
+                    onChange={e=>{setSex(e.target.value)}}
                     label="Sex"
                   >
                   <MenuItem value="">
