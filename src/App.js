@@ -4,6 +4,7 @@ import { Route, Link, BrowserRouter } from 'react-router-dom'
 import Register from './register';
 import Login from './login';
 import ForgotPassword from './forgotPassword';
+import RegistrationForm from './registrationform';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route exact path="/" component={Register}/>
         <Route path="/login" component={Login}/>
         <Route path="/forgot" component={ForgotPassword}/>
+        <Route path="/registrationform" component={RegistrationForm}/>
       </BrowserRouter>
       {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
