@@ -18,17 +18,18 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 import moment from 'moment';
-import Link from '@material-ui/core/Link';
+// import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
+import color from './config';
+import { Route, Link, BrowserRouter } from 'react-router-dom'
+
 
 export default function Register(){
   const styles = useStyles();
-  const [sex,setSex] = React.useState('');
+  const [firstName, setFirstName]= useState('');
+  const [sex,setSex] = useState('');
   const [dob, setDob] = useState(moment().format("DD/MM/YYYY"))
 
-  const handleChange = (event) => {
-    setSex(event.target.value);
-  };
   return(
     <Grid container className={styles.root}>
       <Grid item xs={false} sm={4} md={7} className={styles.image}/>
@@ -103,6 +104,31 @@ export default function Register(){
                   />
                 </Grid>
               </MuiPickersUtilsProvider>
+              <Grid item xs={8} sm={8}>
+              <TextField
+                fullWidth
+                id="email"
+                label="Email"
+                name="email"
+              />
+            </Grid>
+            <Grid xs={4} sm={4}>
+              <FormControl fullWidth className={styles.formControl}>
+                <InputLabel>Role</InputLabel>
+                  <Select
+                    id="role"
+                    value={role}
+                    onChange={e=>{setRole(e.target.value)}}
+                    label="role"
+                  >
+                  <MenuItem value="Patient">
+                    <em>Patient</em>
+                  </MenuItem>
+                  <MenuItem value={'Docter'}>Docter</MenuItem>
+                  <MenuItem value={'Admin'}>Admin</MenuItem>
+                </Select>
+                </FormControl>
+            </Grid>
             <Grid item xs={4} sm={4}>
               <TextField
                 fullWidth
@@ -112,26 +138,21 @@ export default function Register(){
             </Grid>
             <Grid item xs={4} sm={4}>
               <TextField
+                required
                 fullWidth
-                id="Street"
+                id="district"
                 label="District"
                 />
             </Grid>
             <Grid item xs={4} sm={4}>
               <TextField
                 fullWidth
+                required
                 id="city"
                 label="City"
                 />
             </Grid>
-            <Grid item xs={12} sm={12}>
-              <TextField
-                fullWidth
-                id="email"
-                label="Email"
-                name="email"
-              />
-            </Grid>
+            
             </Grid>
             <Button
             type="submit"
