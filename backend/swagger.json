@@ -1,0 +1,248 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a Medical Management Server",
+    "version": "1.0.0",
+    "title": "Swagger Medical Management",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "apiteam@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "localhost:8080",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "medical",
+      "description": "Medical Management"
+    },
+    {
+      "name": "user",
+      "description": "Operations about user"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/test/all": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "responses": {
+          "default": {
+            "description": "Public content"
+          }
+        }
+      }
+    },
+    "/test/patient": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized when you don't have the access token"
+          },
+          "default": {
+            "description": "Patient content"
+          }
+        }
+      }
+    },
+    "/test/doctor": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized when you don't have the access token"
+          },
+          "default": {
+            "description": "Doctor content"
+          }
+        }
+      }
+    },
+    "/test/admin": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized when you don't have the access token"
+          },
+          "default": {
+            "description": "Admin content"
+          }
+        }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Create user",
+        "description": "Create new user with assigned role",
+        "operationId": "createUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/auth/signin": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Logs user into the system",
+        "description": "",
+        "operationId": "loginUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "description": "The user name for login",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "The password for login in clear text",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            },
+            "headers": {
+              "X-Rate-Limit": {
+                "type": "integer",
+                "format": "int32",
+                "description": "calls per hour allowed by the user"
+              },
+              "X-Expires-After": {
+                "type": "string",
+                "format": "date-time",
+                "description": "date in UTC when token expires"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid username/password supplied"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "JwtResponse": {
+      "type": "apiKey",
+      "name": "JwtResponse",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "sex": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "dob": {
+          "type": "string"
+        },
+        "roles": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "User"
+      }
+    },
+    "Role": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "ERole": {
+      "type": "object",
+      "properties": {
+        "ROLE_PATIENT": {
+          "type": "string"
+        },
+        "ROLE_DOCTOR": {
+          "type": "string"
+        },
+        "ROLE_ADMIN": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

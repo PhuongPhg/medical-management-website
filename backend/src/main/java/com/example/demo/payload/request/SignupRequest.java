@@ -20,7 +20,15 @@ public class SignupRequest {
     @NotBlank
     @Size(min = 6, max = 40)
     private String password;
-  
+
+    @NotBlank
+	@Size(max = 50)
+	private String firstname;
+
+    @NotBlank
+	@Size(max = 50)
+	private String lastname;
+    
     @NotBlank
 	@Size(max = 20)
 	private String phone;
@@ -59,7 +67,23 @@ public class SignupRequest {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+	
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+	
 	public String getPhone() {
 		return phone;
 	}

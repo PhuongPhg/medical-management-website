@@ -90,6 +90,8 @@ public class AuthController {
 		User user = new User(signUpRequest.getUsername(), 
 							 signUpRequest.getEmail(),
 							 encoder.encode(signUpRequest.getPassword()),
+							 signUpRequest.getFirstname(),
+							 signUpRequest.getLastname(),
 							 signUpRequest.getPhone(),
 							 signUpRequest.getAddress(),
 							 signUpRequest.getSex(),
@@ -113,7 +115,7 @@ public class AuthController {
 					roles.add(adminRole);
 
 					break;
-				case "mod":
+				case "doctor":
 					Role docRole = roleRepository.findByName(ERole.ROLE_DOCTOR)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 					roles.add(docRole);
