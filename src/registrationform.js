@@ -18,14 +18,16 @@ import { colors } from './config.js';
 export default function RegistrationForm() {
   const styles = useStyles();
   // const [part, setPart] = useState(null);
+  const [name, setName] = useState(null);
+  const [id, setId] = useState(null);
   const [symptom, setSymptom] = useState(null);
   const [firstday, setFirstday] = useState(moment().format("DD/MM/YYYY"));
   const [anamnesis, setAnamnesis] = useState(null);
 
   return (
-    <Grid container className={styles.root}>
-      <Grid item xs={false} sm={4} md={7} className={styles.image}/>
-      <Grid item xs={12} sm={8} md={5}>
+    <Grid container xs={12} sm={8} md={5} className={styles.root}>
+      {/* <Grid item xs={false} sm={4} md={7} className={styles.image}/> */}
+      {/* <Grid item > */}
         <div className={styles.paper}>
           <Avatar className={styles.avatar}>
             <ListAltIcon /> 
@@ -34,27 +36,46 @@ export default function RegistrationForm() {
             Medical Registration Form
           </Typography>
           <form className={styles.form} noValidate>
+            <Grid container>
+            <Grid item xs={12} sm={6}>
+              <TextField 
+                margin="normal"
+                required
+                fullWidth
+                variant="outlined"
+                id="patient-name"
+                label="Patient name"
+                onTextChange = {text => setName(text)}
+                style={{marginRight: '4px'}}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField 
+                margin="normal"
+                required
+                fullWidth
+                variant="outlined"
+                id="identification"
+                label="ID"
+                onTextChange = {text => setId(text)}
+                style={{marginLeft: '4px'}}
+              />
+            </Grid>
             <TextField 
+              multiline
+              rows={4}
+              variant="outlined"
               margin="normal"
               required
               fullWidth
               id="symptom"
-              label="Describe your symptom"
+              label="Describe your health problems"
               onTextChange = {text => setSymptom(text)}
             />
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDatePicker 
-                disableToolbar
-                fullWidth
-                variant="inline"
-                format="MM/dd/yyyy"
-                id="date-picker-inline"
-                label="Date of the first symptom"
-                value={firstday}
-                onChange={val => {setFirstday(val)}}
-              />
-            </MuiPickersUtilsProvider>
             <TextField 
+              multiline
+              rows={4}
+              variant="outlined"
               margin="normal"
               required
               fullWidth
@@ -62,6 +83,21 @@ export default function RegistrationForm() {
               label="Anamnesis"
               onTextChange={text => setAnamnesis(text)}
             />
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker 
+                style={{marginTop: '16px'}}
+                disableToolbar
+                fullWidth
+                variant="inline"
+                inputVariant="outlined"
+                format="MM/dd/yyyy"
+                id="date-picker-inline"
+                label="Set appointment date"
+                value={firstday}
+                onChange={val => {setFirstday(val)}}
+              />
+            </MuiPickersUtilsProvider>
+            </Grid>
             <Button
               type="submit"
               fullWidth
@@ -72,7 +108,7 @@ export default function RegistrationForm() {
             </Button>
           </form>
         </div>
-      </Grid>
+      {/* </Grid> */}
     </Grid>
   );
 }
@@ -80,13 +116,16 @@ export default function RegistrationForm() {
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
+    direction: "row",
+    marginLeft: 'auto',
+    marginRight: 'auto'
   },
-  image: {
-    backgroundImage: "url("+"https://c1.wallpaperflare.com/preview/937/818/491/stethoscope-doctor-md-medical-health-hospital.jpg"+")",
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-  },
+  // image: {
+  //   backgroundImage: "url("+"https://c1.wallpaperflare.com/preview/937/818/491/stethoscope-doctor-md-medical-health-hospital.jpg"+")",
+  //   backgroundRepeat: 'no-repeat',
+  //   backgroundSize: 'cover',
+  //   backgroundPosition: 'center',
+  // },
   paper: {
     margin: theme.spacing(8, 4),
     display: 'flex',
