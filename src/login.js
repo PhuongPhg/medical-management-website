@@ -12,9 +12,10 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import { colors } from './config';
-import { signIn } from './actions/userActions';
+import { colors } from './helpers/config';
+// import { signIn } from './actions/userActions';
 import { useGlobalState } from './helpers/global';
+import axios from 'axios';
 
 export default function Login() {
   const styles = useStyles();
@@ -22,6 +23,24 @@ export default function Login() {
   const [pwd, setPwd] = useState(null);
   const [msg, setMsg] = useState("");
   const [state, dispatch] = useGlobalState();
+
+  const signIn = async () => {
+    try {
+       let res = await axios.post('http://localhost:8080/api/auth/signin',
+          {
+             username: username,
+             password: pwd
+          }
+       )
+       alert('Logged in.');
+       console.log(res.data);
+    }
+    catch(error){
+      alert(error);
+      setMsg('Error: ', error);
+      throw new Error("Error: ", error);
+    }
+  }
 
   return (
     <Grid container component="main" className={styles.root}>
@@ -37,7 +56,7 @@ export default function Login() {
             Sign In
           </Typography>
 
-          <form className={styles.form} noValidate>
+          <form className={styles.form} Validate>
             <TextField
               margin="normal"
               required
@@ -73,17 +92,9 @@ export default function Login() {
               fullWidth
               variant="contained"
               className={styles.submit}
-              onClick={() => {
-                var data = signIn(username, pwd);
-                if (data){
-                  // userToken = data.accessToken;
-                  // setMsg('');
-                  console.log(data);
-                }
-                else{
-                  setMsg("Can't login.");
-                }
-              }}
+              onClick={
+                signIn
+              }
             >
               Sign In
             </Button>

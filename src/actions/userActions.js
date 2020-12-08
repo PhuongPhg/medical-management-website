@@ -13,20 +13,33 @@ import axios from 'axios';
 //    }
 // }
 
-export const signIn = async (username, password) => {
-   var res;
-   try {
-      res = await axios.post('http://localhost:8080/api/auth/signin',
-         {
-            username: username,
-            password: password
-         }
-      )
-      console.log(res.data);
-      return res.data
+// export const signIn = async (username, password) => {
+//    var res;
+//    try {
+//       res = await axios.post('http://localhost:8080/api/auth/signin',
+//          {
+//             username: username,
+//             password: password
+//          }
+//       )
+//       console.log(res.data);
+//       return res.data
+//    }
+//    catch(error){
+//       console.log(error);
+//       throw new Error("Cannot sign in", res);
+//    }
+// }
+
+export const signIn = (username, password) => {
+   axios.post('http://localhost:8080/api/auth/signin',
+   {
+      username: username,
+      password: password
    }
-   catch(error){
+   )
+   .then(response => {return response.data})
+   .catch(function (error){
       console.log(error);
-      throw new Error("Cannot sign in", res);
-   }
+   })
 }

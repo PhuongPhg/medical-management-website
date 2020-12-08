@@ -20,7 +20,7 @@ import {
 import moment from 'moment';
 // import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
-import {colors} from './config';
+import {colors} from './helpers/config';
 import { Route, Link, BrowserRouter } from 'react-router-dom'
 import Login from './login';
 

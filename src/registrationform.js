@@ -13,7 +13,7 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/core/styles';
-import { colors } from './config.js';
+import { colors } from './helpers/config.js';
 
 export default function RegistrationForm() {
   const styles = useStyles();
