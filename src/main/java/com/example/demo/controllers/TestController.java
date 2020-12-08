@@ -22,7 +22,7 @@ public class TestController {
 	}
 
 	@GetMapping("/doctor")
-	@PreAuthorize("hasRole('DOCTOR')")
+	@PreAuthorize("hasRole('DOCTOR') or hasRole('ADMIN')")
 	public String moderatorAccess() {
 		return "Doctor Board.";
 	}
