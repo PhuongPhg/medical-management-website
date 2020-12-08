@@ -6,13 +6,17 @@
 ```
 mvn spring-boot:run
 ```
+Or
+```
+java -jar medical-management-0.0.1-SNAPSHOT.jar
+```
 # Config:
 Open src/main/resources/application.properties
 
 ```
 spring.datasource.url= jdbc:mysql://localhost:3306/testdb?useSSL=false
 spring.datasource.username= root
-spring.datasource.password= 1234
+spring.datasource.password= 123456
 ```
 # After first run:
 ```
