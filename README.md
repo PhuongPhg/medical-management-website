@@ -15,10 +15,12 @@ spring.datasource.username= root
 spring.datasource.password= 1234
 ```
 # After first run:
+```
 Insert those statement to MySQL:
 INSERT INTO roles(name) VALUES('ROLE_DOCTOR');
 INSERT INTO roles(name) VALUES('ROLE_PATIENT');
 INSERT INTO roles(name) VALUES('ROLE_ADMIN');
+```
 
 # API documentation:
 More detailed check swagger.json file.
