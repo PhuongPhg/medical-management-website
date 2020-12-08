@@ -8,18 +8,21 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import { colors } from './config.js';
+import { colors } from './config';
+import { signIn } from './actions/userActions';
+import { useGlobalState } from './helpers/global';
 
 export default function Login() {
   const styles = useStyles();
-  const [email, setEmail] = useState(null);
+  const [username, setUsername] = useState(null);
   const [pwd, setPwd] = useState(null);
-  
+  const [msg, setMsg] = useState("");
+  const [state, dispatch] = useGlobalState();
+
   return (
     <Grid container component="main" className={styles.root}>
       <CssBaseline />
@@ -29,21 +32,23 @@ export default function Login() {
           <Avatar className={styles.avatar}>
             <LockOutlinedIcon />
           </Avatar>
+          
           <Typography component="h1" variant="h5">
             Sign In
           </Typography>
+
           <form className={styles.form} noValidate>
             <TextField
               margin="normal"
               required
               fullWidth
               id="email"
-              label="Email address"
-              name="email"
-              autoComplete="email"
+              label="Username"
+              name="username"
               autoFocus
-              onTextChange={text => setEmail(text)}
+              onTextChange={text => setUsername(text)}
             />
+
             <TextField
               margin="normal"
               required
@@ -55,31 +60,51 @@ export default function Login() {
               autoComplete="current-password"
               onTextChange={text => setPwd(text)}
             />
-            {/* <FormControlLabel
-              style={{justifyContent: 'left'}}
-              control={<Checkbox value="remember" color={colors.primary} />}
-              label="Remember me"
-            /> */}
+
+            {/* <Grid container justify="left">
+              <FormControlLabel
+                control={<Checkbox value="remember" color={colors.primary} />}
+                label="Remember me"
+              />
+            </Grid> */}
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
               className={styles.submit}
+              onClick={() => {
+                var data = signIn(username, pwd);
+                if (data){
+                  // userToken = data.accessToken;
+                  // setMsg('');
+                  console.log(data);
+                }
+                else{
+                  setMsg("Can't login.");
+                }
+              }}
             >
               Sign In
             </Button>
+            
             <Grid container justify="space-between">
               <Grid item>
                 <Link href="/forgot" variant="body2" underline="none">
                   Forgot password?
                 </Link>
               </Grid>
+              
               <Grid item>
                 <Link href="/" variant="body2" underline="none">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
             </Grid>
+
+            <Typography variant="p" paragraph>
+              {msg}
+            </Typography>
           </form>
         </div>
       </Grid>
