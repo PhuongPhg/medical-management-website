@@ -1,10 +1,10 @@
 import logo from './logo.svg';
 import './App.css';
 import { Route, Link, BrowserRouter } from 'react-router-dom'
-import Register from './register';
-import Login from './login';
-import ForgotPassword from './forgotPassword';
-import RegistrationForm from './registrationform';
+import Register from './views/register';
+import Login from './views/login';
+import ForgotPassword from './views/forgotPassword';
+import RegistrationForm from './views/registrationform';
 
 function App() {
   return (
