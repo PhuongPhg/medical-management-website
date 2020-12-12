@@ -45,5 +45,5 @@ Default port: 8080. APIs provided for now:
 | GET     | /api/admin/user  | list all users, only Admin have authority |
 | GET     | /api/admin/user/{id} | list specified user by id, only Admin have authority    |
 | POST    | /api/admin/user/{id} | update specified user by id, only Admin have authority  |                     
-| DELETE  | /api/admin/user/{id} | update specified user by id, only Admin have authority |                                        
+| DELETE  | /api/admin/user/{id} | delete specified user by id, only Admin have authority |                                        
 
