@@ -34,8 +34,16 @@ Default port: 8080. APIs provided for now:
 | POST    | /api/auth/signup  | sign up new account                                           |
 | POST    | /api/auth/signin  | sign in account                                               |
 | GET     | /api/test/all     | public content                                                |
-| GET     | /api/test/admin   | access Admin's content, only Admin have authority             |
-| GET     | /api/test/doctor  | access Doctor's content, only Doctor and Admin have authority |
-| GET     | /api/test/patient | access Patient's content, all except public have authority    |
+| GET     | /api/admin   | access Admin's content, only Admin have authority             |
+| GET     | /api/doctor  | access Doctor's content, only Doctor have authority |
+| GET     | /api/patient | access Patient's content, only Patient have authority    |
 
-- Document for Admin management will be available soon
+## Admin user management
+| Methods | URLs              | Actions                                                       |
+|:-------:|-------------------|---------------------------------------------------------------|
+| GET     | /api/admin   | access Admin homepage, only Admin have authority             |
+| GET     | /api/admin/user  | list all users, only Admin have authority |
+| GET     | /api/admin/user/{id} | list specified user by id, only Admin have authority    |
+| POST    | /api/admin/user/{id} | update specified user by id, only Admin have authority  |                     
+| DELETE  | /api/admin/user/{id} | update specified user by id, only Admin have authority |                                        
+
