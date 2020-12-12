@@ -15,7 +15,7 @@ public class PatientController {
 	@GetMapping("/patient")
 	@PreAuthorize("hasRole('PATIENT')")
 	public String admin() {
-		return "Patient";
+		return "Hello Patient";
 	}
 
 }
