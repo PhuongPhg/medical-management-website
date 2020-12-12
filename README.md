@@ -38,3 +38,4 @@ Default port: 8080. APIs provided for now:
 | GET     | /api/test/doctor  | access Doctor's content, only Doctor and Admin have authority |
 | GET     | /api/test/patient | access Patient's content, all except public have authority    |
 
+- Document for Admin management will be available soon
