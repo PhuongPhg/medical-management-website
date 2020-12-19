@@ -67,16 +67,16 @@ public class User {
 	public User() {
 	}
 
-	public User(String username, String email, String password, String firstname, String lastname, String address, String sex, String phone, Date dob, String specialization) {
+	public User(String username, String email, String password, String firstname, String lastname, String phone, String address, String sex, Date dob, String specialization) {
 		this.username = username;
 		this.email = email;
 		this.password = password;
-		this.address = address;
-		this.dob = dob;
-		this.phone = phone;
-		this.sex = sex;
 		this.firstname = firstname;
 		this.lastname = lastname;
+		this.phone = phone;
+		this.address = address;
+		this.sex = sex;
+		this.dob = dob;
 		this.specialization = specialization;
 	}
 
