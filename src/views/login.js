@@ -13,8 +13,6 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { colors } from '../helpers/config';
-// import { signIn } from './actions/userActions';
-import { useGlobalState } from '../helpers/global';
 import axios from 'axios';
 
 export default function Login() {
@@ -22,24 +20,25 @@ export default function Login() {
   const [username, setUsername] = useState(null);
   const [pwd, setPwd] = useState(null);
   const [msg, setMsg] = useState("");
-  const [state, dispatch] = useGlobalState();
 
   const signIn = async () => {
     try {
-      let res = await axios.post('http://localhost:8080/api/auth/signin',
-        {
-            username: username,
-            password: pwd
-        }
-      )
-      dispatch({userToken: res.data.accessToken});
-      alert('Logged in');
-    }
-    catch(error){
-      alert(error);
-      setMsg('Error: ', error);
-      throw new Error("Error: ", error);
-    }
+			let res = await axios.post("http://localhost:8080/api/auth/signin", {
+				username: username,
+				password: pwd,
+			});
+      sessionStorage.setItem("userToken", res.data.accessToken);
+      
+			// alert('Logged in');
+			// }
+			return true;
+		} catch (error) {
+			alert(error);
+      // setMsg("Error: ", error);
+      return false;
+			// throw new Error("Error: ", error);
+		}
+    
   }
 
   return (
@@ -95,7 +94,9 @@ export default function Login() {
               onClick={(event) => 
                 {
                   event.preventDefault();
-                  signIn();
+                  if (signIn()){
+                    window.open("/dashboard", "_self");
+                  }
                 }
               }
             >

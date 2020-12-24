@@ -6,7 +6,6 @@ import styles from './button_effect.css'
 import { Route, Router } from 'react-router-dom'
 import { AppBar, ClickAwayListener, Grid, Link, MenuList, MenuItem, Typography, Popper, Grow, Paper } from '@material-ui/core';
 import { colors } from './helpers/config';
-import { useGlobalState } from './helpers/global';
 
 const UserAccount = () => {
   const classes = useStyles();
@@ -75,7 +74,6 @@ const UserAccount = () => {
 
 export default function Navigation(props) {
   const classes = useStyles();
-  const [state, dispatch] = useGlobalState();
   // var currentLocation = window.location.pathname;
   // console.log(currentLocation);
   return (
@@ -92,7 +90,7 @@ export default function Navigation(props) {
           </Grid>
           <Grid item>
           {
-            state.userToken ? 
+            sessionStorage.getItem("userToken") ? 
               <Grid item>
                 <Link href="/login" className={classes.navlink}>Login</Link>
                 <Link href="/" className={classes.navlink}>Sign Up</Link>
@@ -120,7 +118,7 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
     textDecoration: 'none',
     textTransform: 'uppercase',
-    padding: 20,
+    padding: 18,
     opacity: 0.9,
     '&:hover': {
       opacity:1,
