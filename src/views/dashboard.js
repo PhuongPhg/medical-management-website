@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import axios from 'axios';
 import { colors } from "../helpers/config";
 import Navigation from "../navigation";
-import { Button, Icon, Input, InputAdornment, InputLabel, FormControl, Table, TableFooter, TableSortLabel, TablePagination, TextField, Typography, Grid } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Icon, Input, InputAdornment, InputLabel, FormControl, Table, TableFooter, TableSortLabel, TablePagination, TextField, Typography, Grid } from "@material-ui/core";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -20,6 +20,21 @@ const UserData = () => {
 	const [page, setPage] = useState(0);
 	const rowsPerPage = 7;
 	const [sortDir, setSortDir] = useState("asc");
+	const [dialogue_open, setOpen] = useState(false);
+
+	const deleteUser = async(id) => {
+		try{
+			await axios.delete(`http://localhost:8080/api/admin/user/${id}`, {
+				headers: {
+					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
+				}
+			});
+			setData(data.filter(item => item.id !== id));
+		}
+		catch(error){
+			alert(error);
+		}
+	}
 
 	const getData = async () => {
 		try{
@@ -82,14 +97,49 @@ const UserData = () => {
 							</TableCell>
 							<TableCell align="left">{item.roles[0].name}</TableCell>
 							<TableCell align="left">
+								{/* Edit button */}
 								<Button variant="outlined" size="small" disableElevation style={{ marginRight: 10 }}>
 									<EditIcon />
 									Edit
 								</Button>
-								<Button variant="outlined" size="small" disableElevation>
+
+								{/* Delete button */}
+								<Button
+									variant="outlined"
+									size="small"
+									disableElevation
+									onClick={() => {
+										setOpen(true);
+									}}
+								>
 									<DeleteSweepIcon />
 									Delete
 								</Button>
+
+								{/* Confirm delete */}
+								<Dialog
+									open={dialogue_open}
+									onClose={() => setOpen(false)}
+									aria-labelledby="alert-dialog-title"
+									aria-describedby="alert-dialog-description"
+								>
+									<DialogTitle id="alert-dialog-title">{"Delete this user?"}</DialogTitle>
+									<DialogActions>
+										<Button
+											onClick={() => {
+												deleteUser(item.id);
+												setOpen(false);
+											}}
+											color="primary"
+											autoFocus
+										>
+											Yes
+										</Button>
+										<Button onClick={() => setOpen(false)} color="primary">
+											No
+										</Button>
+									</DialogActions>
+								</Dialog>
 							</TableCell>
 						</TableRow>
 					))}
@@ -98,7 +148,7 @@ const UserData = () => {
 				<TableFooter>
 					<TableRow>
 						<TablePagination
-						   rowsPerPageOptions={7}
+							rowsPerPageOptions={7}
 							rowsPerPage={rowsPerPage}
 							count={data.length}
 							page={page}
