@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import axios from 'axios';
 import { colors } from "../helpers/config";
 import Navigation from "../navigation";
-import { Button, Icon, Input, InputAdornment, InputLabel, FormControl, Table, TableSortLabel, TextField, Typography, Grid } from "@material-ui/core";
+import { Button, Icon, Input, InputAdornment, InputLabel, FormControl, Table, TableFooter, TableSortLabel, TablePagination, TextField, Typography, Grid } from "@material-ui/core";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -17,6 +17,8 @@ import SearchIcon from '@material-ui/icons/Search';
 const UserData = () => {
 	const classes = useStyles();
 	const [data, setData] = useState([]);
+	const [page, setPage] = useState(0);
+	const rowsPerPage = 7;
 	const [sortDir, setSortDir] = useState("asc");
 
 	const getData = async () => {
@@ -30,7 +32,8 @@ const UserData = () => {
 			setData(res.data);
 		} 
 		catch(error){
-			throw new Error("Error: ", error);
+			alert(error);
+			// throw new Error("Error: ", error);
 		}
 	}
 
@@ -42,7 +45,11 @@ const UserData = () => {
 				<TableHead>
 					<TableRow>
 						<TableCell align="left">ID</TableCell>
-						<TableCell align="left" sortDirection={sortDir} onClick={() => setSortDir(sortDir === "asc" ? "desc" : "asc")}>
+						<TableCell
+							align="left"
+							sortDirection={sortDir}
+							onClick={() => setSortDir(sortDir === "asc" ? "desc" : "asc")}
+						>
 							<TableSortLabel direction={sortDir}>Last name</TableSortLabel>
 						</TableCell>
 						<TableCell align="left">
@@ -57,12 +64,13 @@ const UserData = () => {
 						<TableCell align="left">Action</TableCell>
 					</TableRow>
 				</TableHead>
+
 				<TableBody>
-					{data.map((item) => (
-						<TableRow className={classes.row}>
+					{data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item) => (
+						<TableRow className={classes.row} key={item.id}>
 							<TableCell align="left">{item.id}</TableCell>
-							<TableCell align="left">{item.firstname}</TableCell>
 							<TableCell align="left">{item.lastname}</TableCell>
+							<TableCell align="left">{item.firstname}</TableCell>
 							<TableCell align="left">{item.phone}</TableCell>
 							<TableCell align="left" className={classes.raw_data}>
 								{item.email}
@@ -86,6 +94,18 @@ const UserData = () => {
 						</TableRow>
 					))}
 				</TableBody>
+
+				<TableFooter>
+					<TableRow>
+						<TablePagination
+						   rowsPerPageOptions={7}
+							rowsPerPage={rowsPerPage}
+							count={data.length}
+							page={page}
+							onChangePage={(event, newPage) => setPage(newPage)}
+						/>
+					</TableRow>
+				</TableFooter>
 			</Table>
 		</TableContainer>
 	);
