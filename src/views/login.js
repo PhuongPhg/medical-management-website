@@ -13,8 +13,6 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { colors } from '../helpers/config';
-// import { signIn } from './actions/userActions';
-import { useGlobalState } from '../helpers/global';
 import axios from 'axios';
 
 export default function Login() {
@@ -22,107 +20,86 @@ export default function Login() {
   const [username, setUsername] = useState(null);
   const [pwd, setPwd] = useState(null);
   const [msg, setMsg] = useState("");
-  const [state, dispatch] = useGlobalState();
 
   const signIn = async () => {
     try {
-      let res = await axios.post('http://localhost:8080/api/auth/signin',
-        {
-            username: username,
-            password: pwd
-        }
-      )
-      dispatch({userToken: res.data.accessToken});
-      alert('Logged in');
-    }
-    catch(error){
-      alert(error);
-      setMsg('Error: ', error);
-      throw new Error("Error: ", error);
-    }
+			let res = await axios.post("http://localhost:8080/api/auth/signin", {
+				username: username,
+				password: pwd,
+      });
+
+      sessionStorage.setItem("userToken", res.data.accessToken);
+		} catch (error) {
+			alert(error);
+			// throw new Error("Error: ", error);
+		}
+    
   }
 
   return (
-    <Grid container component="main" className={styles.root}>
-      <CssBaseline />
-      <Grid item xs={false} sm={4} md={7} className={styles.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <div className={styles.paper}>
-          <Avatar className={styles.avatar} onClick={signIn}>
-            <LockOutlinedIcon />
-          </Avatar>
-          
-          <Typography component="h1" variant="h5">
-            Sign In
-          </Typography>
+		<Grid container component="main" className={styles.root}>
+			<CssBaseline />
+			<Grid item xs={false} sm={4} md={7} className={styles.image} />
+			<Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+				<div className={styles.paper}>
+					<Avatar className={styles.avatar} onClick={signIn}>
+						<LockOutlinedIcon />
+					</Avatar>
 
-          <form className={styles.form} Validate>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Username"
-              name="username"
-              autoFocus
-              onChange={text => setUsername(text.target.value)}
-            />
+					<Typography component="h1" variant="h5">
+						Sign In
+					</Typography>
 
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              onChange={text => setPwd(text.target.value)}
-            />
+					<form className={styles.form} Validate>
+						<TextField margin="normal" required fullWidth id="email" label="Username" name="username" autoFocus onChange={(text) => setUsername(text.target.value)} />
 
-            {/* <Grid container justify="left">
+						<TextField margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" onChange={(text) => setPwd(text.target.value)} />
+
+						{/* <Grid container justify="left">
               <FormControlLabel
                 control={<Checkbox value="remember" color={colors.primary} />}
                 label="Remember me"
               />
             </Grid> */}
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              className={styles.submit}
-              onClick={(event) => 
-                {
-                  event.preventDefault();
-                  signIn();
-                }
-              }
-            >
-              Sign In
-            </Button>
-            
-            <Grid container justify="space-between">
-              <Grid item>
-                <Link href="/forgot" variant="body2" underline="none">
-                  Forgot password?
-                </Link>
-              </Grid>
-              
-              <Grid item>
-                <Link href="/" variant="body2" underline="none">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
+						<Button
+							type="submit"
+							fullWidth
+							variant="contained"
+							className={styles.submit}
+							onClick={(event) => {
+								event.preventDefault();
+								signIn();
+								let token = sessionStorage.getItem("userToken");
+								if (token) {
+									window.open("/dashboard", "_self");
+								}
+							}}
+						>
+							Sign In
+						</Button>
 
-            <Typography variant="p" paragraph>
-              {msg}
-            </Typography>
-          </form>
-        </div>
-      </Grid>
-    </Grid>
+						<Grid container justify="space-between">
+							<Grid item>
+								<Link href="/forgot" variant="body2" underline="none">
+									Forgot password?
+								</Link>
+							</Grid>
+
+							<Grid item>
+								<Link href="/" variant="body2" underline="none">
+									{"Don't have an account? Sign Up"}
+								</Link>
+							</Grid>
+						</Grid>
+
+						<Typography variant="p" paragraph>
+							{msg}
+						</Typography>
+					</form>
+				</div>
+			</Grid>
+		</Grid>
   );
 }
 
