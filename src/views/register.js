@@ -43,11 +43,13 @@ export default function Register(){
   const [city, setCity] = useState('');
   const [hover, setHover]=useState(false);
 
-  let history = useHistory()
+  let history = useHistory();
+  const providerRef = React.useRef();
+  const { enqueueSnackbar } = useSnackbar();
 
-  async function onSignUp(){
-    const { enqueueSnackbar } = useSnackbar();
-
+  async function OnSignUp(e){
+    try{
+    e.preventDefault();
     const data={
       "firstname": firstName,
       lastname: lastName,
@@ -60,27 +62,33 @@ export default function Register(){
       dob: dob,
       role: role,
     };
-    // console.log(data)
+
     let res = await axios.post('http://localhost:8080/api/auth/signup', data)
     // console.log(res.data)
-    console.log(res.status)
+    console.log(res.data)
     if (res.status == 200){
-      enqueueSnackbar(res.data, 'success')
-      history.push("/registrationform")
+      enqueueSnackbar(res.data.message, { variant: 'success'})
+      setTimeout(function(){
+        history.push("/registrationform")
+      }, 500);
+    }
+    }catch(e){
+    enqueueSnackbar(e.response.data.message, { variant: 'error'})
     }
   }
   return(
+    // <SnackbarProvider maxSnack={3} ref={providerRef}>
     <Grid container className={styles.root}>
       <Grid item xs={false} sm={4} md={7} className={styles.image}/>
       <Grid item xs={12} sm={8} md={5}>
         <div className={styles.paper}>
-          <Avatar className={styles.avatar} onClick={onSignUp} >
+          <Avatar className={styles.avatar} >
             <LockOpenIcon />
           </Avatar>
           <Typography variant="h5">
             Sign up
           </Typography>
-          <form className={styles.form} onSubmit={onSignUp} Validate>
+          <form className={styles.form} onSubmit={OnSignUp} Validate>
             <Grid container spacing={3}>
               <Grid item xs={6} sm={5}>
                 <TextField 
@@ -223,7 +231,7 @@ export default function Register(){
             variant="contained"
             // color='#81b3cb'
             className={styles.submit}
-            onClick={onSignUp}
+            onClick={OnSignUp}
           >
             Sign Up
           </Button>
@@ -241,6 +249,7 @@ export default function Register(){
         </div>
       </Grid>
     </Grid>
+    // </SnackbarProvider>
   )
 }
 
