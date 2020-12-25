@@ -21,9 +21,10 @@ import moment from 'moment';
 // import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
 import {colors} from '../helpers/config';
-import { Route, Link, BrowserRouter } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import Login from './login';
 import axios from "axios";
+import { SnackbarProvider, useSnackbar } from 'notistack';
 
 
 export default function Register(){
@@ -42,7 +43,11 @@ export default function Register(){
   const [city, setCity] = useState('');
   const [hover, setHover]=useState(false);
 
+  let history = useHistory()
+
   async function onSignUp(){
+    const { enqueueSnackbar } = useSnackbar();
+
     const data={
       "firstname": firstName,
       lastname: lastName,
@@ -57,7 +62,12 @@ export default function Register(){
     };
     // console.log(data)
     let res = await axios.post('http://localhost:8080/api/auth/signup', data)
-    console.log(res.data)
+    // console.log(res.data)
+    console.log(res.status)
+    if (res.status == 200){
+      enqueueSnackbar(res.data, 'success')
+      history.push("/registrationform")
+    }
   }
   return(
     <Grid container className={styles.root}>
@@ -70,7 +80,7 @@ export default function Register(){
           <Typography variant="h5">
             Sign up
           </Typography>
-          <form className={styles.form} Validate>
+          <form className={styles.form} onSubmit={onSignUp} Validate>
             <Grid container spacing={3}>
               <Grid item xs={6} sm={5}>
                 <TextField 
@@ -230,10 +240,6 @@ export default function Register(){
           </form>
         </div>
       </Grid>
-      <BrowserRouter>
-        {/* <Route exact path="/" component={Register}/> */}
-        <Route path="/login" component={Login}/>
-      </BrowserRouter>
     </Grid>
   )
 }
