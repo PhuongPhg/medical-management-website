@@ -70,6 +70,7 @@ const UserData = () => {
 						<TableCell align="left">
 							<TableSortLabel>First name</TableSortLabel>
 						</TableCell>
+						<TableCell align="left">Username</TableCell>
 						<TableCell align="left">Phone</TableCell>
 						<TableCell align="left">Email</TableCell>
 						<TableCell align="left">D.O.B</TableCell>
@@ -86,6 +87,7 @@ const UserData = () => {
 							<TableCell align="left">{item.id}</TableCell>
 							<TableCell align="left">{item.lastname}</TableCell>
 							<TableCell align="left">{item.firstname}</TableCell>
+							<TableCell align="left" className={classes.raw_data}>{item.username}</TableCell>
 							<TableCell align="left">{item.phone}</TableCell>
 							<TableCell align="left" className={classes.raw_data}>
 								{item.email}
