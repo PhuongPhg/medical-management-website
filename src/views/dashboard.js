@@ -52,6 +52,20 @@ const UserData = () => {
 		}
 	}
 
+	const searchUser = async (phone) => {
+		try{
+			let res = await axios.get(`http://localhost:8080/api/admin/user?phone=${phone}`, {
+				headers: {
+					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
+				}
+			});
+			setData(res.data);
+		}
+		catch(error){
+			alert(error);
+		}
+	}
+
 	useEffect(() => getData(), []);
 
 	return (

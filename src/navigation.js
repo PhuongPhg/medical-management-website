@@ -49,7 +49,7 @@ const UserAccount = () => {
         aria-haspopup="true"
         onClick={handleToggle}
         className={classes.username}>
-        Nguyen Van A
+        Hello {sessionStorage.getItem("username")}!
       </Typography>
         <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
           {({ TransitionProps, placement }) => (
@@ -61,7 +61,12 @@ const UserAccount = () => {
                 <ClickAwayListener onClickAway={handleClose}>
                   <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
                     <MenuItem onClick={handleClose}>Profile</MenuItem>
-                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                    <MenuItem onClick={(event) => {
+                      handleClose(event)
+                      sessionStorage.setItem("userToken", null);
+                      sessionStorage.setItem("username", null);
+                      window.open("/login", "_self");
+                    }}>Logout</MenuItem>
                   </MenuList>
                 </ClickAwayListener>
               </Paper>
@@ -91,11 +96,11 @@ export default function Navigation(props) {
           <Grid item>
           {
             sessionStorage.getItem("userToken") ? 
+              <UserAccount/> :
               <Grid item>
                 <Link href="/login" className={classes.navlink}>Login</Link>
                 <Link href="/" className={classes.navlink}>Sign Up</Link>
-              </Grid> :
-              <UserAccount/>
+              </Grid>
           }
           </Grid>
           </Grid>
@@ -129,7 +134,7 @@ const useStyles = makeStyles((theme) => ({
     opacity: 1
   },
   username: {
-    textTransform: 'uppercase',
+    // textTransform: 'uppercase',
     marginRight: 20,
   }
 }));

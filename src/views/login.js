@@ -23,12 +23,13 @@ export default function Login() {
 
   const signIn = async () => {
     try {
-			let res = await axios.post("http://localhost:8080/api/auth/signin", {
-				username: username,
-				password: pwd,
+		let res = await axios.post("http://localhost:8080/api/auth/signin", {
+			username: username,
+			password: pwd,
       });
 
-      sessionStorage.setItem("userToken", res.data.accessToken);
+		sessionStorage.setItem("userToken", res.data.accessToken);
+		sessionStorage.setItem("username", res.data.username);
 		} catch (error) {
 			alert(error);
 			// throw new Error("Error: ", error);
