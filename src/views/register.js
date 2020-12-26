@@ -44,14 +44,21 @@ export default function Register(){
   const [hover, setHover]=useState(false);
 
   let history = useHistory();
-  const providerRef = React.useRef();
   const { enqueueSnackbar } = useSnackbar();
 
+  const enabled = firstName.length > 0 && 
+  lastName.length > 0 &&
+  phone.length > 0 &&
+  email.length > 0 &&
+  district.length > 0 &&
+  city.length > 0 &&
+  username.length > 0 &&
+  password.length > 0;
   async function OnSignUp(e){
     try{
     e.preventDefault();
     const data={
-      "firstname": firstName,
+      firstname: firstName,
       lastname: lastName,
       username: username,
       email: email,
@@ -77,7 +84,6 @@ export default function Register(){
     }
   }
   return(
-    // <SnackbarProvider maxSnack={3} ref={providerRef}>
     <Grid container className={styles.root}>
       <Grid item xs={false} sm={4} md={7} className={styles.image}/>
       <Grid item xs={12} sm={8} md={5}>
@@ -88,7 +94,7 @@ export default function Register(){
           <Typography variant="h5">
             Sign up
           </Typography>
-          <form className={styles.form} onSubmit={OnSignUp} Validate>
+          <form className={styles.form} Validate onSubmit={OnSignUp} >
             <Grid container spacing={3}>
               <Grid item xs={6} sm={5}>
                 <TextField 
@@ -169,13 +175,14 @@ export default function Register(){
                   <InputLabel>Role</InputLabel>
                     <Select
                       id="role"
-                      value={role}
+                      // value={role}
                       onChange={e=>{setRole([e.target.value])}}
                       label="role"
+                      defaultValue={'Patient'}
                     >
                     <MenuItem value={"Patient"}>Patient</MenuItem>
                     <MenuItem value={'Docter'}>Docter</MenuItem>
-                    <MenuItem value={'Admin'}>Admin</MenuItem>
+                    {/* <MenuItem value={'Admin'}>Admin</MenuItem> */}
                   </Select>
                 </FormControl>
               </Grid>
@@ -230,6 +237,7 @@ export default function Register(){
             fullWidth
             variant="contained"
             // color='#81b3cb'
+            disabled={!enabled}
             className={styles.submit}
             onClick={OnSignUp}
           >
@@ -249,7 +257,6 @@ export default function Register(){
         </div>
       </Grid>
     </Grid>
-    // </SnackbarProvider>
   )
 }
 
