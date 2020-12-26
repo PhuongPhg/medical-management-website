@@ -75,6 +75,11 @@ export default function Register(){
     console.log(res.data)
     if (res.status == 200){
       enqueueSnackbar(res.data.message, { variant: 'success'})
+
+      enqueueSnackbar(`Hello ${firstName} ${lastName}!`, { variant: 'success'});
+
+      sessionStorage.setItem("username", username);
+
       setTimeout(function(){
         history.push("/registrationform")
       }, 500);
