@@ -14,13 +14,14 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import SearchIcon from '@material-ui/icons/Search';
 
-const UserData = () => {
+export default function Dashboard() {
 	const classes = useStyles();
 	const [data, setData] = useState([]);
 	const [page, setPage] = useState(0);
 	const rowsPerPage = 7;
 	const [sortDir, setSortDir] = useState("asc");
 	const [dialogue_open, setOpen] = useState(false);
+	const [query, setQuery] = useState(null);
 
 	const deleteUser = async(id) => {
 		try{
@@ -52,10 +53,53 @@ const UserData = () => {
 		}
 	}
 
+	const searchUser = async (phone) => {
+		try{
+			let res = await axios.get(`http://localhost:8080/api/admin/user/find?phone=${phone}`, {
+				headers: {
+					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
+				}
+			});
+			setData(res.data);
+		}
+		catch(error){
+			alert(error);
+		}
+	}
+
 	useEffect(() => getData(), []);
 
 	return (
-		<TableContainer component={Paper}>
+		<div className={classes.container}>
+			<Navigation dashboard />
+			<Grid container>
+				{/* <DataGrid columns={columns}/> */}
+				{/* <Grid item xs="11"> */}
+				<TextField
+					id="search-input"
+					variant="outlined"
+					size="small"
+					placeholder="Search"
+					InputProps={{
+						startAdornment: (
+							<InputAdornment position="start">
+								<SearchIcon />
+							</InputAdornment>
+						),
+					}}
+					onChange={text => setQuery(text.target.value)}
+					onKeyUp={(event) => {
+						if (!query){
+							getData();
+						}
+						else if (event.keyCode===13){
+							searchUser(query)}
+						}
+					}
+					className={classes.searchInput}
+				/>
+
+			<TableContainer component={Paper}>
 			<Table className={classes.table} aria-label="sticky table" size="small">
 				<TableHead>
 					<TableRow>
@@ -70,6 +114,7 @@ const UserData = () => {
 						<TableCell align="left">
 							<TableSortLabel>First name</TableSortLabel>
 						</TableCell>
+						<TableCell align="left">Username</TableCell>
 						<TableCell align="left">Phone</TableCell>
 						<TableCell align="left">Email</TableCell>
 						<TableCell align="left">D.O.B</TableCell>
@@ -86,6 +131,7 @@ const UserData = () => {
 							<TableCell align="left">{item.id}</TableCell>
 							<TableCell align="left">{item.lastname}</TableCell>
 							<TableCell align="left">{item.firstname}</TableCell>
+							<TableCell align="left" className={classes.raw_data}>{item.username}</TableCell>
 							<TableCell align="left">{item.phone}</TableCell>
 							<TableCell align="left" className={classes.raw_data}>
 								{item.email}
@@ -158,36 +204,6 @@ const UserData = () => {
 				</TableFooter>
 			</Table>
 		</TableContainer>
-	);
-};
-
-export default function Dashboard() {
-	const classes = useStyles();
-	return (
-		<div className={classes.container}>
-			<Navigation dashboard />
-			<Grid container>
-				{/* <DataGrid columns={columns}/> */}
-				{/* <Grid item xs="11"> */}
-				<TextField
-					id="search-input"
-					variant="outlined"
-					size="small"
-					placeholder="Search"
-					InputProps={{
-						startAdornment: (
-							<InputAdornment position="start">
-								<SearchIcon />
-							</InputAdornment>
-						),
-					}}
-					inputProps={{
-
-					}}
-					className={classes.searchInput}
-				/>
-
-				<UserData />
 				{/* </Grid> */}
 			</Grid>
 		</div>
