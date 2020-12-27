@@ -76,12 +76,14 @@ export default function Register(){
     if (res.status == 200){
       enqueueSnackbar(res.data.message, { variant: 'success'})
 
-      enqueueSnackbar(`Hello ${firstName} ${lastName}!`, { variant: 'success'});
+      // enqueueSnackbar(`Hello ${firstName} ${lastName}!`, { variant: 'success'});
 
-      sessionStorage.setItem("username", username);
+      // sessionStorage.setItem("username", username);
+
+      enqueueSnackbar("Please log in!", { variant: 'info'})
 
       setTimeout(function(){
-        history.push("/registrationform")
+        history.push("/login")
       }, 500);
     }
     }catch(e){
