@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
+import Navigation from "../navigation";
 import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
@@ -25,6 +26,8 @@ export default function RegistrationForm() {
   const [anamnesis, setAnamnesis] = useState(null);
 
   return (
+    <div className={styles.container}>
+    <Navigation RegistrationForm />
     <Grid container xs={12} sm={8} md={5} className={styles.root}>
       {/* <Grid item xs={false} sm={4} md={7} className={styles.image}/> */}
       {/* <Grid item > */}
@@ -110,10 +113,15 @@ export default function RegistrationForm() {
         </div>
       {/* </Grid> */}
     </Grid>
+    </div>
   );
 }
 
 const useStyles = makeStyles((theme) => ({
+  container: {
+		width: "max-content",
+		minWidth: "100vw"
+	},
   root: {
     height: '100vh',
     direction: "row",
