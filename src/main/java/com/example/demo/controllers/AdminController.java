@@ -76,6 +76,55 @@ public class AdminController {
 			
 	}
 	
+	@GetMapping(value = "/admin/role/admin")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<List<User>> getUserByRoleAdmin(){
+		try {
+			List<User> users = new ArrayList<User>();
+		    userRepository.findAdmin().forEach(users::add);
+		    if (users.isEmpty()) {
+		    	return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+				}
+		    return new ResponseEntity<>(users, HttpStatus.OK);				
+			} 
+		catch (Exception e) {
+			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping(value = "/admin/role/doctor")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<List<User>> getUserByRoleDoctor(){
+		try {
+			List<User> users = new ArrayList<User>();
+		    userRepository.findDoctor().forEach(users::add);
+		    if (users.isEmpty()) {
+		    	return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+				}
+		    return new ResponseEntity<>(users, HttpStatus.OK);				
+			} 
+		catch (Exception e) {
+			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping(value = "/admin/role/patient")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<List<User>> getUserByRolePatient(){
+		try {
+			List<User> users = new ArrayList<User>();
+		    userRepository.findPatient().forEach(users::add);
+		    if (users.isEmpty()) {
+		    	return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+				}
+		    return new ResponseEntity<>(users, HttpStatus.OK);				
+			} 
+		catch (Exception e) {
+			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	
 	
 	@GetMapping("admin/user/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
@@ -99,7 +148,6 @@ public class AdminController {
 			userInfo.setLastname(user.getLastname());
 			userInfo.setAdress(user.getAddress());
 			userInfo.setDob(user.getDob());
-			userInfo.setPhone(user.getPhone());
 			return new ResponseEntity<>(userRepository.save(userInfo),HttpStatus.OK);
 		}
 		else {
