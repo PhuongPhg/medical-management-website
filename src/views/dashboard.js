@@ -80,7 +80,7 @@ export default function Dashboard() {
 					"Authorization" : `Bearer ${sessionStorage.getItem("userToken")}`
 				}
 			});
-			alert("Updated.");
+			// alert("Updated.");
 		}
 		catch(error){
 			alert(error);
@@ -291,7 +291,7 @@ export default function Dashboard() {
 														event.preventDefault();
 														updateData();
 														setFormOpen(false);
-														window.location.reload();
+														setTimeout(() => window.location.reload(), 1000);
 													}}
 												>
 													Save
