@@ -5,6 +5,7 @@ import Register from './views/register';
 import Login from './views/login';
 import ForgotPassword from './views/forgotPassword';
 import RegistrationForm from './views/registrationform';
+import Homepage from './views/homepage';
 import Dashboard from './views/dashboard';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path="/login" component={Login}/>
         <Route path="/forgot" component={ForgotPassword}/>
         <Route path="/registrationform" component={RegistrationForm}/>
+        <Route path="/homepage" component={Homepage}/>
         <Route path="/dashboard" component={Dashboard}/>
       </BrowserRouter>
     </div>
