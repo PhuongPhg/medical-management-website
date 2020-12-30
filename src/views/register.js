@@ -21,9 +21,10 @@ import moment from 'moment';
 // import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
 import {colors} from '../helpers/config';
-import { Route, Link, BrowserRouter } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import Login from './login';
 import axios from "axios";
+import { SnackbarProvider, useSnackbar } from 'notistack';
 
 
 export default function Register(){
@@ -42,9 +43,22 @@ export default function Register(){
   const [city, setCity] = useState('');
   const [hover, setHover]=useState(false);
 
-  async function onSignUp(){
+  let history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const enabled = firstName.length > 0 && 
+  lastName.length > 0 &&
+  phone.length > 0 &&
+  email.length > 0 &&
+  district.length > 0 &&
+  city.length > 0 &&
+  username.length > 0 &&
+  password.length > 0;
+  async function OnSignUp(e){
+    try{
+    e.preventDefault();
     const data={
-      "firstname": firstName,
+      firstname: firstName,
       lastname: lastName,
       username: username,
       email: email,
@@ -55,22 +69,39 @@ export default function Register(){
       dob: dob,
       role: role,
     };
-    // console.log(data)
+
     let res = await axios.post('http://localhost:8080/api/auth/signup', data)
+    // console.log(res.data)
     console.log(res.data)
+    if (res.status == 200){
+      enqueueSnackbar(res.data.message, { variant: 'success'})
+
+      // enqueueSnackbar(`Hello ${firstName} ${lastName}!`, { variant: 'success'});
+
+      // sessionStorage.setItem("username", username);
+
+      enqueueSnackbar("Please log in!", { variant: 'info'})
+
+      setTimeout(function(){
+        history.push("/login")
+      }, 500);
+    }
+    }catch(e){
+    enqueueSnackbar(e.response.data.message, { variant: 'error'})
+    }
   }
   return(
     <Grid container className={styles.root}>
       <Grid item xs={false} sm={4} md={7} className={styles.image}/>
       <Grid item xs={12} sm={8} md={5}>
         <div className={styles.paper}>
-          <Avatar className={styles.avatar} onClick={onSignUp} >
+          <Avatar className={styles.avatar} >
             <LockOpenIcon />
           </Avatar>
           <Typography variant="h5">
             Sign up
           </Typography>
-          <form className={styles.form} Validate>
+          <form className={styles.form} Validate onSubmit={OnSignUp} >
             <Grid container spacing={3}>
               <Grid item xs={6} sm={5}>
                 <TextField 
@@ -151,13 +182,14 @@ export default function Register(){
                   <InputLabel>Role</InputLabel>
                     <Select
                       id="role"
-                      value={role}
+                      // value={role}
                       onChange={e=>{setRole([e.target.value])}}
                       label="role"
+                      defaultValue={'Patient'}
                     >
                     <MenuItem value={"Patient"}>Patient</MenuItem>
                     <MenuItem value={'Docter'}>Docter</MenuItem>
-                    <MenuItem value={'Admin'}>Admin</MenuItem>
+                    {/* <MenuItem value={'Admin'}>Admin</MenuItem> */}
                   </Select>
                 </FormControl>
               </Grid>
@@ -212,8 +244,9 @@ export default function Register(){
             fullWidth
             variant="contained"
             // color='#81b3cb'
+            disabled={!enabled}
             className={styles.submit}
-            onClick={onSignUp}
+            onClick={OnSignUp}
           >
             Sign Up
           </Button>
@@ -230,10 +263,6 @@ export default function Register(){
           </form>
         </div>
       </Grid>
-      <BrowserRouter>
-        {/* <Route exact path="/" component={Register}/> */}
-        <Route path="/login" component={Login}/>
-      </BrowserRouter>
     </Grid>
   )
 }
