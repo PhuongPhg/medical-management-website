@@ -38,7 +38,7 @@ export default function Dashboard() {
 	const classes = useStyles();
 	const [data, setData] = useState([]);
 	const [page, setPage] = useState(0);
-	const rowsPerPage = 7;
+	const rowsPerPage = 20;
 	const [sortDir, setSortDir] = useState("asc");
 	
 	const [dialogue_open, setOpen] = useState(false);
@@ -339,7 +339,6 @@ export default function Dashboard() {
 						<TableFooter>
 							<TableRow>
 								<TablePagination
-									rowsPerPageOptions={7}
 									rowsPerPage={rowsPerPage}
 									count={data.length}
 									page={page}
