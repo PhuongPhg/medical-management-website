@@ -70,7 +70,7 @@ export default function Register(){
       role: role,
     };
 
-    let res = await axios.post('http://localhost:8080/api/auth/signup', data)
+    let res = await axios.post('http://thaonp.work/api/auth/signup', data)
     // console.log(res.data)
     console.log(res.data)
     if (res.status == 200){
