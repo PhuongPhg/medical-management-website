@@ -69,7 +69,7 @@ export default function Register(){
       dob: dob,
       role: role,
     };
-
+    console.log(data)
     let res = await axios.post('http://localhost:8080/api/auth/signup', data)
     // console.log(res.data)
     console.log(res.data)
@@ -182,14 +182,14 @@ export default function Register(){
                   <InputLabel>Role</InputLabel>
                     <Select
                       id="role"
-                      // value={role}
-                      onChange={e=>{setRole([e.target.value])}}
+                      value={role}
+                      onClick={e=>{setRole(e.target.value)}}
                       label="role"
-                      defaultValue={'Patient'}
+                      // defaultValue={'Patient'}
                     >
-                    <MenuItem value={"Patient"}>Patient</MenuItem>
-                    <MenuItem value={'Docter'}>Docter</MenuItem>
-                    {/* <MenuItem value={'Admin'}>Admin</MenuItem> */}
+                    <MenuItem value={"patient"}>Patient</MenuItem>
+                    <MenuItem value={'doctor'}>Doctor</MenuItem>
+                    <MenuItem value={'admin'}>Admin</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
