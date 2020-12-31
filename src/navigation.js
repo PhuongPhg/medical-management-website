@@ -136,5 +136,6 @@ const useStyles = makeStyles((theme) => ({
   username: {
     // textTransform: 'uppercase',
     marginRight: 20,
+    cursor: 'pointer'
   }
 }));
