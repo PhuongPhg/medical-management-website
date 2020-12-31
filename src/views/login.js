@@ -14,8 +14,10 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { colors } from '../helpers/config';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 export default function Login() {
+  const history = useHistory();
   const styles = useStyles();
   const [username, setUsername] = useState(null);
   const [pwd, setPwd] = useState(null);
@@ -30,9 +32,9 @@ export default function Login() {
 
 		sessionStorage.setItem("userToken", res.data.accessToken);
 		sessionStorage.setItem("username", res.data.username);
+		history.push("/dashboard");
 		} catch (error) {
-			alert(error);
-			// throw new Error("Error: ", error);
+			alert("Invalid account or password!");
 		}
     
   }
@@ -71,10 +73,6 @@ export default function Login() {
 							onClick={(event) => {
 								event.preventDefault();
 								signIn();
-								let token = sessionStorage.getItem("userToken");
-								if (token) {
-									window.open("/dashboard", "_self");
-								}
 							}}
 						>
 							Sign In
