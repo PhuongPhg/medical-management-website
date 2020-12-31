@@ -339,6 +339,7 @@ export default function Dashboard() {
 						<TableFooter>
 							<TableRow>
 								<TablePagination
+									rowsPerPageOptions={rowsPerPage}
 									rowsPerPage={rowsPerPage}
 									count={data.length}
 									page={page}
