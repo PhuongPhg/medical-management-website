@@ -187,15 +187,9 @@ export default function Register(){
                       label="role"
                       // defaultValue={'Patient'}
                     >
-<<<<<<< HEAD
                     <MenuItem value={"patient"}>Patient</MenuItem>
                     <MenuItem value={'doctor'}>Doctor</MenuItem>
                     <MenuItem value={'admin'}>Admin</MenuItem>
-=======
-                    <MenuItem value={"Patient"}>Patient</MenuItem>
-                    <MenuItem value={'Doctor'}>Doctor</MenuItem>
-                    {/* <MenuItem value={'Admin'}>Admin</MenuItem> */}
->>>>>>> 8025b5e90e691081de5322752a5ab0a275eafff5
                   </Select>
                 </FormControl>
               </Grid>
