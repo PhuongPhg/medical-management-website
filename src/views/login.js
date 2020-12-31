@@ -72,12 +72,7 @@ export default function Login() {
 							className={styles.submit}
 							onClick={(event) => {
 								event.preventDefault();
-								try{
-									signIn();
-								}
-								catch(error){
-									alert(error);
-								}
+								signIn();
 							}}
 						>
 							Sign In
