@@ -188,7 +188,7 @@ export default function Register(){
                       defaultValue={'Patient'}
                     >
                     <MenuItem value={"Patient"}>Patient</MenuItem>
-                    <MenuItem value={'Docter'}>Docter</MenuItem>
+                    <MenuItem value={'Doctor'}>Doctor</MenuItem>
                     {/* <MenuItem value={'Admin'}>Admin</MenuItem> */}
                   </Select>
                 </FormControl>
