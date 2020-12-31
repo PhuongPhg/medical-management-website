@@ -69,8 +69,8 @@ export default function Register(){
       dob: dob,
       role: role,
     };
-    console.log(data)
-    let res = await axios.post('http://localhost:8080/api/auth/signup', data)
+    let res = await axios.post('http://thaonp.work/api/auth/signup', data)
+
     // console.log(res.data)
     console.log(res.data)
     if (res.status == 200){
@@ -187,9 +187,15 @@ export default function Register(){
                       label="role"
                       // defaultValue={'Patient'}
                     >
+<<<<<<< HEAD
                     <MenuItem value={"patient"}>Patient</MenuItem>
                     <MenuItem value={'doctor'}>Doctor</MenuItem>
                     <MenuItem value={'admin'}>Admin</MenuItem>
+=======
+                    <MenuItem value={"Patient"}>Patient</MenuItem>
+                    <MenuItem value={'Doctor'}>Doctor</MenuItem>
+                    {/* <MenuItem value={'Admin'}>Admin</MenuItem> */}
+>>>>>>> 8025b5e90e691081de5322752a5ab0a275eafff5
                   </Select>
                 </FormControl>
               </Grid>

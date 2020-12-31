@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // export const signUp = async (name, email, password) => {
 //    try {
-//       let res = await axios.post('http://localhost:8080/api/auth/signup',
+//       let res = await axios.post('http://thaonp.work/api/auth/signup',
 //          {
 //             name: name,email: email, password: password
 //          }
@@ -16,7 +16,7 @@ import axios from 'axios';
 // export const signIn = async (username, password) => {
 //    var res;
 //    try {
-//       res = await axios.post('http://localhost:8080/api/auth/signin',
+//       res = await axios.post('http://thaonp.work/api/auth/signin',
 //          {
 //             username: username,
 //             password: password
@@ -32,7 +32,7 @@ import axios from 'axios';
 // }
 
 export const signIn = (username, password) => {
-   axios.post('http://localhost:8080/api/auth/signin',
+   axios.post('http://thaonp.work/api/auth/signin',
    {
       username: username,
       password: password
