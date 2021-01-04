@@ -49,7 +49,6 @@ const UserAccount = () => {
 				aria-controls={open ? "menu-list-grow" : undefined}
 				aria-haspopup="true"
 				onMouseOver={handleToggle}
-				onMouseOut={handleToggle}
 				className={classes.username}
 			>
 				Hello {sessionStorage.getItem("username")}!
@@ -95,12 +94,11 @@ export default function Navigation(props) {
         <Toolbar className={classes.toolbar}>
           <Grid container justify="space-between">
             <Grid item>
-          {/* <Button size="big">Subscribe</Button> */}
-            <Link href="/homepage" className={props.homepage ? [classes.navlink, classes.active] : classes.navlink}>Homepage</Link>
-            <Link href="/dashboard" className={props.dashboard ? [classes.navlink, classes.active] : classes.navlink}>Dashboard</Link>
-            <Link href="#" className={props.schedule ? [classes.navlink, classes.active] : classes.navlink}>Schedule</Link>
-            <Link href="#" className={props.contact ? [classes.navlink, classes.active] : classes.navlink}>Contact</Link>
-            <Link href="#" className={props.services ? [classes.navlink, classes.active] : classes.navlink}>Services</Link>
+              <Link href="/homepage" className={props.homepage ? [classes.navlink, classes.active] : classes.navlink}>Homepage</Link>
+              {sessionStorage.getItem("role") === "ROLE_ADMIN" ? <Link href="/dashboard" className={props.dashboard ? [classes.navlink, classes.active] : classes.navlink}>Dashboard</Link> : null}
+              <Link href="#" className={props.schedule ? [classes.navlink, classes.active] : classes.navlink}>Schedule</Link>
+              <Link href="#" className={props.contact ? [classes.navlink, classes.active] : classes.navlink}>Contact</Link>
+              <Link href="#" className={props.services ? [classes.navlink, classes.active] : classes.navlink}>Services</Link>
           </Grid>
           <Grid item>
           {
