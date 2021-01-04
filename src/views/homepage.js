@@ -11,7 +11,7 @@ export default function Homepage () {
 
   return (
     <div className={styles.container}>
-      <Navigation Homepage />
+      <Navigation homepage />
 			<Grid component="main" spacing={0} className={styles.root} direction="column">
         <Grid xs={12} className={styles.image}>
           <Grid className={styles.header} direction="columm" alignItems='center' justify="space-around">
