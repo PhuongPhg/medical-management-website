@@ -1,10 +1,24 @@
 package com.example.demo.controllers;
 
+
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.models.MedicalRecord;
+import com.example.demo.models.User;
+import com.example.demo.repository.MedicalRecordRepository;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.security.services.UserDetailsImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -12,10 +26,43 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 public class PatientController {
-	@GetMapping("/patient")
+	@Autowired
+	private UserRepository userRepository;
+	@Autowired
+	private MedicalRecordRepository medicalRecordRepository;
+	
+	@GetMapping("/patient/doctor")
 	@PreAuthorize("hasRole('PATIENT')")
-	public String admin() {
-		return "Hello Patient";
+	public ResponseEntity<List<User>> getUserByRoleDoctor(){
+		try {
+			List<User> users = new ArrayList<User>();
+		    userRepository.findDoctor().forEach(users::add);
+		    if (users.isEmpty()) {
+		    	return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+				}
+		    return new ResponseEntity<>(users, HttpStatus.OK);				
+			} 
+		catch (Exception e) {
+			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping("/patient/medicalRecord")
+	@PreAuthorize("hasRole('PATIENT')")
+	public ResponseEntity<List<MedicalRecord>> getMedicalRecord(){
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+		String email = userDetails.getEmail();
+		List<MedicalRecord> medical = new ArrayList<MedicalRecord>();
+		medicalRecordRepository.findByEmail(email).forEach(medical::add);
+		try {
+			if (medical.isEmpty()) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity<>(medical, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 }

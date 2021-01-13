@@ -11,13 +11,15 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.models.MedicalRecord;
 import com.example.demo.models.User;
+import com.example.demo.repository.MedicalRecordRepository;
 import com.example.demo.repository.UserRepository;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -27,6 +29,9 @@ public class AdminController {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private MedicalRecordRepository medicalRecordRepository;
 	
 	@GetMapping("/admin")
 	@PreAuthorize("hasRole('ADMIN')")
@@ -138,7 +143,7 @@ public class AdminController {
 		}
 	}
 	
-	@PostMapping("admin/user/{id}")
+	@PutMapping("admin/user/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<User> updateUserById(@PathVariable("id") long id, @RequestBody User user){
 		Optional<User> userId = userRepository.findById(id);
@@ -166,4 +171,20 @@ public class AdminController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	@GetMapping("admin/medicalRecord")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<List<MedicalRecord>> getAllMedicalRecord(){
+		try {
+			List<MedicalRecord> medicalRecords = new ArrayList<MedicalRecord>();
+			medicalRecordRepository.findAll().forEach(medicalRecords::add);
+			if (medicalRecords.isEmpty()) {
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			}
+			return new ResponseEntity<>(medicalRecords, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 }
