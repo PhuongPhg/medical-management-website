@@ -75,7 +75,7 @@ export default function Dashboard() {
 		};
 
 		try{
-			await axios.post(`http://thaonp.work/api/admin/user/${updateItem.id}`, formData, {
+			await axios.put(`http://thaonp.work/api/admin/user/${updateItem.id}`, formData, {
 				headers: {
 					"Authorization" : `Bearer ${sessionStorage.getItem("userToken")}`
 				}
