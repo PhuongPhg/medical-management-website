@@ -32,7 +32,8 @@ export default function Login() {
 
 		sessionStorage.setItem("userToken", res.data.accessToken);
 		sessionStorage.setItem("username", res.data.username);
-		history.push("/dashboard");
+		sessionStorage.setItem("role", res.data.roles[0]);
+		history.push("/homepage");
 		} catch (error) {
 			alert("Invalid account or password!");
 		}

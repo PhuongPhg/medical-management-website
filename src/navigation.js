@@ -42,39 +42,46 @@ const UserAccount = () => {
   prevOpen.current = open;
   }, [open]);
 
-  return(
-    <Grid container>
-      <Typography ref={anchorRef}
-        aria-controls={open ? 'menu-list-grow' : undefined}
-        aria-haspopup="true"
-        onClick={handleToggle}
-        className={classes.username}>
-        Hello {sessionStorage.getItem("username")}!
-      </Typography>
-        <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                    <MenuItem onClick={handleClose}>Profile</MenuItem>
-                    <MenuItem onClick={(event) => {
-                      handleClose(event)
-                      sessionStorage.setItem("userToken", null);
-                      sessionStorage.setItem("username", null);
-                      window.open("/login", "_self");
-                    }}>Logout</MenuItem>
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
-    </Grid>
-  )
+  return (
+		<Grid container>
+			<Typography
+				ref={anchorRef}
+				aria-controls={open ? "menu-list-grow" : undefined}
+				aria-haspopup="true"
+				onMouseOver={handleToggle}
+				className={classes.username}
+			>
+				Hello {sessionStorage.getItem("username")}!
+			</Typography>
+      
+			<Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+				{({ TransitionProps, placement }) => (
+					<Grow
+						{...TransitionProps}
+						style={{ transformOrigin: placement === "bottom" ? "center top" : "center bottom" }}
+					>
+						<Paper>
+							<ClickAwayListener onClickAway={handleClose}>
+								<MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+									<MenuItem onClick={handleClose}>Profile</MenuItem>
+									<MenuItem
+										onClick={(event) => {
+											handleClose(event);
+											sessionStorage.setItem("userToken", null);
+											sessionStorage.setItem("username", null);
+											window.open("/login", "_self");
+										}}
+									>
+										Logout
+									</MenuItem>
+								</MenuList>
+							</ClickAwayListener>
+						</Paper>
+					</Grow>
+				)}
+			</Popper>
+		</Grid>
+  );
 }
 
 export default function Navigation(props) {
@@ -87,15 +94,15 @@ export default function Navigation(props) {
         <Toolbar className={classes.toolbar}>
           <Grid container justify="space-between">
             <Grid item>
-          {/* <Button size="big">Subscribe</Button> */}
-            <Link href="/dashboard" className={props.dashboard ? [classes.navlink, classes.active] : classes.navlink}>Dashboard</Link>
-            <Link href="#" className={props.schedule ? [classes.navlink, classes.active] : classes.navlink}>Schedule</Link>
-            <Link href="#" className={props.contact ? [classes.navlink, classes.active] : classes.navlink}>Contact</Link>
-            <Link href="#" className={props.services ? [classes.navlink, classes.active] : classes.navlink}>Services</Link>
+              <Link href="/homepage" className={props.homepage ? [classes.navlink, classes.active] : classes.navlink}>Homepage</Link>
+              {sessionStorage.getItem("role") === "ROLE_ADMIN" ? <Link href="/dashboard" className={props.dashboard ? [classes.navlink, classes.active] : classes.navlink}>Dashboard</Link> : null}
+              <Link href="#" className={props.schedule ? [classes.navlink, classes.active] : classes.navlink}>Schedule</Link>
+              <Link href="#" className={props.contact ? [classes.navlink, classes.active] : classes.navlink}>Contact</Link>
+              <Link href="#" className={props.services ? [classes.navlink, classes.active] : classes.navlink}>Services</Link>
           </Grid>
           <Grid item>
           {
-            sessionStorage.getItem("userToken") ? 
+            sessionStorage.getItem("userToken") !== null ? 
               <UserAccount/> :
               <Grid item>
                 <Link href="/login" className={classes.navlink}>Login</Link>
@@ -123,7 +130,7 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
     textDecoration: 'none',
     textTransform: 'uppercase',
-    padding: 18,
+    padding: 20,
     opacity: 0.9,
     '&:hover': {
       opacity:1,
