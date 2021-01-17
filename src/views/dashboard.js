@@ -163,7 +163,7 @@ export default function Dashboard() {
 						className={classes.searchInput}
 					/>
 
-					<Typography>Filter</Typography>
+					<Typography>Filter by role</Typography>
 					<Select defaultValue="" className={classes.select_filter} onChange={(event) => {
 						if (!event.target.value){
 							getData();
