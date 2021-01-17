@@ -141,16 +141,18 @@ export default function Dashboard() {
 			<Grid container>
 				<Grid container alignItems="center">
 					<TextField
-						id="search-input"
 						variant="outlined"
 						size="small"
-						placeholder="Search"
+						placeholder="Search by phone number"
 						InputProps={{
 							startAdornment: (
 								<InputAdornment position="start">
-									<SearchIcon />
+									<SearchIcon fontSize="small"/>
 								</InputAdornment>
 							),
+							classes: {
+								input: classes.searchInput
+							}
 						}}
 						onChange={(text) => setQuery(text.target.value)}
 						onKeyUp={(event) => {
@@ -160,11 +162,11 @@ export default function Dashboard() {
 								searchUser(query);
 							}
 						}}
-						className={classes.searchInput}
+						className={classes.searchBox}
 					/>
 
-					<Typography>Filter by role</Typography>
-					<Select defaultValue="" className={classes.select_filter} onChange={(event) => {
+					<Typography className={classes.tableCell}>Filter by role</Typography>
+					<Select defaultValue="" className={classes.selectFilter} onChange={(event) => {
 						if (!event.target.value){
 							getData();
 						}
@@ -183,46 +185,50 @@ export default function Dashboard() {
 					<Table className={classes.table} aria-label="sticky table" size="small">
 						<TableHead>
 							<TableRow>
-								<TableCell align="left">ID</TableCell>
-								<TableCell align="left" sortDirection={sortDir} onClick={() => setSortDir(sortDir === "asc" ? "desc" : "asc")}>
+								<TableCell align="left" className={classes.tableCell}>ID</TableCell>
+								<TableCell align="left" sortDirection={sortDir}
+									onClick={() => setSortDir(sortDir === "asc" ? "desc" : "asc")}
+									className={classes.tableCell}
+								>
 									<TableSortLabel direction={sortDir}>Last name</TableSortLabel>
 								</TableCell>
-								<TableCell align="left">
+								<TableCell align="left" className={classes.tableCell}>
 									<TableSortLabel>First name</TableSortLabel>
 								</TableCell>
-								<TableCell align="left">Username</TableCell>
-								<TableCell align="left">Phone</TableCell>
-								<TableCell align="left">Email</TableCell>
-								<TableCell align="left">D.O.B</TableCell>
-								<TableCell align="left">Sex</TableCell>
-								<TableCell align="left">Address</TableCell>
-								<TableCell align="left">Role</TableCell>
-								<TableCell align="left">Action</TableCell>
+								<TableCell align="left" className={classes.tableCell}>Username</TableCell>
+								<TableCell align="left" className={classes.tableCell}>Phone</TableCell>
+								<TableCell align="left" className={classes.tableCell}>Email</TableCell>
+								<TableCell align="left" className={classes.tableCell}>D.O.B</TableCell>
+								<TableCell align="left" className={classes.tableCell}>Sex</TableCell>
+								<TableCell align="left" className={classes.tableCell}>Address</TableCell>
+								<TableCell align="left" className={classes.tableCell}>Role</TableCell>
+								<TableCell align="left" className={classes.tableCell}>Action</TableCell>
 							</TableRow>
 						</TableHead>
 
 						<TableBody>
 							{data ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item) => (
 								<TableRow className={classes.row} key={item.id}>
-									<TableCell align="left">{item.id}</TableCell>
-									<TableCell align="left">{item.lastname}</TableCell>
-									<TableCell align="left">{item.firstname}</TableCell>
-									<TableCell align="left" className={classes.raw_data}>
+									<TableCell align="left" className={classes.tableCell} width={30}>{item.id}</TableCell>
+									<TableCell align="left" className={classes.tableCell} width={120}>{item.lastname}</TableCell>
+									<TableCell align="left" className={classes.tableCell} width={110}>{item.firstname}</TableCell>
+									<TableCell align="left" className={[classes.raw_data, classes.tableCell]} width={100}>
 										{item.username}
 									</TableCell>
-									<TableCell align="left">{item.phone}</TableCell>
-									<TableCell align="left" className={classes.raw_data}>
+									<TableCell align="left" className={classes.tableCell} width={100}>{item.phone}</TableCell>
+									<TableCell align="left" className={[classes.raw_data, classes.tableCell]} width={180}>
 										{item.email}
 									</TableCell>
-									<TableCell align="left">{new Date(item.dob).toLocaleDateString()}</TableCell>
-									<TableCell align="left">{item.sex}</TableCell>
-									<TableCell align="left" className={classes.row}>
+									<TableCell align="left" className={classes.tableCell} width={100}>{new Date(item.dob).toLocaleDateString()}</TableCell>
+									<TableCell align="left" className={classes.tableCell} width={60}>{item.sex}</TableCell>
+									<TableCell align="left" className={classes.tableCell} width={120}>
 										{item.address}
 									</TableCell>
-									<TableCell align="left">{item.roles[0].name}</TableCell>
-									<TableCell align="left">
+									<TableCell align="left" className={classes.tableCell} width={100}>{item.roles[0].name}</TableCell>
+									<TableCell align="left" className={classes.tableCell}>
 										{/* Edit button */}
 										<Button
+											className={classes.button}
 											variant="outlined"
 											size="small"
 											disableElevation
@@ -231,7 +237,7 @@ export default function Dashboard() {
 												handleUpdateRequest(item);
 											}}
 										>
-											<EditIcon />
+											<EditIcon fontSize="small" className={classes.button}/>
 											Edit
 										</Button>
 
@@ -239,7 +245,7 @@ export default function Dashboard() {
 										{updateItem ? (
 											<Modal open={form_open} onClose={() => setFormOpen(false)} aria-labelledby="simple-modal-title" aria-describedby="simple-modal-description">
 												<Grid container justify="center" alignItems="center">
-													<form className={classes.update_form}>
+													<form className={classes.updateForm}>
 														<CloseIcon
 															onClick={() => {
 																// resetValue();
@@ -292,8 +298,8 @@ export default function Dashboard() {
 										) : null}
 
 										{/* Delete button */}
-										<Button variant="outlined" size="small" disableElevation onClick={() => handleDeleteRequest(item)}>
-											<DeleteSweepIcon />
+										<Button className={classes.button} variant="outlined" size="small" disableElevation onClick={() => handleDeleteRequest(item)}>
+											<DeleteSweepIcon fontSize="small"/>
 											Delete
 										</Button>
 
@@ -335,24 +341,29 @@ export default function Dashboard() {
 
 const useStyles = makeStyles((theme) => ({
 	container: {
+		width: 1430,
+	},
+	table: {
 		width: "max-content",
 		minWidth: "100vw",
 	},
-	table: {
-		minWidth: 650,
-	},
 	row: {
-		width: "max-content",
 		textTransform: "capitalize",
 		"&:hover": {
 			backgroundColor: colors.highlight,
-		},
+		}
 	},
-	limit_cell: {
-		maxWidth: 400,
+	tableCell: {
+		fontSize: 16,
+		paddingTop: 2,
+		paddingBottom: 2,
+		paddingRight: 0,
 	},
 	button: {
-		textTransform: "capitalize",
+		fontSize: 14,
+		marginTop: 2,
+		marginBottom: 2,
+
 	},
 	closeButton: {
 		cursor: "pointer",
@@ -360,10 +371,13 @@ const useStyles = makeStyles((theme) => ({
 	raw_data: {
 		textTransform: "none",
 	},
-	searchInput: {
+	searchBox: {
 		margin: 20,
 	},
-	update_form: {
+	searchInput: {
+		fontSize: 16,
+	},
+	updateForm: {
 		position: "absolute",
 		top: "25%",
 		width: 400,
@@ -375,7 +389,7 @@ const useStyles = makeStyles((theme) => ({
 	submit: {
 		marginTop: 10
 	},
-	select_filter: {
+	selectFilter: {
 		fontSize: 14,
 		marginLeft: 10,
 	}
