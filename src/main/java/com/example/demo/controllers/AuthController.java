@@ -101,8 +101,8 @@ public class AuthController {
 							 signUpRequest.getPhone(),
 							 signUpRequest.getAddress(),
 							 signUpRequest.getSex(),
-							 signUpRequest.getDob(),
-							 signUpRequest.getSpecialization());
+							 signUpRequest.getDob()
+							 );
 		
 		System.out.println(user.getPassword());
 		

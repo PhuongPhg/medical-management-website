@@ -52,9 +52,9 @@ public class PatientController {
 	public ResponseEntity<List<MedicalRecord>> getMedicalRecord(){
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-		String email = userDetails.getEmail();
+		long userId = userDetails.getId();
 		List<MedicalRecord> medical = new ArrayList<MedicalRecord>();
-		medicalRecordRepository.findByEmail(email).forEach(medical::add);
+		medicalRecordRepository.findByUserId(userId).forEach(medical::add);
 		try {
 			if (medical.isEmpty()) {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);

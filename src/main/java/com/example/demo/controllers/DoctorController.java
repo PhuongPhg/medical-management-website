@@ -64,12 +64,27 @@ public class DoctorController {
 		}
 	}
 	
+	@GetMapping("/doctor/medicalRecord/{userId}")
+	@PreAuthorize("hasRole('DOCTOR')")
+	public ResponseEntity<List<MedicalRecord>> getMedicalRecordByUserId(@PathVariable("userId") long userId){
+		List<MedicalRecord> medical = new ArrayList<MedicalRecord>();
+		medicalRecordRepository.findByUserId(userId).forEach(medical::add);
+		try {
+			if (medical.isEmpty()) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity<>(medical, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+		} 
+	}
+	
 	@PostMapping("/doctor/medicalRecord")
 	@PreAuthorize("hasRole('DOCTOR')")
 	public ResponseEntity<MedicalRecord> addMedicalRecord(@RequestBody MedicalRecord medical){
 		try {
 			MedicalRecord medicalRecord = medicalRecordRepository.
-					save(new MedicalRecord(medical.getDate(),medical.getDoctor(),medical.getEmail(),medical.getFirstname(),medical.getLastname(),medical.getPhone(),medical.getDetails(),medical.getPrescriptions()));
+					save(new MedicalRecord(medical.getDate(),medical.getDoctor(),medical.getUserId(),medical.getFirstname(),medical.getLastname(),medical.getPhone(),medical.getDetails(),medical.getPrescriptions()));
 			return new ResponseEntity<>(medicalRecord, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -83,6 +98,7 @@ public class DoctorController {
 		if (recordId.isPresent()) {
 			MedicalRecord recordInfo = recordId.get();
 			recordInfo.setDetails(medical.getDetails());
+			recordInfo.setPrescriptions(medical.getPrescriptions());
 			return new ResponseEntity<>(medicalRecordRepository.save(recordInfo), HttpStatus.OK);
 		}
 		else {

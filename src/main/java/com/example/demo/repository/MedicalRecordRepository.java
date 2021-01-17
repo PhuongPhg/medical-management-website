@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.support.JpaRepositoryImplementati
 import com.example.demo.models.MedicalRecord;
 
 public interface MedicalRecordRepository extends JpaRepositoryImplementation<MedicalRecord,Long> {
-	List<MedicalRecord> findByEmail(String email);
+	List<MedicalRecord> findByUserId(long userId);
 
 }

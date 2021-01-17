@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -26,10 +25,8 @@ public class MedicalRecord {
 	private String doctor;
 	
 	@NotBlank
-	@Size(max = 50)
-	@Email
-	private String email;
-	
+	private long userId;
+
 	@NotBlank
 	@Size(max = 50)
 	private String firstname;
@@ -51,10 +48,10 @@ public class MedicalRecord {
 	public MedicalRecord() {
 	}
 
-	public MedicalRecord(Date date,String doctor, String email, String firstname, String lastname, String phone, String details, String prescriptions) {
+	public MedicalRecord(Date date,String doctor, long userId, String firstname, String lastname, String phone, String details, String prescriptions) {
 		this.date = date;
 		this.doctor = doctor;
-		this.email = email;
+		this.userId = userId;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.phone = phone;
@@ -86,12 +83,12 @@ public class MedicalRecord {
 		this.doctor = doctor;
 	}
 
-	public String getEmail() {
-		return email;
+	public long getUserId() {
+		return userId;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 
 	public String getFirstname() {
@@ -135,7 +132,4 @@ public class MedicalRecord {
 		this.prescriptions = prescriptions;
 	}
 	
-	
-	
-
 }

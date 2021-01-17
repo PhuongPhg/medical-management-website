@@ -40,9 +40,6 @@ public class SignupRequest {
 	@NotBlank
 	@Size(max = 10)
 	private String sex;
-	
-	@Size(max = 50)
-	private String specialization;
 		
 	@NotBlank
 	@Past
@@ -110,16 +107,7 @@ public class SignupRequest {
 
 	public void setSex(String sex) {
 		this.sex = sex;
-	}
-
-	public String getSpecialization() {
-		return specialization;
-	}
-
-	public void setSpcialization(String specialization) {
-		this.specialization = specialization;
-	}
-	
+	}	
 	
 	public Date getDob() {
 		return dob;

@@ -55,9 +55,6 @@ public class User {
 	@NotBlank
 	@Past
 	private Date dob;
-
-	@Size(max = 50)
-	private String specialization;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(	name = "user_roles", 
@@ -68,7 +65,7 @@ public class User {
 	public User() {
 	}
 
-	public User(String username, String email, String password, String firstname, String lastname, String phone, String address, String sex, Date dob, String specialization) {
+	public User(String username, String email, String password, String firstname, String lastname, String phone, String address, String sex, Date dob) {
 		this.username = username;
 		this.email = email;
 		this.password = password;
@@ -78,7 +75,6 @@ public class User {
 		this.address = address;
 		this.sex = sex;
 		this.dob = dob;
-		this.specialization = specialization;
 	}
 
 	public Long getId() {
@@ -161,14 +157,6 @@ public class User {
 		this.dob = dob;
 	}
 	
-
-	public String getSpecialization() {
-		return specialization;
-	}
-
-	public void setSpecialization(String specialization) {
-		this.specialization = specialization;
-	}
 	
 	public Set<Role> getRoles() {
 		return roles;
