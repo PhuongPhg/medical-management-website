@@ -221,7 +221,7 @@ export default function Dashboard() {
 									</TableCell>
 									<TableCell align="left" className={classes.tableCell} width={100}>{new Date(item.dob).toLocaleDateString()}</TableCell>
 									<TableCell align="left" className={classes.tableCell} width={60}>{item.sex}</TableCell>
-									<TableCell align="left" className={classes.tableCell} width={120}>
+									<TableCell align="left" className={classes.tableCell} width={150}>
 										{item.address}
 									</TableCell>
 									<TableCell align="left" className={classes.tableCell} width={100}>{item.roles[0].name}</TableCell>
@@ -341,7 +341,7 @@ export default function Dashboard() {
 
 const useStyles = makeStyles((theme) => ({
 	container: {
-		width: 1430,
+		width: 1460,
 	},
 	table: {
 		width: "max-content",
