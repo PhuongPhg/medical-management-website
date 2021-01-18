@@ -91,14 +91,13 @@ export default function Navigation(props) {
   return (
     <React.Fragment>
       <AppBar position="sticky" className={classes.appbar}>
-        <Toolbar className={classes.toolbar}>
-          <Grid container justify="space-between">
-            <Grid item>
-              <Link href="/homepage" className={props.homepage ? [classes.navlink, classes.active] : classes.navlink}>Homepage</Link>
-              {sessionStorage.getItem("role") === "ROLE_ADMIN" ? <Link href="/dashboard" className={props.dashboard ? [classes.navlink, classes.active] : classes.navlink}>Dashboard</Link> : null}
-              <Link href="#" className={props.schedule ? [classes.navlink, classes.active] : classes.navlink}>Schedule</Link>
-              <Link href="#" className={props.contact ? [classes.navlink, classes.active] : classes.navlink}>Contact</Link>
-              <Link href="#" className={props.services ? [classes.navlink, classes.active] : classes.navlink}>Services</Link>
+        <Grid container justify="space-between">
+          <Grid item>
+            <Link href="/homepage" className={props.homepage ? [classes.navlink, classes.active] : classes.navlink}>Homepage</Link>
+            {sessionStorage.getItem("role") === "ROLE_ADMIN" ? <Link href="/dashboard" className={props.dashboard ? [classes.navlink, classes.active] : classes.navlink}>Dashboard</Link> : null}
+            <Link href="#" className={props.schedule ? [classes.navlink, classes.active] : classes.navlink}>Schedule</Link>
+            <Link href="#" className={props.contact ? [classes.navlink, classes.active] : classes.navlink}>Contact</Link>
+            <Link href="#" className={props.services ? [classes.navlink, classes.active] : classes.navlink}>Services</Link>
           </Grid>
           <Grid item>
           {
@@ -110,8 +109,7 @@ export default function Navigation(props) {
               </Grid>
           }
           </Grid>
-          </Grid>
-        </Toolbar>
+        </Grid>
       </AppBar>
     </React.Fragment>
   );
@@ -120,7 +118,8 @@ export default function Navigation(props) {
 const useStyles = makeStyles((theme) => ({
   appbar: {
     backgroundColor: colors.primary,
-    height: 65,
+    height: 55,
+    justifyContent: "center",
   },
   toolbar: {
     borderBottom: `1px solid ${theme.palette.divider}`,
@@ -130,8 +129,8 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
     textDecoration: 'none',
     textTransform: 'uppercase',
-    padding: 20,
-    opacity: 0.9,
+    padding: 15,
+    opacity: 0.7,
     '&:hover': {
       opacity:1,
     },
