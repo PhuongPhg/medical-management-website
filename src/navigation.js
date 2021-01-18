@@ -96,8 +96,9 @@ export default function Navigation(props) {
             <Link href="/homepage" className={props.homepage ? [classes.navlink, classes.active] : classes.navlink}>Homepage</Link>
             {sessionStorage.getItem("role") === "ROLE_ADMIN" ? <Link href="/dashboard" className={props.dashboard ? [classes.navlink, classes.active] : classes.navlink}>Dashboard</Link> : null}
             <Link href="#" className={props.schedule ? [classes.navlink, classes.active] : classes.navlink}>Schedule</Link>
-            <Link href="#" className={props.contact ? [classes.navlink, classes.active] : classes.navlink}>Contact</Link>
-            <Link href="#" className={props.services ? [classes.navlink, classes.active] : classes.navlink}>Services</Link>
+            <Link href="/patients" className={props.patients ? [classes.navlink, classes.active] : classes.navlink}>Patients</Link>
+            {/* <Link href="#" className={props.contact ? [classes.navlink, classes.active] : classes.navlink}>Contact</Link> */}
+            {/* <Link href="#" className={props.services ? [classes.navlink, classes.active] : classes.navlink}>Services</Link> */}
           </Grid>
           <Grid item>
           {
