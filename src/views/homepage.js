@@ -20,7 +20,7 @@ export default function Homepage () {
               {/* <p className={styles.textdescription}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed iaculis magna nibh, tristique suscipit magna porta non. Nulla mauris eros, facilisis ac mollis eget, lacinia sit amet justo. Proin semper commodo metus blandit vestibulum.</p> */}
             </Grid>
             <Grid xs={6} className={styles.textdescription}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed iaculis magna nibh, tristique suscipit magna porta non. Nulla mauris eros, facilisis ac mollis eget, lacinia sit amet justo. Proin semper commodo metus blandit vestibulum.
+              Medical Management system helps you to schedule appointments, organize your medical information and manage your well-being status. 
             </Grid>
             <Grid style={{display:'flex', marginBottom: '3vh'}}>
               <Button
@@ -78,12 +78,11 @@ const useStyles = makeStyles((theme) => ({
   },
   header: {
     height: '100%',
-    width: '100%',
+    maxWidth: '100vw',
     paddingTop: '1vh',
     paddingLeft: '3vw',
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     color: 'white',
-    width: '100vw',
     paddingBottom: '3vh',
   },
   texttitle: {
