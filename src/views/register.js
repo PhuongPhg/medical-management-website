@@ -64,12 +64,13 @@ export default function Register(){
       email: email,
       password: password,
       phone: phone,
-      address: street +", "+district+", "+city,
+      address: district+", "+city,
       sex: sex,
       dob: dob,
       role: role,
     };
-    let res = await axios.post('http://thaonp.work/api/auth/signup', data)
+    // let res = await axios.post('http://thaonp.work/api/auth/signup', data)
+    let res = await axios.post('http://localhost:8080/api/auth/signup', data)
 
     // console.log(res.data)
     console.log(res.data)

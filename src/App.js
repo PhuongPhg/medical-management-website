@@ -8,7 +8,7 @@ import ForgotPassword from './views/forgotPassword';
 import RegistrationForm from './views/registrationform';
 import Homepage from './views/homepage';
 import Dashboard from './views/dashboard';
-
+import Schedule from './views/schedule';
 function App() {
   return (
     <div className="App">
@@ -19,6 +19,7 @@ function App() {
         <Route path="/registrationform" component={RegistrationForm}/>
         <Route path="/homepage" component={Homepage}/>
         <Route path="/dashboard" component={Dashboard}/>
+        <Route path="/schedule" component={Schedule}/>
       </BrowserRouter>
     </div>
   );
