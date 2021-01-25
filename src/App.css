@@ -58,3 +58,6 @@
 .e-year-view .e-calendar-wrapper .e-month-calendar.e-calendar  {
   background: #81b3cb;
 }
+.e-today{ 
+  display: none !important;      
+} 
