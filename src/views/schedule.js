@@ -6,12 +6,12 @@ import Navigation from '../navigation';
 import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
+import { colors } from '../helpers/config.js';
 import { ScheduleComponent,  Week, Month, Day, Inject, ViewsDirective, ViewDirective } from '@syncfusion/ej2-react-schedule';
-import moment from 'moment';
 
 export default function Schedule(){
   const classes = useStyles();
-  
+  const day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const [data, setData] = useState(
     [{
       Id: 2,
@@ -23,14 +23,31 @@ export default function Schedule(){
       // Priority: 'High'
   }],
   )
-  // var now = new Date(2021, 1, 15);
-  // var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  // var day = days[ now.getDay() ];
-  var day = new Date();
+  const CreateEvent = () => {
+      setData(
+        [{
+          Id: 2,
+          Subject: 'Meeting',
+          StartTime: new Date(2021, 0, 19, 10, 0),
+          EndTime: new Date(2021, 0, 19, 12, 30),
+          IsAllDay: false,
+          Status: 'Completed',
+          // Priority: 'High'
+      },
+      {
+        Id: 3,
+        Subject: 'Lung Examination',
+        StartTime: new Date(2021, 0, 20, 10, 0),
+        EndTime: new Date(2021, 0, 20, 12, 30),
+        IsAllDay: false,
+        Status: 'Completed',
+        // Priority: 'High'
+    }],
+      )
+  }
   useEffect(()=>{
-    day=moment().format("YYYY, MM, DD");
-    console.log(data[0].StartTime)
-  })
+    console.log(data)
+  },[data])
   return(
     <div>
       <Navigation Schedule />
@@ -43,28 +60,40 @@ export default function Schedule(){
               </Grid>
               <Grid item xs={12} sm={6} style={{textAlign: 'right', }}>
                 <Tooltip title="Create an appointment">
-                  <IconButton aria-label="create">
+                  <IconButton aria-label="create" onClick={CreateEvent}>
                     <AddIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
             </Grid>
-            <Paper className={classes.listAppoint}>
-              <Grid container spacing={3}>
-                <Grid item  xs={6} sm={3}>
-                  3
-                </Grid>
-                <Grid item  xs={12} sm={9}>
-                  3
-                </Grid>
-              </Grid>
-            </Paper>
+            {
+              data.map((item)=>{
+                return(
+                  <Paper className={classes.listAppoint}>
+                    <Grid container spacing={3}>
+                      <Grid item  xs={6} sm={3} >
+                        <div style={{display:'flex', flexDirection: 'column', fontSize: 14}}>
+                          <div style={{flex: 2, textAlign: 'center', padding: 2}}>{item.StartTime.getDate()}</div>
+                          <div style={{flex:1, textAlign:'center', padding: 2}}>{day[item.StartTime.getDay()]}</div>
+                        </div>
+                      </Grid>
+                      <Grid item  xs={12} sm={9} style={{textAlign: 'left'}}>
+                        <div style={{display:'flex', flexDirection: 'column'}}>
+                          <div style={{flex: 2, padding: 2}}>{item.Subject}</div>
+                          <div style={{flex:1, padding: 2, fontSize: 12, color: colors.grey }}>{item.StartTime.getHours()}:{item.StartTime.getMinutes()} - {item.EndTime.getHours()}:{item.EndTime.getMinutes()}</div>
+                        </div>
+                      </Grid>
+                    </Grid>
+                  </Paper>
+                  )})
+                }
           </Paper>
         </Grid>
         <Grid item xs={9}>
           <Paper className={classes.profile_contain} style={{width: '98%', marginLeft: 5}}>
-          <ScheduleComponent height='550px' selectedDate={new Date()} eventSettings={{ dataSource: data,}}
+          <ScheduleComponent height='550px' selectedDate={new Date()} eventSettings={{ dataSource: data, allowAdding: false, allowDeleting: false, allowEditing: false}}
             actionComplete={()=> console.log(data)}
+            
             >
           <ViewsDirective>
             <ViewDirective option='Day'/>
