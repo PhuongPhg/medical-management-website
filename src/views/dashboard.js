@@ -22,7 +22,8 @@ export default function Dashboard() {
 	const [data, setData] = useState([]);
 	const [page, setPage] = useState(0);
 	const rowsPerPage = 20;
-	const [sortDir, setSortDir] = useState("asc");
+	const [sortName, setSortName] = useState("asc");
+	const [sortID, setSortID] = useState("asc");
 	
 	const [dialogue_open, setOpen] = useState(false);
 	const [form_open, setFormOpen] = useState(false);
@@ -86,7 +87,7 @@ export default function Dashboard() {
 
 	const getData = async () => {
 		try{
-			let res = await axios.get('http://thaonp.work/api/admin/user', {
+			let res = await axios.get('http://localhost:8080/api/admin/user', {
 				headers: {
 					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
 				}
@@ -132,7 +133,32 @@ export default function Dashboard() {
 			alert(error);
 		}
 	}
+	
+	const customSort = (array, comparator) => {
+		let sortedArray = array.sort((a,b) => {
+			if (a[comparator] > b[comparator]) {
+				return -1;
+			 }
+			 if (a[comparator] < b[comparator]) {
+				return 1;
+			 }
+			 return 0;
+		});
+		return sortedArray;
+	};
 
+	const sortData = (comparator, sortDir, setSortDir) => {
+		if (sortDir === "asc"){
+			setData(customSort(data, comparator));
+			setSortDir("desc");
+		}
+		else{
+			let sortedData = customSort(data, comparator);
+			setData(sortedData.reverse());
+			setSortDir("asc");
+		}
+	}
+	
 	useEffect(() => getData(), []);
 
 	return (
@@ -147,12 +173,12 @@ export default function Dashboard() {
 						InputProps={{
 							startAdornment: (
 								<InputAdornment position="start">
-									<SearchIcon fontSize="small"/>
+									<SearchIcon fontSize="small" />
 								</InputAdornment>
 							),
 							classes: {
-								input: classes.searchInput
-							}
+								input: classes.searchInput,
+							},
 						}}
 						onChange={(text) => setQuery(text.target.value)}
 						onKeyUp={(event) => {
@@ -166,14 +192,17 @@ export default function Dashboard() {
 					/>
 
 					<Typography className={classes.tableCell}>Filter by role</Typography>
-					<Select defaultValue="" className={classes.selectFilter} onChange={(event) => {
-						if (!event.target.value){
-							getData();
-						}
-						else{
-							applyFilter(event.target.value);
-						}
-					}}>
+					<Select
+						defaultValue=""
+						className={classes.selectFilter}
+						onChange={(event) => {
+							if (!event.target.value) {
+								getData();
+							} else {
+								applyFilter(event.target.value);
+							}
+						}}
+					>
 						<MenuItem value="">None</MenuItem>
 						<MenuItem value="admin">Admin</MenuItem>
 						<MenuItem value="doctor">Doctor</MenuItem>
@@ -185,146 +214,181 @@ export default function Dashboard() {
 					<Table className={classes.table} aria-label="sticky table" size="small">
 						<TableHead>
 							<TableRow>
-								<TableCell align="left" className={classes.tableCell}>ID</TableCell>
-								<TableCell align="left" sortDirection={sortDir}
-									onClick={() => setSortDir(sortDir === "asc" ? "desc" : "asc")}
-									className={classes.tableCell}
-								>
-									<TableSortLabel direction={sortDir}>Last name</TableSortLabel>
+								<TableCell align="left" className={classes.tableCell}>
+									<TableSortLabel direction={sortID} onClick={() => sortData("id", sortID, setSortID)}>
+										ID
+									</TableSortLabel>
 								</TableCell>
 								<TableCell align="left" className={classes.tableCell}>
-									<TableSortLabel>First name</TableSortLabel>
+									Last name
 								</TableCell>
-								<TableCell align="left" className={classes.tableCell}>Username</TableCell>
-								<TableCell align="left" className={classes.tableCell}>Phone</TableCell>
-								<TableCell align="left" className={classes.tableCell}>Email</TableCell>
-								<TableCell align="left" className={classes.tableCell}>D.O.B</TableCell>
-								<TableCell align="left" className={classes.tableCell}>Sex</TableCell>
-								<TableCell align="left" className={classes.tableCell}>Address</TableCell>
-								<TableCell align="left" className={classes.tableCell}>Role</TableCell>
-								<TableCell align="left" className={classes.tableCell}>Action</TableCell>
+								<TableCell align="left" className={classes.tableCell}>
+									<TableSortLabel direction={sortName} onClick={() => sortData("firstname", sortName, setSortName)}>
+										First name
+									</TableSortLabel>
+								</TableCell>
+								<TableCell align="left" className={classes.tableCell}>
+									Username
+								</TableCell>
+								<TableCell align="left" className={classes.tableCell}>
+									Phone
+								</TableCell>
+								<TableCell align="left" className={classes.tableCell}>
+									Email
+								</TableCell>
+								<TableCell align="left" className={classes.tableCell}>
+									D.O.B
+								</TableCell>
+								<TableCell align="left" className={classes.tableCell}>
+									Sex
+								</TableCell>
+								<TableCell align="left" className={classes.tableCell}>
+									Address
+								</TableCell>
+								<TableCell align="left" className={classes.tableCell}>
+									Role
+								</TableCell>
+								<TableCell align="left" className={classes.tableCell}>
+									Action
+								</TableCell>
 							</TableRow>
 						</TableHead>
 
 						<TableBody>
-							{data ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item) => (
-								<TableRow className={classes.row} key={item.id}>
-									<TableCell align="left" className={classes.tableCell} width={30}>{item.id}</TableCell>
-									<TableCell align="left" className={classes.tableCell} width={120}>{item.lastname}</TableCell>
-									<TableCell align="left" className={classes.tableCell} width={110}>{item.firstname}</TableCell>
-									<TableCell align="left" className={[classes.raw_data, classes.tableCell]} width={100}>
-										{item.username}
-									</TableCell>
-									<TableCell align="left" className={classes.tableCell} width={100}>{item.phone}</TableCell>
-									<TableCell align="left" className={[classes.raw_data, classes.tableCell]} width={180}>
-										{item.email}
-									</TableCell>
-									<TableCell align="left" className={classes.tableCell} width={100}>{new Date(item.dob).toLocaleDateString()}</TableCell>
-									<TableCell align="left" className={classes.tableCell} width={60}>{item.sex}</TableCell>
-									<TableCell align="left" className={classes.tableCell} width={150}>
-										{item.address}
-									</TableCell>
-									<TableCell align="left" className={classes.tableCell} width={100}>{item.roles[0].name}</TableCell>
-									<TableCell align="left" className={classes.tableCell}>
-										{/* Edit button */}
-										<Button
-											className={classes.button}
-											variant="outlined"
-											size="small"
-											disableElevation
-											style={{ marginRight: 10 }}
-											onClick={() => {
-												handleUpdateRequest(item);
-											}}
-										>
-											<EditIcon fontSize="small" className={classes.button}/>
-											Edit
-										</Button>
-
-										{/* Update form */}
-										{updateItem ? (
-											<Modal open={form_open} onClose={() => setFormOpen(false)} aria-labelledby="simple-modal-title" aria-describedby="simple-modal-description">
-												<Grid container justify="center" alignItems="center">
-													<form className={classes.updateForm}>
-														<CloseIcon
-															onClick={() => {
-																// resetValue();
-																setFormOpen(false);
-															}}
-															className={classes.closeButton}
-														/>
-
-														<Grid container spacing={3}>
-															<Grid item xs={6} sm={5}>
-																<TextField name="firstName" required={true} fullWidth label={"First name"} value={firstname} onChange={(event) => setFName(event.target.value)} />
-															</Grid>
-															<Grid item xs={6} sm={7}>
-																<TextField name="lastName" required fullWidth label="Last Name" value={lastname} onChange={(event) => setLName(event.target.value)} />
-															</Grid>
-														</Grid>
-
-														<TextField margin="normal" required fullWidth label="Address" name="address" value={address} onChange={(event) => setAddress(event.target.value)} />
-
-														<MuiPickersUtilsProvider utils={DateFnsUtils}>
-															<KeyboardDatePicker
-																disableToolbar
-																variant="inline"
-																format="yyyy-MM-dd"
-																label="DOB"
-																value={dob}
-																fullWidth
-																onChange={(event) => {
-																	setDOB(event);
-																}}
-															/>
-														</MuiPickersUtilsProvider>
-
-														<Button
-															fullWidth
-															variant="contained"
-															className={classes.submit}
-															onClick={(event) => {
-																event.preventDefault();
-																updateData();
-																setFormOpen(false);
-																setTimeout(() => window.location.reload(), 1000);
-															}}
-														>
-															Save
-														</Button>
-													</form>
-												</Grid>
-											</Modal>
-										) : null}
-
-										{/* Delete button */}
-										<Button className={classes.button} variant="outlined" size="small" disableElevation onClick={() => handleDeleteRequest(item)}>
-											<DeleteSweepIcon fontSize="small"/>
-											Delete
-										</Button>
-
-										{/* Confirm delete */}
-										<Dialog open={dialogue_open} onClose={() => setOpen(false)} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
-											<DialogTitle id="alert-dialog-title">{"Delete this user?"}</DialogTitle>
-											<DialogActions>
+							{data
+								? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item) => (
+										<TableRow className={classes.row} key={item.id}>
+											<TableCell align="left" className={classes.tableCell} width={30}>
+												{item.id}
+											</TableCell>
+											<TableCell align="left" className={classes.tableCell} width={120}>
+												{item.lastname}
+											</TableCell>
+											<TableCell align="left" className={classes.tableCell} width={110}>
+												{item.firstname}
+											</TableCell>
+											<TableCell align="left" className={[classes.raw_data, classes.tableCell]} width={100}>
+												{item.username}
+											</TableCell>
+											<TableCell align="left" className={classes.tableCell} width={100}>
+												{item.phone}
+											</TableCell>
+											<TableCell align="left" className={[classes.raw_data, classes.tableCell]} width={180}>
+												{item.email}
+											</TableCell>
+											<TableCell align="left" className={classes.tableCell} width={100}>
+												{new Date(item.dob).toLocaleDateString()}
+											</TableCell>
+											<TableCell align="left" className={classes.tableCell} width={60}>
+												{item.sex}
+											</TableCell>
+											<TableCell align="left" className={classes.tableCell} width={150}>
+												{item.address}
+											</TableCell>
+											<TableCell align="left" className={classes.tableCell} width={100}>
+												{item.roles[0].name}
+											</TableCell>
+											<TableCell align="left" className={classes.tableCell}>
+												{/* Edit button */}
 												<Button
+													className={classes.button}
+													variant="outlined"
+													size="small"
+													disableElevation
+													style={{ marginRight: 10 }}
 													onClick={() => {
-														deleteUser();
-														setOpen(false);
+														handleUpdateRequest(item);
 													}}
-													color="primary"
-													autoFocus
 												>
-													Yes
+													<EditIcon fontSize="small" className={classes.button} />
+													Edit
 												</Button>
-												<Button onClick={() => setOpen(false)} color="primary">
-													No
+
+												{/* Update form */}
+												{updateItem ? (
+													<Modal open={form_open} onClose={() => setFormOpen(false)} aria-labelledby="simple-modal-title" aria-describedby="simple-modal-description">
+														<Grid container justify="center" alignItems="center">
+															<form className={classes.updateForm}>
+																<CloseIcon
+																	onClick={() => {
+																		// resetValue();
+																		setFormOpen(false);
+																	}}
+																	className={classes.closeButton}
+																/>
+
+																<Grid container spacing={3}>
+																	<Grid item xs={6} sm={5}>
+																		<TextField name="firstName" required={true} fullWidth label={"First name"} value={firstname} onChange={(event) => setFName(event.target.value)} />
+																	</Grid>
+																	<Grid item xs={6} sm={7}>
+																		<TextField name="lastName" required fullWidth label="Last Name" value={lastname} onChange={(event) => setLName(event.target.value)} />
+																	</Grid>
+																</Grid>
+
+																<TextField margin="normal" required fullWidth label="Address" name="address" value={address} onChange={(event) => setAddress(event.target.value)} />
+
+																<MuiPickersUtilsProvider utils={DateFnsUtils}>
+																	<KeyboardDatePicker
+																		disableToolbar
+																		variant="inline"
+																		format="yyyy-MM-dd"
+																		label="DOB"
+																		value={dob}
+																		fullWidth
+																		onChange={(event) => {
+																			setDOB(event);
+																		}}
+																	/>
+																</MuiPickersUtilsProvider>
+
+																<Button
+																	fullWidth
+																	variant="contained"
+																	className={classes.submit}
+																	onClick={(event) => {
+																		event.preventDefault();
+																		updateData();
+																		setFormOpen(false);
+																		setTimeout(() => window.location.reload(), 1000);
+																	}}
+																>
+																	Save
+																</Button>
+															</form>
+														</Grid>
+													</Modal>
+												) : null}
+
+												{/* Delete button */}
+												<Button className={classes.button} variant="outlined" size="small" disableElevation onClick={() => handleDeleteRequest(item)}>
+													<DeleteSweepIcon fontSize="small" />
+													Delete
 												</Button>
-											</DialogActions>
-										</Dialog>
-									</TableCell>
-								</TableRow>
-							)) : null}
+
+												{/* Confirm delete */}
+												<Dialog open={dialogue_open} onClose={() => setOpen(false)} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
+													<DialogTitle id="alert-dialog-title">{"Delete this user?"}</DialogTitle>
+													<DialogActions>
+														<Button
+															onClick={() => {
+																deleteUser();
+																setOpen(false);
+															}}
+															color="primary"
+															autoFocus
+														>
+															Yes
+														</Button>
+														<Button onClick={() => setOpen(false)} color="primary">
+															No
+														</Button>
+													</DialogActions>
+												</Dialog>
+											</TableCell>
+										</TableRow>
+								  ))
+								: null}
 						</TableBody>
 
 						<TableFooter>
@@ -341,7 +405,7 @@ export default function Dashboard() {
 
 const useStyles = makeStyles((theme) => ({
 	container: {
-		width: 1460,
+		width: 1480,
 	},
 	table: {
 		width: "max-content",
