@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +23,7 @@ import com.example.demo.models.MedicalRecord;
 import com.example.demo.models.User;
 import com.example.demo.repository.MedicalRecordRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.security.services.UserDetailsImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -186,5 +189,21 @@ public class AdminController {
 			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	@GetMapping("admin/myProfile")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<User> getMyProfile(){
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+		long userId = userDetails.getId();
+		Optional<User> user = userRepository.findById(userId);
+		if (user.isPresent()) {
+			return new ResponseEntity<>(user.get(),HttpStatus.OK);
+		}
+		else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
 	
 }
