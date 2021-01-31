@@ -52,12 +52,6 @@
 @import "../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css";
 @import "../node_modules/@syncfusion/ej2-react-schedule/styles/material.css";
 
-.e-schedule .e-new-event  {
-  background-color: #81b3cb;
-}
-.e-year-view .e-calendar-wrapper .e-month-calendar.e-calendar  {
-  background: #81b3cb;
-}
 .e-today{ 
   display: none !important;      
 } 

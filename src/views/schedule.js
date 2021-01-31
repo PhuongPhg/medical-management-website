@@ -31,13 +31,22 @@ export default function Schedule(){
     [{
       Id: 2,
       Subject: 'Meeting',
-      StartTime: new Date(2021, 0, 29, 10, 0),
-      EndTime: new Date(2021, 0, 29, 12, 30),
-      IsAllDay: false,
+      StartTime: new Date(2021, 0, 31, 10, 0),
+      EndTime: new Date(2021, 0, 31, 12, 30),
       Status: 'Completed',
+      Description: 'abc'
       // Priority: 'High'
-  }],
-  )
+  },
+  {
+    Id: 3,
+    Subject: 'Lung Examination',
+    StartTime: new Date(2021, 1, 1, 10, 0),
+    EndTime: new Date(2021, 1, 1, 12, 30),
+    IsAllDay: false,
+    Status: 'Completed',
+    // Priority: 'High'
+}
+], )
   const [name, setName] = useState(null);
   const [id, setId] = useState(null);
   const [symptom, setSymptom] = useState(null);
@@ -72,6 +81,7 @@ export default function Schedule(){
     }],
       )
   }
+  
   useEffect(()=>{
     console.log(data)
   },[data])
@@ -94,9 +104,9 @@ export default function Schedule(){
               </Grid>
             </Grid>
             {
-              data.map((item)=>{
+              data ? data.map((item)=>{
                 return(
-                  <Paper className={classes.listAppoint}>
+                  <Paper className={classes.listAppoint} key={item.Id} onClick={() => console.log(item)}>
                     <Grid container spacing={3}>
                       <Grid item  xs={6} sm={3} >
                         <div style={{display:'flex', flexDirection: 'column', fontSize: 14}}>
@@ -112,7 +122,7 @@ export default function Schedule(){
                       </Grid>
                     </Grid>
                   </Paper>
-                  )})
+                  )}) : null
                 }
           </Paper>
         </Grid>
@@ -120,6 +130,7 @@ export default function Schedule(){
           <Paper className={classes.profile_contain} style={{width: '98%', marginLeft: 5}}>
           <ScheduleComponent height='550px' selectedDate={new Date()} eventSettings={{ dataSource: data, allowAdding: false, allowDeleting: false, allowEditing: false}}
             actionComplete={()=> console.log(data)}
+            cssClass='custom-class'
             >
           <ViewsDirective>
             <ViewDirective option='Day'/>
