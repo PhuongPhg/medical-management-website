@@ -12,7 +12,6 @@ export const SearchBox = (props) => {
 	const search = () => {
 		if (query){
 			setDisplay(data.filter(item => 
-				item.lastname.split(" ").includes(query) ||
 				item.firstname.includes(query) ||
 				item.phone.includes(query) ||
 				item.username.includes(query) ||
@@ -28,7 +27,7 @@ export const SearchBox = (props) => {
       <TextField
 		variant="outlined"
 		size="small"
-		placeholder="Search"
+		placeholder="Search by name, phone, username or email"
 		InputProps={{
 			startAdornment: (
 				<InputAdornment position="start">

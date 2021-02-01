@@ -23,7 +23,7 @@ export default function Patients() {
 
 	const getData = async () => {
 		try{
-			let res = await axios.get('http://localhost:8080/api/doctor/patient', {
+			let res = await axios.get('http://thaonp.work/api/doctor/patient', {
 				headers: {
 					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
 				}
