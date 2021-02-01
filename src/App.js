@@ -8,6 +8,7 @@ import RegistrationForm from './views/registrationform';
 import Homepage from './views/homepage';
 import Dashboard from './views/dashboard';
 import Patients from './views/patients';
+import Profile from './views/profile';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
 				<Route path="/homepage" component={Homepage} />
 				<Route path="/dashboard" component={Dashboard} />
 				<Route path="/patients" component={Patients} />
+				<Route path="/profile" component={Profile} />
 			</BrowserRouter>
 		</div>
   );
