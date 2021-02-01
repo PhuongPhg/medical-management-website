@@ -5,6 +5,40 @@ import { colors } from '../helpers/config';
 import { Card, CardContent, Typography, makeStyles } from "@material-ui/core";
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
+const AppointmentCard = (props) => {
+  const styles = useStyles();
+
+  return (
+		<Card className={styles.card}>
+			<CardContent>
+				<Grid container justify="space-between" alignItems="center">
+					<Grid item style={{ display: "flex" }} direction="row">
+						<Grid item className={styles.date}>
+							<Typography align="center">{props.date}</Typography>
+						</Grid>
+						<Grid item>
+							<Typography align="left">{props.title}</Typography>
+							<Typography align="left" className={styles.status}>
+								{props.time}
+							</Typography>
+						</Grid>
+					</Grid>
+					<Grid item direction="row">
+				
+              {
+                props.finished ?
+                <Typography component="span" className={styles.status}>
+								  Finished and reschedule in {props.nextApm}
+                </Typography> : null
+              }
+							<NavigateNextIcon className={styles.next_btn} />
+					</Grid>
+				</Grid>
+			</CardContent>
+		</Card>
+  );
+}
+
 export default function Profile () {
   const styles = useStyles();
 
@@ -17,33 +51,18 @@ export default function Profile () {
 				</Grid>
 
 				<Grid xs={9} direction="row" className={styles.records}>
-					<Grid justify="left" container>
+					<Grid container>
 						<Typography variant="p" align="left" className={styles.sectionHeader}>
 							Appointments
 						</Typography>
-					</Grid>
-					<Grid container>
-						<Card className={styles.card}>
-							<CardContent>
-								<Grid container justify="space-between" alignItems="center">
-									<Grid item style={{display: "flex"}} direction="row">
-                    <Grid item className={styles.date}>
-                      <Typography>6</Typography>
-                      <Typography>March</Typography>
-                    </Grid>
-                    <Grid item>
-  										<Typography align="left">Lung Examination</Typography>
-	  									<Typography align="left" className={styles.status}>08:00 - 10:00 AM</Typography>
-                    </Grid>
-                  </Grid>
-									<Grid item direction="row">
-										<Typography component="span" className={styles.status}>Finished and reschedule in 07/04</Typography>
-                    <NavigateNextIcon viewBox='0 0 24 24' style={{color: colors.additional_info, backgroundColor: 'red'}} />
-									</Grid>
-								</Grid>
-							</CardContent>
-						</Card>
-					</Grid>
+						<AppointmentCard date="1 Feb" title="Lung examination" time="8:00 - 10:00 AM" finished={false}/>
+				  
+            <Typography variant="p" align="left" className={styles.sectionHeader}>
+							Medical records
+						</Typography>
+            <AppointmentCard date="31 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="01/02"/>
+            <AppointmentCard date="30 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="31/01"/>
+          </Grid>
 				</Grid>
 			</Grid>
 		</div>
@@ -79,7 +98,8 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: '30px',
   },
   card: {
-    width: '100%'
+    width: '100%',
+    marginBottom: 20,
   },
   sectionHeader: {
     fontWeight: 600,
@@ -89,9 +109,14 @@ const useStyles = makeStyles((theme) => ({
   date: {
     color: colors.date_color,
     marginRight: 20,
+    width: 40,
   },
   status: {
     color: colors.additional_info,
     marginTop: 0,
+  },
+  next_btn: {
+    color: colors.additional_info,
+    verticalAlign: 'middle',
   }
 }));
