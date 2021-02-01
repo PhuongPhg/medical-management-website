@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import axios from 'axios';
 import { colors } from "../helpers/config";
 import Navigation from "../navigation";
-import { Button, Dialog, DialogActions, DialogTitle, InputAdornment, Modal, Table, TableFooter, TableSortLabel, TablePagination, TextField, Typography, Grid, FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogTitle, IconButton, InputAdornment, Modal, Table, TableFooter, TableSortLabel, TablePagination, TextField, Typography, Grid, FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -309,13 +309,17 @@ export default function Dashboard() {
 													<Modal open={form_open} onClose={() => setFormOpen(false)} aria-labelledby="simple-modal-title" aria-describedby="simple-modal-description">
 														<Grid container justify="center" alignItems="center">
 															<form className={classes.updateForm}>
-																<CloseIcon
-																	onClick={() => {
-																		// resetValue();
-																		setFormOpen(false);
-																	}}
-																	className={classes.closeButton}
-																/>
+																<Grid container justify="flex-end">
+																	<IconButton>
+																		<CloseIcon
+																			onClick={() => {
+																				// resetValue();
+																				setFormOpen(false);
+																			}}
+																			className={classes.closeButton}
+																		/>
+																	</IconButton>
+																</Grid>
 
 																<Grid container spacing={3}>
 																	<Grid item xs={6} sm={5}>
