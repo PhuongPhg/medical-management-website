@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import Navigation from "../navigation";
 import Grid from '@material-ui/core/Grid';
 import { colors } from '../helpers/config';
-import { Card, CardContent, Typography, makeStyles } from "@material-ui/core";
+import { Button, Card, CardContent, Modal, TextField, Tooltip, Typography, makeStyles, IconButton } from "@material-ui/core";
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import Button from '@material-ui/core/Button';
 import ReactRoundedImage from "react-rounded-image";
 import SamplePhoto from "../SampleProfileImage.jpg"
+import AddIcon from '@material-ui/icons/Add';
+import CloseIcon from '@material-ui/icons/Close';
+import moment from 'moment';
+import RegistrationForm from './registrationform';
 const AppointmentCard = (props) => {
   const styles = useStyles();
 
@@ -32,7 +35,7 @@ const AppointmentCard = (props) => {
 								Finished and reschedule in {props.nextApm}
 							</Typography>
 						) : null}
-						<NavigateNextIcon className={styles.next_btn} />
+						<NavigateNextIcon className={styles.nextBtn} />
 					</Grid>
 				</Grid>
 			</CardContent>
@@ -40,8 +43,19 @@ const AppointmentCard = (props) => {
   );
 }
 
+const InfoItem = (props) => {
+  const styles = useStyles();
+  return (
+    <div className={styles.outerBullet}>
+      <div className={styles.bullet} />
+      <p className={styles.bulletText}>{props.info}</p>
+    </div>
+  );
+}
+
 export default function Profile () {
   const styles = useStyles();
+  const [newRecord, setOpenNewRecord] = useState(false);
 
   return (
 		<div className={styles.container}>
@@ -61,54 +75,62 @@ export default function Profile () {
             <p style={{marginTop: '0', color: '#6A6A6A', fontSize: '20px'}}>Patient</p>
           </div>
           <Grid container direction="column" style={{display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
-            <div className={styles.outerBullet}>
+            {/* <div className={styles.outerBullet}>
               <div className={styles.bullet} />
               <p className={styles.bulletText}>username</p>
-            </div>
+            </div> */}
+            <InfoItem info="username"/>
             <div style={{display: 'flex', direction: 'row'}}>
-              <div className={styles.outerBullet}>
-                <div className={styles.bullet} />
-                <p className={styles.bulletText}>Male</p>
-              </div>
+              <InfoItem info="Male"/>
               <div className={styles.outerBullet} style={{marginLeft: '60px'}}>
                 <div className={styles.bullet} />
                 <p className={styles.bulletText}>51 ans</p>
               </div>
             </div>
-            <div className={styles.outerBullet}>
-              <div className={styles.bullet} />
-              <p className={styles.bulletText}>0123456789</p>
-            </div>
-            <div className={styles.outerBullet}>
-              <div className={styles.bullet} />
-              <p className={styles.bulletText}>useremail@email.com</p>
-            </div>
-            <div className={styles.outerBullet}>
-              <div className={styles.bullet} />
-              <p className={styles.bulletText} style={{textAlign:'start'}}>18B Hoang Quoc Viet, Hanoi, Vietnam</p>
-            </div>
+            <InfoItem info="0123456789" />
+            <InfoItem info="useremail@email.com" />
+            <InfoItem info="18B Hoang Quoc Viet, Hanoi, Vietnam" />
             <Button variant="contained" href="#" className={styles.editButton}>EDIT</Button>
           </Grid>
 				</Grid>
 
 				<Grid xs={9} direction="row" className={styles.records}>
 					<Grid container>
+						{/* Appointments */}
 						<Typography variant="p" align="left" className={styles.sectionHeader}>
 							Appointments
 						</Typography>
-						<AppointmentCard date="1 Feb" title="Lung examination" time="8:00 - 10:00 AM" finished={false}/>
-				  
-            <Typography variant="p" align="left" className={styles.sectionHeader}>
-							Medical records
-						</Typography>
-            <AppointmentCard date="31 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="01/02"/>
-            <AppointmentCard date="30 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="31/01"/>
-          </Grid>
-          <Grid container justify="flex-end">
-            <NavigateBeforeIcon />
-            <NavigateNextIcon />
-          </Grid>
+						<AppointmentCard date="1 Feb" title="Lung examination" time="8:00 - 10:00 AM" finished={false} />
+
+						{/* Medical records */}
+						<Grid container direction="row" justify="space-between" alignItems="center">
+							<Typography variant="p" className={styles.sectionHeader}>
+								Medical records
+							</Typography>
+
+							<IconButton onClick={() => setOpenNewRecord(true)}>
+								<AddIcon />
+							</IconButton>
+						</Grid>
+						<AppointmentCard date="31 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="01/02" />
+						<AppointmentCard date="30 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="31/01" />
+					</Grid>
+					<Grid container justify="flex-end">
+						<NavigateBeforeIcon />
+						<NavigateNextIcon />
+					</Grid>
 				</Grid>
+
+				<Modal open={newRecord} onClose={() => setOpenNewRecord(false)} className={styles.modal}>
+					<Grid xs="5" className={styles.newRecordForm} align="right">
+						<Tooltip title="Close" onClick={() => setOpenNewRecord(false)}>
+							<IconButton aria-label="closeDetail" style={{ width: 40, height: 40, margin: 0 }}>
+								<CloseIcon />
+							</IconButton>
+						</Tooltip>
+            <RegistrationForm />
+					</Grid>
+				</Modal>
 			</Grid>
 		</div>
   );
@@ -142,14 +164,15 @@ const useStyles = makeStyles((theme) => ({
   bullet: {
     height: '15px', 
     width:'15px', 
-    marginLeft: '10px', 
+    marginLeft: '20px', 
     marginRight: '10px', 
     borderRadius:'50%', 
     backgroundColor: '#C4C4C4'
   },
   bulletText: {
     fontSize: '20px', 
-    margin: '0px'
+    margin: '0px',
+    textAlign: 'start'
   },
   editButton: {
     backgroundColor:'#96C3D9', 
@@ -191,8 +214,18 @@ const useStyles = makeStyles((theme) => ({
     color: colors.additional_info,
     marginTop: 0,
   },
-  next_btn: {
+  nextBtn: {
     color: colors.additional_info,
-    verticalAlign: 'middle',
+    verticalAlign: 'middle'
   },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  newRecordForm: {
+		backgroundColor: theme.palette.background.paper,
+    borderRadius: 7,
+    padding: 10,
+  }
 }));
