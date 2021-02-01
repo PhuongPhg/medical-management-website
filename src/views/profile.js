@@ -2,10 +2,13 @@ import React, {useState, useEffect} from "react";
 import Navigation from "../navigation";
 import Grid from '@material-ui/core/Grid';
 import { colors } from '../helpers/config';
-import { Button, Card, CardContent, Typography, makeStyles, IconButton } from "@material-ui/core";
+import { Button, Card, CardContent, Modal, TextField, Tooltip, Typography, makeStyles, IconButton } from "@material-ui/core";
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import AddIcon from '@material-ui/icons/Add';
+import CloseIcon from '@material-ui/icons/Close';
+import moment from 'moment';
+import RegistrationForm from './registrationform';
 
 const AppointmentCard = (props) => {
   const styles = useStyles();
@@ -41,6 +44,7 @@ const AppointmentCard = (props) => {
 
 export default function Profile () {
   const styles = useStyles();
+  const [newRecord, setOpenNewRecord] = useState(false);
 
   return (
 		<div className={styles.container}>
@@ -52,28 +56,41 @@ export default function Profile () {
 
 				<Grid xs={9} direction="row" className={styles.records}>
 					<Grid container>
+						{/* Appointments */}
 						<Typography variant="p" align="left" className={styles.sectionHeader}>
 							Appointments
 						</Typography>
-						<AppointmentCard date="1 Feb" title="Lung examination" time="8:00 - 10:00 AM" finished={false}/>
-				  
-            <Grid container direction="row" justify="space-between" alignItems="center">
-              <Typography variant="p" className={styles.sectionHeader}>
-                Medical records
-              </Typography>
+						<AppointmentCard date="1 Feb" title="Lung examination" time="8:00 - 10:00 AM" finished={false} />
 
-              <IconButton>
-                <AddIcon />
-              </IconButton>
-            </Grid>
-            <AppointmentCard date="31 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="01/02"/>
-            <AppointmentCard date="30 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="31/01"/>
-          </Grid>
-          <Grid container justify="flex-end">
-            <NavigateBeforeIcon />
-            <NavigateNextIcon />
-          </Grid>
+						{/* Medical records */}
+						<Grid container direction="row" justify="space-between" alignItems="center">
+							<Typography variant="p" className={styles.sectionHeader}>
+								Medical records
+							</Typography>
+
+							<IconButton onClick={() => setOpenNewRecord(true)}>
+								<AddIcon />
+							</IconButton>
+						</Grid>
+						<AppointmentCard date="31 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="01/02" />
+						<AppointmentCard date="30 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="31/01" />
+					</Grid>
+					<Grid container justify="flex-end">
+						<NavigateBeforeIcon />
+						<NavigateNextIcon />
+					</Grid>
 				</Grid>
+
+				<Modal open={newRecord} onClose={() => setOpenNewRecord(false)} className={styles.modal}>
+					<Grid xs="5" className={styles.newRecordForm} align="right">
+						<Tooltip title="Close" onClick={() => setOpenNewRecord(false)}>
+							<IconButton aria-label="closeDetail" style={{ width: 40, height: 40, margin: 0 }}>
+								<CloseIcon />
+							</IconButton>
+						</Tooltip>
+            <RegistrationForm />
+					</Grid>
+				</Modal>
 			</Grid>
 		</div>
   );
@@ -128,5 +145,15 @@ const useStyles = makeStyles((theme) => ({
   nextBtn: {
     color: colors.additional_info,
     verticalAlign: 'middle'
+  },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  newRecordForm: {
+		backgroundColor: theme.palette.background.paper,
+    borderRadius: 7,
+    padding: 10,
   }
 }));

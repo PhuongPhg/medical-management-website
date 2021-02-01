@@ -17,128 +17,54 @@ import { makeStyles } from '@material-ui/core/styles';
 import { colors } from '../helpers/config.js';
 
 export default function RegistrationForm() {
-  const styles = useStyles();
-  // const [part, setPart] = useState(null);
-  const [name, setName] = useState(null);
-  const [id, setId] = useState(null);
-  const [symptom, setSymptom] = useState(null);
-  const [firstday, setFirstday] = useState(moment().format("DD/MM/YYYY"));
-  const [anamnesis, setAnamnesis] = useState(null);
+	const styles = useStyles();
+	// const [part, setPart] = useState(null);
+	const [name, setName] = useState(null);
+	const [id, setId] = useState(null);
+	const [symptom, setSymptom] = useState(null);
+	const [firstday, setFirstday] = useState(moment().format("DD/MM/YYYY"));
+	const [prescription, setPrescription] = useState(null);
 
-  return (
-    <div className={styles.container}>
-    <Navigation RegistrationForm />
-    <Grid container xs={12} sm={8} md={5} className={styles.root}>
-      {/* <Grid item xs={false} sm={4} md={7} className={styles.image}/> */}
-      {/* <Grid item > */}
-        <div className={styles.paper}>
-          <Avatar className={styles.avatar}>
-            <ListAltIcon /> 
-          </Avatar>
-          <Typography variant="h5">
-            Medical Registration Form
-          </Typography>
-          <form className={styles.form} noValidate>
-            <Grid container>
-            <Grid item xs={12} sm={6}>
-              <TextField 
-                margin="normal"
-                required
-                fullWidth
-                variant="outlined"
-                id="patient-name"
-                label="Patient name"
-                onTextChange = {text => setName(text)}
-                style={{marginRight: '4px'}}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField 
-                margin="normal"
-                required
-                fullWidth
-                variant="outlined"
-                id="identification"
-                label="ID"
-                onTextChange = {text => setId(text)}
-                style={{marginLeft: '4px'}}
-              />
-            </Grid>
-            <TextField 
-              multiline
-              rows={4}
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="symptom"
-              label="Describe your health problems"
-              onTextChange = {text => setSymptom(text)}
-            />
-            <TextField 
-              multiline
-              rows={4}
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="anamnesis"
-              label="Anamnesis"
-              onTextChange={text => setAnamnesis(text)}
-            />
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDatePicker 
-                style={{marginTop: '16px'}}
-                disableToolbar
-                fullWidth
-                variant="inline"
-                inputVariant="outlined"
-                format="MM/dd/yyyy"
-                id="date-picker-inline"
-                label="Set appointment date"
-                value={firstday}
-                onChange={val => {setFirstday(val)}}
-              />
-            </MuiPickersUtilsProvider>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              className={styles.submit}
-            >
-              Submit
-            </Button>
-          </form>
-        </div>
-      {/* </Grid> */}
-    </Grid>
-    </div>
-  );
+	return (
+		<Grid className={styles.paper}>
+			<Typography variant="h5">Medical Registration Form</Typography>
+			<form className={styles.form} Validate>
+				<Grid container>
+					<TextField size="small" multiline rows={2} variant="outlined" margin="normal" required fullWidth id="symptom" label="Describe health problems" onTextChange={(text) => setSymptom(text)} />
+					<TextField size="small" multiline rows={4} variant="outlined" margin="normal" required fullWidth label="Prescription" onTextChange={(text) => setPrescription(text)} />
+					<MuiPickersUtilsProvider utils={DateFnsUtils}>
+						<KeyboardDatePicker
+							style={{ marginTop: "16px" }}
+							disableToolbar
+							fullWidth
+							variant="inline"
+							inputVariant="outlined"
+							format="MM/dd/yyyy"
+							id="date-picker-inline"
+							label="Set appointment date"
+							value={firstday}
+							onChange={(val) => {
+								setFirstday(val);
+							}}
+						/>
+					</MuiPickersUtilsProvider>
+				</Grid>
+				<Button type="submit" fullWidth variant="contained" className={styles.submit}>
+					Submit
+				</Button>
+			</form>
+		</Grid>
+	);
 }
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-		width: "max-content",
-		minWidth: "100vw"
-	},
-  root: {
-    height: '100vh',
-    direction: "row",
-    marginLeft: 'auto',
-    marginRight: 'auto'
-  },
-  // image: {
-  //   backgroundImage: "url("+"https://c1.wallpaperflare.com/preview/937/818/491/stethoscope-doctor-md-medical-health-hospital.jpg"+")",
-  //   backgroundRepeat: 'no-repeat',
-  //   backgroundSize: 'cover',
-  //   backgroundPosition: 'center',
-  // },
   paper: {
-    margin: theme.spacing(8, 4),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    paddingLeft: 40,
+    paddingRight: 40,
+    paddingBottom: 20,
   },
   avatar: {
     margin: theme.spacing(1),
