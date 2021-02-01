@@ -24,11 +24,11 @@ export default function Schedule(){
   const [data, setData] = useState(
     [{
       Id: 1,
-      Subject: 'Meeting',
+      Subject: 'Lung Examination',
       StartTime: new Date(2021, 0, 31, 10, 0),
       EndTime: new Date(2021, 0, 31, 12, 30),
       Status: 'Completed',
-      Description: 'abc'
+      Description: 'Hurt and hard breath'
       // Priority: 'High'
   },
   
@@ -42,12 +42,27 @@ export default function Schedule(){
   const handleCloseCreate = () => setOpenCreate(false);
 
   const[tempDetail, setTempDetail] = useState({
-    name: ''
+    name: '',
+    title: '',
+    StartTime: new Date(),
+    EndTime: new Date(),
+    description: '',
+    status: '',
+    Notes: ''
   });
   const [openDetail, setOpenDetail] = useState(false);
   const handleOpenDetail = (item) => { 
     // console.log(item);
-    setTempDetail({name: item.Id});
+    setTempDetail(
+      {
+        name: item.Id,
+        title: item.Subject,
+        StartTime: item.StartTime,
+        EndTime: item.EndTime,
+        description: item.Description ? item.Description : 'None',
+        status: item.status ? item.status : 'None',
+        Notes: ''
+      });
     setOpenDetail(true)
   };
   const handleCloseDetail = () => setOpenDetail(false);
@@ -72,8 +87,8 @@ export default function Schedule(){
       <Navigation Schedule />
       <Grid container className={classes.container}>
         <Grid item xs={3}>
-          <Paper className={classes.profile_contain} style={{width: '90%'}}>
-            <Grid container spacing={3} className={classes.bar}>
+          <Paper className={classes.profile_contain} style={{width: '90%'}} >
+            <Grid container spacing={3} className={classes.bar} >
               <Grid item xs={12} sm={6} className={classes.textInBar}>
                 Upcoming
               </Grid>
@@ -85,12 +100,13 @@ export default function Schedule(){
                 </Tooltip>
               </Grid>
             </Grid>
+            <div style={{overflowY: 'scroll', whiteSpace: 'wrap', height: '100%'}}>
             {
               data ? data.map((item)=>{
                 return(
-                  <Paper className={classes.listAppoint} key={item.Id} onClick={() => handleOpenDetail(item)}>
+                  <Paper className={classes.listAppoint} key={item.Id} onClick={() => handleOpenDetail(item)} >
                     <Grid container spacing={3}>
-                      <Grid item  xs={6} sm={3} >
+                      <Grid item  xs={6} sm={3} style={{color: colors.primary, fontSize: 15}}>
                         <div style={{display:'flex', flexDirection: 'column', fontSize: 14}}>
                           <div style={{flex: 2, textAlign: 'center', padding: 2}}>{item.StartTime.getDate()}</div>
                           <div style={{flex:1, textAlign:'center', padding: 2}}>{day[item.StartTime.getDay()]}</div>
@@ -99,13 +115,14 @@ export default function Schedule(){
                       <Grid item  xs={12} sm={9} style={{textAlign: 'left'}}>
                         <div style={{display:'flex', flexDirection: 'column'}}>
                           <div style={{flex: 2, padding: 2}}>{item.Subject}</div>
-                          {/* <div style={{flex:1, padding: 2, fontSize: 12, color: colors.grey }}>{item.StartTime.getHours()}:{item.StartTime.getMinutes()} - {item.EndTime.getHours()}:{item.EndTime.getMinutes()}</div> */}
+                          <div style={{flex:1, padding: 2, fontSize: 12, color: colors.grey }}>{item.StartTime.getHours()}:{item.StartTime.getMinutes()} - {item.EndTime.getHours()}:{item.EndTime.getMinutes()}</div>
                         </div>
                       </Grid>
                     </Grid>
                   </Paper>
                   )}) : null
                 }
+                </div>
           </Paper>
         </Grid>
         <Grid item xs={9}>
@@ -245,7 +262,27 @@ export default function Schedule(){
       >
         <Fade in={openDetail}>
           <div className={classes.paper}>
-          {tempDetail.name}
+            <Grid container justify='space-between' direction='row'>
+              <Grid item direction='column' style={{display: 'flex', marginBottom: 15}}>
+                <Grid item>
+                  <Typography align="left" variant="h5">{tempDetail.title}</Typography>
+                </Grid>
+                <Grid item>
+                  <Typography align="left" varient="h6" style={{color: colors.grey}}>
+                    {day[tempDetail.StartTime.getDay()]} at {tempDetail.StartTime.getHours()}:{tempDetail.StartTime.getMinutes()} to {tempDetail.EndTime.getHours()}:{tempDetail.EndTime.getMinutes()}</Typography>
+                </Grid>
+              </Grid>
+              <Typography align="right">Doctor: Unknow</Typography>
+              <Grid item xs={12} spacing={2}>
+                <Grid item style={{marginBottom: 15, color: colors.grey}}>
+                  <Typography align="left">Description: {tempDetail.description}</Typography>
+                  <Typography align="left">Status: {tempDetail.status}</Typography>
+                </Grid>
+                <Typography align='left' style={{marginBottom: 5}}>Notes</Typography>
+                <TextField fullWidth id="filled-basic" variant="filled" value={tempDetail.Notes} rows={3}  multiline style={{paddingBottom: 10}}/>
+              </Grid>
+            </Grid>
+            
         </div>
         </Fade>
       </Modal>
@@ -273,11 +310,13 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#f6f5f5',
     alignContent: 'center',
     textAlign: 'center',
-    maxWidth: '40%',
+    // maxWidth: '40%',
     alignItems: 'center',
     margin: 'auto',
     borderRadius: 10,
-    outline: 'none'
+    outline: 'none',
+    // minWidth: '30%'
+    width: '40%'
   },
   bar:{
     // paddingTop: 10,
