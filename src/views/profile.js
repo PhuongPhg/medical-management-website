@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import { colors } from '../helpers/config';
 import { Card, CardContent, Typography, makeStyles } from "@material-ui/core";
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 
 const AppointmentCard = (props) => {
   const styles = useStyles();
@@ -24,14 +25,12 @@ const AppointmentCard = (props) => {
 						</Grid>
 					</Grid>
 					<Grid item direction="row">
-				
-              {
-                props.finished ?
-                <Typography component="span" className={styles.status}>
-								  Finished and reschedule in {props.nextApm}
-                </Typography> : null
-              }
-							<NavigateNextIcon className={styles.next_btn} />
+						{props.finished ? (
+							<Typography component="span" className={styles.status}>
+								Finished and reschedule in {props.nextApm}
+							</Typography>
+						) : null}
+						<NavigateNextIcon className={styles.next_btn} />
 					</Grid>
 				</Grid>
 			</CardContent>
@@ -62,6 +61,10 @@ export default function Profile () {
 						</Typography>
             <AppointmentCard date="31 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="01/02"/>
             <AppointmentCard date="30 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="31/01"/>
+          </Grid>
+          <Grid container justify="flex-end">
+            <NavigateBeforeIcon />
+            <NavigateNextIcon />
           </Grid>
 				</Grid>
 			</Grid>
@@ -118,5 +121,5 @@ const useStyles = makeStyles((theme) => ({
   next_btn: {
     color: colors.additional_info,
     verticalAlign: 'middle',
-  }
+  },
 }));
