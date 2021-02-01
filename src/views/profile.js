@@ -1,11 +1,13 @@
-import React, {useState, useEffect} from "react";
+import React from "react";
 import Navigation from "../navigation";
 import Grid from '@material-ui/core/Grid';
 import { colors } from '../helpers/config';
 import { Card, CardContent, Typography, makeStyles } from "@material-ui/core";
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-
+import Button from '@material-ui/core/Button';
+import ReactRoundedImage from "react-rounded-image";
+import SamplePhoto from "../SampleProfileImage.jpg"
 const AppointmentCard = (props) => {
   const styles = useStyles();
 
@@ -45,8 +47,48 @@ export default function Profile () {
 		<div className={styles.container}>
 			<Navigation homepage />
 			<Grid component="main" spacing={4} className={styles.root}>
-				<Grid xs={3} className={styles.userinfo}>
-					<h1 styles={{ backgroundColor: "#000000" }}>ksjflkjasklfjdklj</h1>
+				<Grid xs={3} direction="column" alignItems="center" className={styles.userinfo}>
+        <div style={{marginTop: '30px'}}>
+            <ReactRoundedImage
+            image = {SamplePhoto} 
+            imageWidth = "200"
+            imageHeight = "200"
+            roundedSize = "0"
+            />
+          </div>
+          <div>
+            <h1 style={{marginBottom: '0'}}>Nguyen Van A</h1>
+            <p style={{marginTop: '0', color: '#6A6A6A', fontSize: '20px'}}>Patient</p>
+          </div>
+          <Grid container direction="column" style={{display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
+            <div className={styles.outerBullet}>
+              <div className={styles.bullet} />
+              <p className={styles.bulletText}>username</p>
+            </div>
+            <div style={{display: 'flex', direction: 'row'}}>
+              <div className={styles.outerBullet}>
+                <div className={styles.bullet} />
+                <p className={styles.bulletText}>Male</p>
+              </div>
+              <div className={styles.outerBullet} style={{marginLeft: '60px'}}>
+                <div className={styles.bullet} />
+                <p className={styles.bulletText}>51 ans</p>
+              </div>
+            </div>
+            <div className={styles.outerBullet}>
+              <div className={styles.bullet} />
+              <p className={styles.bulletText}>0123456789</p>
+            </div>
+            <div className={styles.outerBullet}>
+              <div className={styles.bullet} />
+              <p className={styles.bulletText}>useremail@email.com</p>
+            </div>
+            <div className={styles.outerBullet}>
+              <div className={styles.bullet} />
+              <p className={styles.bulletText} style={{textAlign:'start'}}>18B Hoang Quoc Viet, Hanoi, Vietnam</p>
+            </div>
+            <Button variant="contained" href="#" className={styles.editButton}>EDIT</Button>
+          </Grid>
 				</Grid>
 
 				<Grid xs={9} direction="row" className={styles.records}>
@@ -87,6 +129,37 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: '20px',
     marginRight: '10px',
     backgroundColor: colors.secondary_background,
+    display: 'flex',
+    paddingLeft: '10px',
+    paddingRight: '10px',  
+  },
+  outerBullet: {
+    display: 'flex',
+    justifyContent: 'center' ,
+    alignItems: 'baseline',
+    margin: '5px'
+  },
+  bullet: {
+    height: '15px', 
+    width:'15px', 
+    marginLeft: '10px', 
+    marginRight: '10px', 
+    borderRadius:'50%', 
+    backgroundColor: '#C4C4C4'
+  },
+  bulletText: {
+    fontSize: '20px', 
+    margin: '0px'
+  },
+  editButton: {
+    backgroundColor:'#96C3D9', 
+    width: '179px', 
+    marginTop:'20px', 
+    fontSize:'20px', 
+    color:'#555555', 
+    fontWeight:'bold', 
+    alignSelf:'center', 
+    borderRadius:'10px'
   },
   records: {
     height: '80vh',
