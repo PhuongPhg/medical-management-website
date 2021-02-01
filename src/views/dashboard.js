@@ -87,7 +87,7 @@ export default function Dashboard() {
 
 	const getData = async () => {
 		try{
-			let res = await axios.get('http://localhost:8080/api/admin/user', {
+			let res = await axios.get('http://thaonp.work/api/admin/user', {
 				headers: {
 					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
 				}

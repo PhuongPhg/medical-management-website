@@ -67,7 +67,7 @@ export default function Register(){
       address: street +", "+district+", "+city,
       sex: sex,
       dob: dob,
-      role: role,
+      role: [role],
     };
     let res = await axios.post('http://thaonp.work/api/auth/signup', data)
 
