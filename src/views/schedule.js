@@ -43,7 +43,6 @@ export default function Schedule(){
   const handleCloseCreate = () => setOpenCreate(false);
 
   const[tempDetail, setTempDetail] = useState({
-    name: '',
     title: '',
     StartTime: new Date(),
     EndTime: new Date(),
@@ -53,10 +52,8 @@ export default function Schedule(){
   });
   const [openDetail, setOpenDetail] = useState(false);
   const handleOpenDetail = (item) => { 
-    // console.log(item);
     setTempDetail(
       {
-        name: item.Id,
         title: item.Subject,
         StartTime: item.StartTime,
         EndTime: item.EndTime,
@@ -68,17 +65,24 @@ export default function Schedule(){
   };
   const handleCloseDetail = () => setOpenDetail(false);
   
-  useEffect(()=>{
-    console.log(data);
-    // console.log(moment(firstday).add(120, 'minutes').format('yyyy-MM-DDTkk:mm'))
-  },[data])
+  // useEffect(()=>{
+  //   console.log(data);
+  //   // console.log(moment(firstday).add(120, 'minutes').format('yyyy-MM-DDTkk:mm'))
+  // },[data])
 
   const onSubmit = () => {
+    let max = 0;
+    data.forEach(e => {
+      if(e.Id > max){
+        max = e.Id;
+      }
+    });
+    console.log(firstday)
     setData(pre => [...pre, {
-      Id: sessionStorage.getItem("userID"),
+      Id: max+1,
       Subject: title,
-      StartTime: new Date(moment(firstday).subtract(1, 'days')),
-      EndTime: new Date(moment(firstday).add(120, 'minutes').subtract(1, 'days').format('yyyy-MM-DDTkk:mm')),
+      StartTime: new Date(moment(firstday)),
+      EndTime: new Date(moment(firstday).add(120, 'minutes').format('yyyy-MM-DDTkk:mm')),
       Description: symptom
     }])
   }
@@ -116,7 +120,7 @@ export default function Schedule(){
                       <Grid item  xs={12} sm={9} style={{textAlign: 'left'}}>
                         <div style={{display:'flex', flexDirection: 'column'}}>
                           <div style={{flex: 2, padding: 2}}>{item.Subject}</div>
-                          <div style={{flex:1, padding: 2, fontSize: 12, color: colors.grey }}>{item.StartTime.getHours()}:{item.StartTime.getMinutes()} - {item.EndTime.getHours()}:{item.EndTime.getMinutes()}</div>
+                          <div style={{flex:1, padding: 2, fontSize: 12, color: colors.grey }}>{item.StartTime.getHours() < 10 ? '0' : ''}{item.StartTime.getHours()}:{item.StartTime.getMinutes() < 10 ? '0': ''}{item.StartTime.getMinutes()} - {item.EndTime.getHours() < 10 ? '0':''}{item.EndTime.getHours()}:{item.EndTime.getMinutes() < 10 ? '0': ''}{item.EndTime.getMinutes()}</div>
                         </div>
                       </Grid>
                     </Grid>
@@ -233,7 +237,7 @@ export default function Schedule(){
               InputLabelProps={{
                 shrink: true,
               }}
-              onTextChange={txt => setFirstday(txt)}
+              onChange={txt => setFirstday(txt.target.value)}
             />
             </Grid>
             <Grid container spacing={1}>
