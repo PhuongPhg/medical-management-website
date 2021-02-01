@@ -2,9 +2,10 @@ import React, {useState, useEffect} from "react";
 import Navigation from "../navigation";
 import Grid from '@material-ui/core/Grid';
 import { colors } from '../helpers/config';
-import { Card, CardContent, Typography, makeStyles } from "@material-ui/core";
+import { Button, Card, CardContent, Typography, makeStyles, IconButton } from "@material-ui/core";
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import AddIcon from '@material-ui/icons/Add';
 
 const AppointmentCard = (props) => {
   const styles = useStyles();
@@ -30,7 +31,7 @@ const AppointmentCard = (props) => {
 								Finished and reschedule in {props.nextApm}
 							</Typography>
 						) : null}
-						<NavigateNextIcon className={styles.next_btn} />
+						<NavigateNextIcon className={styles.nextBtn} />
 					</Grid>
 				</Grid>
 			</CardContent>
@@ -56,9 +57,15 @@ export default function Profile () {
 						</Typography>
 						<AppointmentCard date="1 Feb" title="Lung examination" time="8:00 - 10:00 AM" finished={false}/>
 				  
-            <Typography variant="p" align="left" className={styles.sectionHeader}>
-							Medical records
-						</Typography>
+            <Grid container direction="row" justify="space-between" alignItems="center">
+              <Typography variant="p" className={styles.sectionHeader}>
+                Medical records
+              </Typography>
+
+              <IconButton>
+                <AddIcon />
+              </IconButton>
+            </Grid>
             <AppointmentCard date="31 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="01/02"/>
             <AppointmentCard date="30 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="31/01"/>
           </Grid>
@@ -118,8 +125,7 @@ const useStyles = makeStyles((theme) => ({
     color: colors.additional_info,
     marginTop: 0,
   },
-  next_btn: {
+  nextBtn: {
     color: colors.additional_info,
-    verticalAlign: 'middle',
-  },
+  }
 }));
