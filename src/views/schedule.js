@@ -17,12 +17,6 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
-import DateFnsUtils from '@date-io/date-fns';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
 
 export default function Schedule(){
   const classes = useStyles();
@@ -37,54 +31,42 @@ export default function Schedule(){
       Description: 'abc'
       // Priority: 'High'
   },
-  {
-    Id: 3,
-    Subject: 'Lung Examination',
-    StartTime: new Date(2021, 1, 1, 10, 0),
-    EndTime: new Date(2021, 1, 1, 12, 30),
-    IsAllDay: false,
-    Status: 'Completed',
-    // Priority: 'High'
-}
+  
 ], )
-  const [name, setName] = useState(null);
-  const [id, setId] = useState(null);
   const [symptom, setSymptom] = useState(null);
-  const [firstday, setFirstday] = useState(moment().format("DD/MM/YYYY"));
-  const [anamnesis, setAnamnesis] = useState(null);
-  const [open, setOpen] = useState(false);
+  const [firstday, setFirstday] = useState(moment().format("yyyy-MM-DDTkk:mm"));
+  const [title, setTitle] = useState('');
 
-  const handleOpen = () => setOpen(true);
+  const [openCreate, setOpenCreate] = useState(false);
+  const handleOpenCreate = () => setOpenCreate(true);
+  const handleCloseCreate = () => setOpenCreate(false);
 
-  const handleClose = () => {
-    setOpen(false);
+  const[tempDetail, setTempDetail] = useState({
+    name: ''
+  });
+  const [openDetail, setOpenDetail] = useState(false);
+  const handleOpenDetail = (item) => { 
+    // console.log(item);
+    setTempDetail({name: item.Id});
+    setOpenDetail(true)
   };
-  const CreateEvent = () => {
-      setData(
-        [{
-          Id: 2,
-          Subject: 'Meeting',
-          StartTime: new Date(2021, 0, 19, 10, 0),
-          EndTime: new Date(2021, 0, 19, 12, 30),
-          IsAllDay: false,
-          Status: 'Completed',
-          // Priority: 'High'
-      },
-      {
-        Id: 3,
-        Subject: 'Lung Examination',
-        StartTime: new Date(2021, 0, 20, 10, 0),
-        EndTime: new Date(2021, 0, 20, 12, 30),
-        IsAllDay: false,
-        Status: 'Completed',
-        // Priority: 'High'
-    }],
-      )
-  }
+  const handleCloseDetail = () => setOpenDetail(false);
   
   useEffect(()=>{
-    console.log(data)
+    console.log(data);
+    // console.log(moment(firstday).add(120, 'minutes').format('yyyy-MM-DDTkk:mm'))
   },[data])
+
+  const onSubmit = () => {
+    setData(pre => [...pre, {
+      Id: sessionStorage.getItem("userID"),
+      Subject: title,
+      StartTime: firstday,
+      EndTime: moment(firstday).add(120, 'minutes').format('yyyy-MM-DDTkk:mm'),
+      Description: symptom
+    }])
+  }
+
   return(
     <div>
       <Navigation Schedule />
@@ -97,7 +79,7 @@ export default function Schedule(){
               </Grid>
               <Grid item xs={12} sm={6} style={{textAlign: 'right', }}>
                 <Tooltip title="Create an appointment">
-                  <IconButton aria-label="create" onClick={handleOpen}>
+                  <IconButton aria-label="create" onClick={handleOpenCreate}>
                     <AddIcon />
                   </IconButton>
                 </Tooltip>
@@ -106,7 +88,7 @@ export default function Schedule(){
             {
               data ? data.map((item)=>{
                 return(
-                  <Paper className={classes.listAppoint} key={item.Id} onClick={() => console.log(item)}>
+                  <Paper className={classes.listAppoint} key={item.Id} onClick={() => handleOpenDetail(item)}>
                     <Grid container spacing={3}>
                       <Grid item  xs={6} sm={3} >
                         <div style={{display:'flex', flexDirection: 'column', fontSize: 14}}>
@@ -146,15 +128,15 @@ export default function Schedule(){
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         className={classes.modal}
-        open={open}
-        onClose={handleClose}
+        open={openCreate}
+        onClose={handleCloseCreate}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 300,
         }}
       >
-        <Fade in={open}>
+        <Fade in={openCreate}>
           <div className={classes.paper}>
           <Avatar className={classes.avatar}>
             <ListAltIcon /> 
@@ -172,7 +154,10 @@ export default function Schedule(){
                 variant="outlined"
                 id="patient-name"
                 label="Patient name"
-                onTextChange = {text => setName(text)}
+                InputProps={{
+                  readOnly: true,
+                }}
+                value={sessionStorage.getItem("username")}
                 style={{marginRight: '4px'}}
               />
             </Grid>
@@ -184,13 +169,27 @@ export default function Schedule(){
                 variant="outlined"
                 id="identification"
                 label="ID"
-                onTextChange = {text => setId(text)}
+                InputProps={{
+                  readOnly: true,
+                }}
+                value={sessionStorage.getItem("userID")}
                 style={{marginLeft: '4px'}}
               />
             </Grid>
             <TextField 
               multiline
-              rows={4}
+              rows={2}
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="title"
+              label="Title"
+              onTextChange={text => setTitle(text)}
+            />
+            <TextField 
+              multiline
+              rows={3}
               variant="outlined"
               margin="normal"
               required
@@ -199,42 +198,48 @@ export default function Schedule(){
               label="Describe your health problems"
               onTextChange = {text => setSymptom(text)}
             />
-            <TextField 
-              multiline
-              rows={4}
-              variant="outlined"
-              margin="normal"
-              required
+            
+            <TextField
+              id="datetime-local"
+              label="Next appointment"
+              type="datetime-local"
+              // format='yyyy-MM-ddThh:mm'
               fullWidth
-              id="anamnesis"
-              label="Anamnesis"
-              onTextChange={text => setAnamnesis(text)}
+              defaultValue={firstday}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onTextChange={txt => setFirstday(txt)}
             />
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDatePicker 
-                style={{marginTop: '16px'}}
-                disableToolbar
-                fullWidth
-                variant="inline"
-                inputVariant="outlined"
-                format="MM/dd/yyyy"
-                id="date-picker-inline"
-                label="Set appointment date"
-                value={firstday}
-                onChange={val => {setFirstday(val)}}
-              />
-            </MuiPickersUtilsProvider>
             </Grid>
             <Button
               type="submit"
               fullWidth
               variant="contained"
               className={classes.submit}
-              onSubmit={CreateEvent}
+              onSubmit={() => onSubmit}
             >
               Submit
             </Button>
           </form>
+        </div>
+        </Fade>
+      </Modal>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={openDetail}
+        onClose={handleCloseDetail}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 300,
+        }}
+      >
+        <Fade in={openDetail}>
+          <div className={classes.paper}>
+          {tempDetail.name}
         </div>
         </Fade>
       </Modal>
@@ -264,7 +269,9 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     maxWidth: '40%',
     alignItems: 'center',
-    margin: 'auto'
+    margin: 'auto',
+    borderRadius: 10,
+    outline: 'none'
   },
   bar:{
     // paddingTop: 10,
