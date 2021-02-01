@@ -17,6 +17,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
+import CloseIcon from '@material-ui/icons/Close';
 
 export default function Schedule(){
   const classes = useStyles();
@@ -167,7 +168,7 @@ export default function Schedule(){
             Medical Registration Form
           </Typography>
           <form className={classes.form} noValidate>
-            <Grid container>
+            <Grid container style={{marginBottom: 10}}>
             <Grid item xs={12} sm={6}>
               <TextField 
                 margin="normal"
@@ -235,15 +236,32 @@ export default function Schedule(){
               onTextChange={txt => setFirstday(txt)}
             />
             </Grid>
-            <Button
-              // type="submit"
-              fullWidth
-              variant="contained"
-              className={classes.submit}
-              onClick={onSubmit}
-            >
-              Submit
-            </Button>
+            <Grid container spacing={1}>
+              <Grid item xs={12} sm={6}>
+                <Button
+                // type="submit"
+                fullWidth
+                variant="contained"
+                className={classes.submit}
+                style={{backgroundColor: colors.primary}}
+                onClick={onSubmit}
+                >
+                  Submit
+                </Button>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Button
+                // type="submit"
+                fullWidth
+                variant="contained"
+                className={classes.submit}
+                onClick={handleCloseCreate}
+                >
+                  Cancel
+                </Button>
+              </Grid>
+            </Grid>
+            
           </form>
         </div>
         </Fade>
@@ -272,7 +290,12 @@ export default function Schedule(){
                     {day[tempDetail.StartTime.getDay()]} at {tempDetail.StartTime.getHours()}:{tempDetail.StartTime.getMinutes()} to {tempDetail.EndTime.getHours()}:{tempDetail.EndTime.getMinutes()}</Typography>
                 </Grid>
               </Grid>
-              <Typography align="right">Doctor: Unknow</Typography>
+              {/* <Typography align="right">Doctor: Unknow</Typography> */}
+              <Tooltip title="Close" onClick={handleCloseDetail}>
+                <IconButton aria-label="closeDetail" style={{width: 40, height: 40, margin: 0}}>
+                  <CloseIcon style={{color: colors.primary}} />
+                </IconButton>
+              </Tooltip>
               <Grid item xs={12} spacing={2}>
                 <Grid item style={{marginBottom: 15, color: colors.grey}}>
                   <Typography align="left">Description: {tempDetail.description}</Typography>
