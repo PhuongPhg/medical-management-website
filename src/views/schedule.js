@@ -23,7 +23,7 @@ export default function Schedule(){
   const day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const [data, setData] = useState(
     [{
-      Id: 2,
+      Id: 1,
       Subject: 'Meeting',
       StartTime: new Date(2021, 0, 31, 10, 0),
       EndTime: new Date(2021, 0, 31, 12, 30),
@@ -33,8 +33,8 @@ export default function Schedule(){
   },
   
 ], )
-  const [symptom, setSymptom] = useState(null);
-  const [firstday, setFirstday] = useState(moment().format("yyyy-MM-DDTkk:mm"));
+  const [symptom, setSymptom] = useState('');
+  const [firstday, setFirstday] = useState(moment().format('yyyy-MM-DDTkk:mm'));
   const [title, setTitle] = useState('');
 
   const [openCreate, setOpenCreate] = useState(false);
@@ -61,8 +61,8 @@ export default function Schedule(){
     setData(pre => [...pre, {
       Id: sessionStorage.getItem("userID"),
       Subject: title,
-      StartTime: firstday,
-      EndTime: moment(firstday).add(120, 'minutes').format('yyyy-MM-DDTkk:mm'),
+      StartTime: new Date(moment(firstday).subtract(1, 'days')),
+      EndTime: new Date(moment(firstday).add(120, 'minutes').subtract(1, 'days').format('yyyy-MM-DDTkk:mm')),
       Description: symptom
     }])
   }
@@ -99,7 +99,7 @@ export default function Schedule(){
                       <Grid item  xs={12} sm={9} style={{textAlign: 'left'}}>
                         <div style={{display:'flex', flexDirection: 'column'}}>
                           <div style={{flex: 2, padding: 2}}>{item.Subject}</div>
-                          <div style={{flex:1, padding: 2, fontSize: 12, color: colors.grey }}>{item.StartTime.getHours()}:{item.StartTime.getMinutes()} - {item.EndTime.getHours()}:{item.EndTime.getMinutes()}</div>
+                          {/* <div style={{flex:1, padding: 2, fontSize: 12, color: colors.grey }}>{item.StartTime.getHours()}:{item.StartTime.getMinutes()} - {item.EndTime.getHours()}:{item.EndTime.getMinutes()}</div> */}
                         </div>
                       </Grid>
                     </Grid>
@@ -110,7 +110,12 @@ export default function Schedule(){
         </Grid>
         <Grid item xs={9}>
           <Paper className={classes.profile_contain} style={{width: '98%', marginLeft: 5}}>
-          <ScheduleComponent height='550px' selectedDate={new Date()} eventSettings={{ dataSource: data, allowAdding: false, allowDeleting: false, allowEditing: false}}
+          <ScheduleComponent height='550px' selectedDate={new Date()} eventSettings={{ dataSource: data, allowAdding: false, allowDeleting: false, allowEditing: false,  fields: { 
+            Id: 'Id', 
+            Subject: { name: 'Subject' }, 
+            StartTime: { name: 'StartTime' }, 
+            EndTime: { name: 'EndTime' } 
+        }}}
             actionComplete={()=> console.log(data)}
             cssClass='custom-class'
             >
@@ -185,7 +190,8 @@ export default function Schedule(){
               fullWidth
               id="title"
               label="Title"
-              onTextChange={text => setTitle(text)}
+              value={title}
+              onChange={text => setTitle(text.target.value)}
             />
             <TextField 
               multiline
@@ -194,11 +200,11 @@ export default function Schedule(){
               margin="normal"
               required
               fullWidth
+              value={symptom}
               id="symptom"
               label="Describe your health problems"
-              onTextChange = {text => setSymptom(text)}
+              onChange = {text => setSymptom(text.target.value)}
             />
-            
             <TextField
               id="datetime-local"
               label="Next appointment"
@@ -213,11 +219,11 @@ export default function Schedule(){
             />
             </Grid>
             <Button
-              type="submit"
+              // type="submit"
               fullWidth
               variant="contained"
               className={classes.submit}
-              onSubmit={() => onSubmit}
+              onClick={onSubmit}
             >
               Submit
             </Button>
