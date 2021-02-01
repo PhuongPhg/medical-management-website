@@ -127,5 +127,6 @@ const useStyles = makeStyles((theme) => ({
   },
   nextBtn: {
     color: colors.additional_info,
+    verticalAlign: 'middle'
   }
 }));
