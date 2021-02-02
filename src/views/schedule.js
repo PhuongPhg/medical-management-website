@@ -89,7 +89,7 @@ export default function Schedule(){
 
   return(
     <div>
-      <Navigation Schedule />
+      <Navigation schedule />
       <Grid container className={classes.container}>
         <Grid item xs={3}>
           <Paper className={classes.profile_contain} style={{width: '90%'}} >
