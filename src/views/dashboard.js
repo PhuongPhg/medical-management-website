@@ -152,7 +152,7 @@ export default function Dashboard() {
 			<Navigation dashboard />
 			<Grid container>
 				<Grid container alignItems="center">
-					<SearchBox data={data} setDisplay={setDisplay}/>
+					<SearchBox data={data} setDisplay={setDisplay} />
 
 					<Typography className={classes.tableCell}>Filter by role</Typography>
 					<Select
@@ -269,59 +269,59 @@ export default function Dashboard() {
 
 												{/* Update form */}
 												{updateItem ? (
-													<Modal open={form_open} onClose={() => setFormOpen(false)} aria-labelledby="simple-modal-title" aria-describedby="simple-modal-description">
-														<Grid container justify="center" alignItems="center">
+													<Modal open={form_open} onClose={() => setFormOpen(false)} className={classes.modal}>
+														<Grid item justify="center" alignItems="center">
 															<form className={classes.updateForm}>
 																<Grid container justify="flex-end">
 																	<IconButton>
 																		<CloseIcon
 																			onClick={() => {
-																				// resetValue();
 																				setFormOpen(false);
 																			}}
 																			className={classes.closeButton}
 																		/>
 																	</IconButton>
 																</Grid>
-
-																<Grid container spacing={3}>
-																	<Grid item xs={6} sm={5}>
-																		<TextField name="firstName" required={true} fullWidth label={"First name"} value={firstname} onChange={(event) => setFName(event.target.value)} />
+																<Grid style={{ paddingLeft: 30, paddingRight: 30 }}>
+																	<Grid container spacing={3}>
+																		<Grid item xs={6} sm={5}>
+																			<TextField name="firstName" required={true} fullWidth label={"First name"} value={firstname} onChange={(event) => setFName(event.target.value)} />
+																		</Grid>
+																		<Grid item xs={6} sm={7}>
+																			<TextField name="lastName" required fullWidth label="Last Name" value={lastname} onChange={(event) => setLName(event.target.value)} />
+																		</Grid>
 																	</Grid>
-																	<Grid item xs={6} sm={7}>
-																		<TextField name="lastName" required fullWidth label="Last Name" value={lastname} onChange={(event) => setLName(event.target.value)} />
-																	</Grid>
-																</Grid>
 
-																<TextField margin="normal" required fullWidth label="Address" name="address" value={address} onChange={(event) => setAddress(event.target.value)} />
+																	<TextField margin="normal" required fullWidth label="Address" name="address" value={address} onChange={(event) => setAddress(event.target.value)} />
 
-																<MuiPickersUtilsProvider utils={DateFnsUtils}>
-																	<KeyboardDatePicker
-																		disableToolbar
-																		variant="inline"
-																		format="yyyy-MM-dd"
-																		label="DOB"
-																		value={dob}
+																	<MuiPickersUtilsProvider utils={DateFnsUtils}>
+																		<KeyboardDatePicker
+																			disableToolbar
+																			variant="inline"
+																			format="yyyy-MM-dd"
+																			label="DOB"
+																			value={dob}
+																			fullWidth
+																			onChange={(event) => {
+																				setDOB(event);
+																			}}
+																		/>
+																	</MuiPickersUtilsProvider>
+
+																	<Button
 																		fullWidth
-																		onChange={(event) => {
-																			setDOB(event);
+																		variant="contained"
+																		className={classes.submit}
+																		onClick={(event) => {
+																			event.preventDefault();
+																			updateData();
+																			setFormOpen(false);
+																			setTimeout(() => window.location.reload(), 1000);
 																		}}
-																	/>
-																</MuiPickersUtilsProvider>
-
-																<Button
-																	fullWidth
-																	variant="contained"
-																	className={classes.submit}
-																	onClick={(event) => {
-																		event.preventDefault();
-																		updateData();
-																		setFormOpen(false);
-																		setTimeout(() => window.location.reload(), 1000);
-																	}}
-																>
-																	Save
-																</Button>
+																	>
+																		Save
+																	</Button>
+																</Grid>
 															</form>
 														</Grid>
 													</Modal>
@@ -408,17 +408,22 @@ const useStyles = makeStyles((theme) => ({
 	searchInput: {
 		fontSize: 16,
 	},
+	modal: {
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center'
+	 },
 	updateForm: {
-		position: "absolute",
-		top: "25%",
 		width: 400,
 		backgroundColor: theme.palette.background.paper,
-		border: "2px solid #000",
+		borderRadius: 7,
 		boxShadow: theme.shadows[5],
-		padding: theme.spacing(2, 4, 3),
+		padding: 10,
 	},
 	submit: {
-		marginTop: 10
+		marginTop: 10,
+		marginBottom: 20,
+		backgroundColor: colors.primary
 	},
 	selectFilter: {
 		fontSize: 14,
