@@ -15,13 +15,14 @@ function App() {
   return (
 		<div className="App">
 			<BrowserRouter>
-				<Route exact path="/" component={Register} />
+				<Route exact path="/" component={Homepage} />
+				<Route exact path="/register" component={Register} />
 				<Route path="/login" component={Login} />
 				<Route path="/forgot" component={ForgotPassword} />
 				<Route path="/registrationform" component={RegistrationForm} />
 				<Route path="/homepage" component={Homepage} />
 				<Route path="/dashboard" component={Dashboard} />
-        <Route path="/schedule" component={Schedule}/>
+        		<Route path="/schedule" component={Schedule}/>
 				<Route path="/patients" component={Patients} />
 				<Route path="/profile" component={Profile} />
 			</BrowserRouter>

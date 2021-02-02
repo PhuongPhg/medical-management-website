@@ -57,7 +57,7 @@ export default function Profile () {
 
   return (
 		<div className={styles.container}>
-			<Navigation homepage />
+			<Navigation />
 			<Grid component="main" spacing={4} className={styles.root}>
 				<Grid xs={3} direction="column" alignItems="center" className={styles.userinfo}>
         <div style={{marginTop: '30px'}}>
