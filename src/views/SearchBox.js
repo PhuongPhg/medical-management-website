@@ -46,6 +46,7 @@ export const SearchBox = (props) => {
 
 const useStyles = makeStyles((theme) => ({
 	searchBox: {
+		width: '30vw',
 		margin: 20,
 	},
 	searchInput: {

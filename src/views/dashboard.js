@@ -16,10 +16,12 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
 import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from '@material-ui/icons/Close';
+import { SearchBox } from './SearchBox';
 
 export default function Dashboard() {
 	const classes = useStyles();
 	const [data, setData] = useState([]);
+	const [display, setDisplay] = useState([]);
 	const [page, setPage] = useState(0);
 	const rowsPerPage = 20;
 	const [sortName, setSortName] = useState("asc");
@@ -96,29 +98,11 @@ export default function Dashboard() {
 			});
 			console.log(res.data)
 			setData(res.data);
+			setDisplay(res.data);
 		} 
 		catch(error){
 			alert(error);
 			// throw new Error("Error: ", error);
-		}
-	}
-
-	const searchUser = async (phone) => {
-		try{
-			let res = await axios.get(`http://thaonp.work/api/admin/user/find?phone=${phone}`, {
-				headers: {
-					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
-				}
-			});
-			if (res.data){
-				setData(res.data);
-			}
-			else{
-				setData(null);
-			}
-		}
-		catch(error){
-			alert(error);
 		}
 	}
 
@@ -168,30 +152,7 @@ export default function Dashboard() {
 			<Navigation dashboard />
 			<Grid container>
 				<Grid container alignItems="center">
-					<TextField
-						variant="outlined"
-						size="small"
-						placeholder="Search by phone number"
-						InputProps={{
-							startAdornment: (
-								<InputAdornment position="start">
-									<SearchIcon fontSize="small" />
-								</InputAdornment>
-							),
-							classes: {
-								input: classes.searchInput,
-							},
-						}}
-						onChange={(text) => setQuery(text.target.value)}
-						onKeyUp={(event) => {
-							if (!query) {
-								getData();
-							} else if (event.keyCode === 13) {
-								searchUser(query);
-							}
-						}}
-						className={classes.searchBox}
-					/>
+					<SearchBox data={data} setDisplay={setDisplay}/>
 
 					<Typography className={classes.tableCell}>Filter by role</Typography>
 					<Select
@@ -199,7 +160,7 @@ export default function Dashboard() {
 						className={classes.selectFilter}
 						onChange={(event) => {
 							if (!event.target.value) {
-								getData();
+								setDisplay(data);
 							} else {
 								applyFilter(event.target.value);
 							}
@@ -257,8 +218,8 @@ export default function Dashboard() {
 						</TableHead>
 
 						<TableBody>
-							{data
-								? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item) => (
+							{display
+								? display.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item) => (
 										<TableRow className={classes.row} key={item.id}>
 											<TableCell align="left" className={classes.tableCell} width={30}>
 												{item.id}
