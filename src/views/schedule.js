@@ -229,7 +229,7 @@ export default function Schedule(){
             />
             <TextField
               id="datetime-local"
-              label="Next appointment"
+              label="Date and Time"
               type="datetime-local"
               // format='yyyy-MM-ddThh:mm'
               fullWidth
