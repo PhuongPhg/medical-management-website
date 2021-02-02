@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import Navigation from "../navigation";
 import Grid from '@material-ui/core/Grid';
 import { colors } from '../helpers/config';
-import { Button, Card, CardContent, Modal, TextField, Tooltip, Typography, makeStyles, IconButton } from "@material-ui/core";
+import { Button, Card, CardContent, Modal, TextField, Tooltip, Typography, makeStyles, IconButton, Avatar } from "@material-ui/core";
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import ReactRoundedImage from "react-rounded-image";
-import SamplePhoto from "../SampleProfileImage.jpg"
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import moment from 'moment';
@@ -63,11 +61,9 @@ export default function Profile () {
 			<Grid component="main" spacing={4} className={styles.root}>
 				<Grid xs={3} direction="column" alignItems="center" className={styles.userinfo}>
         <div style={{marginTop: '30px'}}>
-            <ReactRoundedImage
-            image = {SamplePhoto} 
-            imageWidth = "200"
-            imageHeight = "200"
-            roundedSize = "0"
+            <Avatar 
+              alt="User avatar" 
+              style={{height:'200px', width:'200px'}}
             />
           </div>
           <div>
@@ -75,13 +71,9 @@ export default function Profile () {
             <p style={{marginTop: '0', color: '#6A6A6A', fontSize: '20px'}}>Patient</p>
           </div>
           <Grid container direction="column" style={{display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
-            {/* <div className={styles.outerBullet}>
-              <div className={styles.bullet} />
-              <p className={styles.bulletText}>username</p>
-            </div> */}
             <InfoItem info="username"/>
             <div style={{display: 'flex', direction: 'row'}}>
-              <InfoItem info="Male"/>
+              <InfoItem info="Female"/>
               <div className={styles.outerBullet} style={{marginLeft: '60px'}}>
                 <div className={styles.bullet} />
                 <p className={styles.bulletText}>51 ans</p>
