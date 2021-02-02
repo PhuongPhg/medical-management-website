@@ -25,13 +25,15 @@ export default function Login() {
 
   const signIn = async () => {
     try {
-		let res = await axios.post("http://thaonp.work/api/auth/signin", {
+		// let res = await axios.post("http://thaonp.work/api/auth/signin", {
+		let res = await axios.post("http://localhost:8080/api/auth/signin", {
 			username: username,
 			password: pwd,
       });
 
 		sessionStorage.setItem("userToken", res.data.accessToken);
 		sessionStorage.setItem("username", res.data.username);
+		sessionStorage.setItem("userID", res.data.id);
 		sessionStorage.setItem("role", res.data.roles[0]);
 		history.push("/homepage");
 		} catch (error) {

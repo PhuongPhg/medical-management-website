@@ -59,7 +59,8 @@ export default function Dashboard() {
 		};
 
 		try{
-			await axios.put(`http://thaonp.work/api/admin/user/${updateItem.id}`, formData, {
+			// await axios.put(`http://thaonp.work/api/admin/user/${updateItem.id}`, formData, {
+			await axios.put(`http://localhost:8080/api/admin/user/${updateItem.id}`, formData, {
 				headers: {
 					"Authorization" : `Bearer ${sessionStorage.getItem("userToken")}`
 				}
@@ -73,7 +74,8 @@ export default function Dashboard() {
 
 	const deleteUser = async() => {
 		try{
-			await axios.delete(`http://thaonp.work/api/admin/user/${deleteItem.id}`, {
+			// await axios.delete(`http://thaonp.work/api/admin/user/${deleteItem.id}`, {
+			await axios.delete(`http://localhost:8080/api/admin/user/${deleteItem.id}`, {
 				headers: {
 					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
 				}
@@ -87,7 +89,8 @@ export default function Dashboard() {
 
 	const getData = async () => {
 		try{
-			let res = await axios.get('http://thaonp.work/api/admin/user', {
+			// let res = await axios.get('http://thaonp.work/api/admin/user', {
+			let res = await axios.get('http://localhost:8080/api/admin/user', {
 				headers: {
 					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
 				}
@@ -103,7 +106,7 @@ export default function Dashboard() {
 
 	const searchUser = async (phone) => {
 		try{
-			let res = await axios.get(`http://thaonp.work/api/admin/user/find?phone=${phone}`, {
+			let res = await axios.get(`http://localhost:8080/api/admin/user/find?phone=${phone}`, {
 				headers: {
 					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
 				}
