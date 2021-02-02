@@ -3,12 +3,14 @@ import Navigation from "../navigation";
 import Grid from '@material-ui/core/Grid';
 import { colors } from '../helpers/config';
 import { Button, Card, CardContent, Modal, TextField, Tooltip, Typography, makeStyles, IconButton, Avatar } from "@material-ui/core";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
+import DateFnsUtils from '@date-io/date-fns';
+import RegistrationForm from './registrationform';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
-import moment from 'moment';
-import RegistrationForm from './registrationform';
+
 const AppointmentCard = (props) => {
   const styles = useStyles();
 
@@ -41,6 +43,72 @@ const AppointmentCard = (props) => {
   );
 }
 
+const UpdateForm = (props) => {
+  const styles = useStyles();
+
+  const setFormOpen = props.setFormOpen;
+  const [firstname, setFName] = useState(null);
+	const [lastname, setLName] = useState(null);
+	const [address, setAddress] = useState(null);
+  const [dob, setDOB] = useState(null);
+
+  return (
+		<Grid container justify="center" alignItems="center">
+			<form className={styles.updateForm}>
+        <Grid container justify="flex-end">
+					<IconButton>
+						<CloseIcon
+							onClick={() => {
+								setFormOpen(false);
+							}}
+						/>
+					</IconButton>
+				</Grid>
+        <Grid style={{paddingLeft:30, paddingRight:30}}>			
+        <Grid container spacing={3}>
+					<Grid item xs={6} sm={5}>
+						<TextField name="firstName" required={true} fullWidth label={"First name"} value={firstname} onChange={(event) => setFName(event.target.value)} />
+					</Grid>
+					<Grid item xs={6} sm={7}>
+						<TextField name="lastName" required fullWidth label="Last Name" value={lastname} onChange={(event) => setLName(event.target.value)} />
+					</Grid>
+				</Grid>
+
+				<TextField margin="normal" required fullWidth label="Address" name="address" value={address} onChange={(event) => setAddress(event.target.value)} />
+
+				<MuiPickersUtilsProvider utils={DateFnsUtils}>
+					<KeyboardDatePicker
+						disableToolbar
+						variant="inline"
+						format="yyyy-MM-dd"
+						label="DOB"
+						value={dob}
+						fullWidth
+						onChange={(event) => {
+							setDOB(event);
+						}}
+					/>
+				</MuiPickersUtilsProvider>
+
+				<Button
+					fullWidth
+					variant="contained"
+					className={styles.submit}
+					onClick={(event) => {
+						event.preventDefault();
+						// updateData();
+						setFormOpen(false);
+						setTimeout(() => window.location.reload(), 1000);
+					}}
+				>
+					Save
+				</Button>
+        </Grid>
+			</form>
+		</Grid>
+  );
+}
+
 const InfoItem = (props) => {
   const styles = useStyles();
   return (
@@ -55,6 +123,9 @@ export default function Profile () {
   const styles = useStyles();
   const [newRecord, setOpenNewRecord] = useState(false);
 
+	const [form_open, setFormOpen] = useState(false);
+	const [updateItem, setUpdateItem] = useState(null);
+  
   return (
 		<div className={styles.container}>
 			<Navigation />
@@ -82,7 +153,7 @@ export default function Profile () {
             <InfoItem info="0123456789" />
             <InfoItem info="useremail@email.com" />
             <InfoItem info="18B Hoang Quoc Viet, Hanoi, Vietnam" />
-            <Button variant="contained" href="#" className={styles.editButton}>EDIT</Button>
+            <Button variant="contained" onClick={() => setFormOpen(true)} className={styles.editButton}>EDIT</Button>
           </Grid>
 				</Grid>
 
@@ -122,6 +193,10 @@ export default function Profile () {
 						</Tooltip>
             <RegistrationForm />
 					</Grid>
+				</Modal>
+
+        <Modal open={form_open} onClose={() => setFormOpen(false)} className={styles.modal}>
+          <UpdateForm setFormOpen={setFormOpen}/>
 				</Modal>
 			</Grid>
 		</div>
@@ -219,5 +294,17 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: theme.palette.background.paper,
     borderRadius: 7,
     padding: 10,
-  }
+  },
+  updateForm: {
+		width: 400,
+		backgroundColor: theme.palette.background.paper,
+		borderRadius: 7,
+		boxShadow: theme.shadows[5],
+		padding: 10,
+  },
+  submit: {
+    marginTop: 10,
+    marginBottom: 20,
+    backgroundColor: colors.primary
+	},
 }));
