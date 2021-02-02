@@ -25,8 +25,7 @@ export default function Login() {
 
   const signIn = async () => {
     try {
-		// let res = await axios.post("http://thaonp.work/api/auth/signin", {
-		let res = await axios.post("http://localhost:8080/api/auth/signin", {
+		let res = await axios.post("http://thaonp.work/api/auth/signin", {
 			username: username,
 			password: pwd,
       });
