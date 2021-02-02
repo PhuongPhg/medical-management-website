@@ -48,7 +48,7 @@ public class MedicalRecord {
 	public MedicalRecord() {
 	}
 
-	public MedicalRecord(Date date,String doctor, long userId, String firstname, String lastname, String phone, String details, String prescriptions) {
+	public MedicalRecord(Date date, String doctor, long userId, String firstname, String lastname, String phone, String details, String prescriptions) {
 		this.date = date;
 		this.doctor = doctor;
 		this.userId = userId;

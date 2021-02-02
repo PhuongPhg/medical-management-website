@@ -14,16 +14,22 @@ public class Appointment {
     private LocalDate appointmentDate;
     private Time appointmentStartTime;
     private Time appointmentEndTime;
+    private String subject;
+    private String notes;
+    private String description;
     private String nameOfDoctor;
 	private AppointmentStatus status = AppointmentStatus.SCHEDULED;
     private BigDecimal price;
-
+    
     public Appointment() {
 
     }
 
-    public Appointment(Timestamp createdAt, LocalDate appointmentDate, Time appointmentStartTime, Time appointmentEndTime, String nameOfDoctor, AppointmentStatus status, BigDecimal price) {
+    public Appointment(Timestamp createdAt, String subject, LocalDate appointmentDate, Time appointmentStartTime, Time appointmentEndTime, String nameOfDoctor, AppointmentStatus status, String notes, String description, BigDecimal price) {
         this.createdAt = createdAt;
+        this.subject = subject;
+        this.notes = notes;
+        this.description = description;
         this.appointmentDate = appointmentDate;
         this.appointmentStartTime = appointmentStartTime;
         this.appointmentEndTime = appointmentEndTime;
@@ -45,6 +51,11 @@ public class Appointment {
         this.nameOfDoctor = nameOfDoctor;
         this.price = price;
     }
+    
+    public int compareTo(Appointment o) {
+        return this.getAppointmentStartTime().compareTo(o.getAppointmentStartTime());
+    }
+
 
     public Long getId() {
         return id;
@@ -93,7 +104,31 @@ public class Appointment {
     public void setNameOfDoctor(String nameOfDoctor) {
         this.nameOfDoctor = nameOfDoctor;
     }
+    
+    public String getSubject() {
+        return subject;
+    }
 
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getNotes() {
+    	return notes;
+    }
+    
+    public void setNotes(String notes) {
+    	this.notes = notes;
+    }
+    
+    public String getDescription() {
+    	return description;
+    }
+    
+    public void setDescription(String description) {
+    	this.description = description;
+    }
+    
     public AppointmentStatus getStatus() {
         return status;
     }
@@ -109,4 +144,5 @@ public class Appointment {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
+
 }
