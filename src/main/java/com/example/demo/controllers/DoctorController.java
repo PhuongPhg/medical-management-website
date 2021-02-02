@@ -135,6 +135,26 @@ public class DoctorController {
 		}
 	}
 	
+	@PutMapping("/doctor/myProfile")
+	@PreAuthorize("hasRole('DOCTOR')")
+	public ResponseEntity<User> updateMyProfile(@RequestBody User user){
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+		long userId = userDetails.getId();
+		Optional<User> userID = userRepository.findById(userId);
+		if (userID.isPresent()) {
+			User userInfo = userID.get();
+			userInfo.setFirstname(user.getFirstname());
+			userInfo.setLastname(user.getLastname());
+			userInfo.setAdress(user.getAddress());
+			userInfo.setDob(user.getDob());
+			return new ResponseEntity<>(userRepository.save(userInfo),HttpStatus.OK);
+		}
+		else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
 	
 	
 }
