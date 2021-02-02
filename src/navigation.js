@@ -12,6 +12,13 @@ const UserAccount = () => {
 
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
+  
+  const logout = () => {
+    sessionStorage.setItem("userToken", null);
+    sessionStorage.setItem("username", null);
+    sessionStorage.setItem("userID", null);
+    sessionStorage.setItem("role", null);
+  }
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -67,8 +74,7 @@ const UserAccount = () => {
 									<MenuItem
 										onClick={(event) => {
 											handleClose(event);
-											sessionStorage.setItem("userToken", null);
-											sessionStorage.setItem("username", null);
+											logout();
 											window.open("/login", "_self");
 										}}
 									>
