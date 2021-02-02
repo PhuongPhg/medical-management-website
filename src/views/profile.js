@@ -137,7 +137,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
   },
   userinfo: {
-    height: '80vh',
+    height: 'max-content',
     marginTop: '20px',
     marginBottom: '20px',
     marginLeft: '20px',
@@ -170,6 +170,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor:'#96C3D9', 
     width: '179px', 
     marginTop:'20px', 
+    marginBottom:'20px', 
     fontSize:'20px', 
     color:'#555555', 
     fontWeight:'bold', 
@@ -177,7 +178,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius:'10px'
   },
   records: {
-    height: '80vh',
     backgroundColor: colors.secondary_background,
     marginTop: '20px',
     marginBottom: '20px',
