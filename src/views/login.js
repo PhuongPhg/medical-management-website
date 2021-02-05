@@ -15,33 +15,43 @@ import { makeStyles } from '@material-ui/core/styles';
 import { colors } from '../helpers/config';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import PulseLoader from "react-spinners/PulseLoader";
 
 export default function Login() {
   const history = useHistory();
   const styles = useStyles();
+  const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState(null);
   const [pwd, setPwd] = useState(null);
   const [msg, setMsg] = useState("");
 
-  const signIn = async () => {
-    try {
-		let res = await axios.post("http://thaonp.work/api/auth/signin", {
-			username: username,
-			password: pwd,
-      });
+   const signIn = async () => {
+		setLoading(true);
+		try {
+			let res = await axios.post("http://thaonp.work/api/auth/signin", {
+				username: username,
+				password: pwd,
+			});
 
-		sessionStorage.setItem("userToken", res.data.accessToken);
-		sessionStorage.setItem("username", res.data.username);
-		sessionStorage.setItem("userID", res.data.id);
-		sessionStorage.setItem("role", res.data.roles[0]);
-		history.push("/homepage");
+			sessionStorage.setItem("userToken", res.data.accessToken);
+			sessionStorage.setItem("username", res.data.username);
+			sessionStorage.setItem("userID", res.data.id);
+			sessionStorage.setItem("role", res.data.roles[0]);
+			history.push("/homepage");
 		} catch (error) {
 			alert("Invalid account or password!");
 		}
-    
-  }
+		setLoading(false);
+   };
 
-  return (
+  	if (loading){
+		return(
+			<Grid container justify="center" alignItems="center" style={{height: "100vh"}}>
+				<PulseLoader color={colors.primary_light} loading={loading} size={15} margin={7}/>
+			</Grid>
+		)
+	}
+   else return (
 		<Grid container component="main" className={styles.root}>
 			<CssBaseline />
 			<Grid item xs={false} sm={4} md={7} className={styles.image} />

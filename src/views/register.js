@@ -25,10 +25,11 @@ import { Link, useHistory } from 'react-router-dom'
 import Login from './login';
 import axios from "axios";
 import { SnackbarProvider, useSnackbar } from 'notistack';
-
+import PulseLoader from "react-spinners/PulseLoader";
 
 export default function Register(){
   const styles = useStyles();
+  const [loading, setLoading] = useState(false);
   const [firstName, setFirstName]= useState('');
   const [lastName, setLastName]= useState('');
   const [sex,setSex] = useState('');
@@ -54,44 +55,54 @@ export default function Register(){
   city.length > 0 &&
   username.length > 0 &&
   password.length > 0;
-  async function OnSignUp(e){
-    try{
-    e.preventDefault();
-    const data={
-      firstname: firstName,
-      lastname: lastName,
-      username: username,
-      email: email,
-      password: password,
-      phone: phone,
-      address: district+", "+city,
-      sex: sex,
-      dob: dob,
-      role: [role],
-    };
-    // let res = await axios.post('http://thaonp.work/api/auth/signup', data)
-    let res = await axios.post('http://localhost:8080/api/auth/signup', data)
+  async function OnSignUp(e) {
+    setLoading(true);
+		try {
+			e.preventDefault();
+			const data = {
+				firstname: firstName,
+				lastname: lastName,
+				username: username,
+				email: email,
+				password: password,
+				phone: phone,
+				address: district + ", " + city,
+				sex: sex,
+				dob: dob,
+				role: [role],
+			};
+			let res = await axios.post("http://thaonp.work/api/auth/signup", data);
+			// let res = await axios.post('http://localhost:8080/api/auth/signup', data)
 
-    // console.log(res.data)
-    console.log(res.data)
-    if (res.status == 200){
-      enqueueSnackbar(res.data.message, { variant: 'success'})
+			// console.log(res.data)
+			console.log(res.data);
+			if (res.status == 200) {
+				enqueueSnackbar(res.data.message, { variant: "success" });
 
-      // enqueueSnackbar(`Hello ${firstName} ${lastName}!`, { variant: 'success'});
+				// enqueueSnackbar(`Hello ${firstName} ${lastName}!`, { variant: 'success'});
 
-      // sessionStorage.setItem("username", username);
+				// sessionStorage.setItem("username", username);
 
-      enqueueSnackbar("Please log in!", { variant: 'info'})
+				enqueueSnackbar("Please log in!", { variant: "info" });
 
-      setTimeout(function(){
-        history.push("/login")
-      }, 500);
+				setTimeout(function () {
+					history.push("/login");
+				}, 500);
+			}
+		} catch (e) {
+			enqueueSnackbar(e.response.data.message, { variant: "error" });
     }
-    }catch(e){
-    enqueueSnackbar(e.response.data.message, { variant: 'error'})
-    }
+    setLoading(false);
   }
-  return(
+
+  if (loading){
+		return(
+			<Grid container justify="center" alignItems="center" style={{height: "100vh"}}>
+				<PulseLoader color={colors.primary_light} loading={loading} size={15} margin={7}/>
+			</Grid>
+		)
+	}
+  else return(
     <Grid container className={styles.root}>
       <Grid item xs={false} sm={4} md={7} className={styles.image}/>
       <Grid item xs={12} sm={8} md={5}>

@@ -11,9 +11,11 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { SearchBox } from "./SearchBox";
+import PulseLoader from "react-spinners/PulseLoader";
 
 export default function Patients() {
 	const classes = useStyles();
+	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState([]);
 	const [page, setPage] = useState(0);
 	const rowsPerPage = 20;
@@ -31,6 +33,7 @@ export default function Patients() {
 			console.log(res.data)
 			setData(res.data);
 			setDisplay(res.data);
+			setLoading(false);
 		} 
 		catch(error){
 			alert(error);
@@ -40,7 +43,14 @@ export default function Patients() {
 
 	useEffect(() => getData(), []);
 
-	return (
+	if (loading){
+		return(
+			<Grid container justify="center" alignItems="center" style={{height: "100vh"}}>
+				<PulseLoader color={colors.primary_light} loading={loading} size={15} margin={7}/>
+			</Grid>
+		)
+	}
+	else return (
 		<div className={classes.container}>
 			<Navigation patients />
 			<Grid container alignItems="center">

@@ -105,7 +105,7 @@ export default function Navigation(props) {
               <UserAccount/> :
               <Grid item>
                 <Link href="/login" className={classes.navlink}>Login</Link>
-                <Link href="/" className={classes.navlink}>Sign Up</Link>
+                <Link href="/register" className={classes.navlink}>Sign Up</Link>
               </Grid>
           }
           </Grid>

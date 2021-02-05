@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import axios from 'axios';
 import { colors } from "../helpers/config";
 import Navigation from "../navigation";
-import { Button, Dialog, DialogActions, DialogTitle, IconButton, InputAdornment, Modal, Table, TableFooter, TableSortLabel, TablePagination, TextField, Typography, Grid, FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogTitle, IconButton, Modal, Table, TableFooter, TableSortLabel, TablePagination, TextField, Typography, Grid, MenuItem, Select } from "@material-ui/core";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -14,22 +14,22 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/picker
 import DateFnsUtils from '@date-io/date-fns';
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
-import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from '@material-ui/icons/Close';
 import { SearchBox } from './SearchBox';
+import PulseLoader from "react-spinners/PulseLoader";
 
 export default function Dashboard() {
 	const classes = useStyles();
+	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState([]);
 	const [display, setDisplay] = useState([]);
 	const [page, setPage] = useState(0);
 	const rowsPerPage = 20;
 	const [sortName, setSortName] = useState("asc");
 	const [sortID, setSortID] = useState("asc");
-	
+
 	const [dialogue_open, setOpen] = useState(false);
 	const [form_open, setFormOpen] = useState(false);
-	const [query, setQuery] = useState(null);
 	const [updateItem, setUpdateItem] = useState(null);
 	const [deleteItem, setDeleteItem] = useState(null);
 
@@ -61,13 +61,11 @@ export default function Dashboard() {
 		};
 
 		try{
-			// await axios.put(`http://thaonp.work/api/admin/user/${updateItem.id}`, formData, {
 			await axios.put(`http://thaonp.work/api/admin/user/${updateItem.id}`, formData, {
 				headers: {
 					"Authorization" : `Bearer ${sessionStorage.getItem("userToken")}`
 				}
 			});
-			// alert("Updated.");
 		}
 		catch(error){
 			alert(error);
@@ -76,7 +74,6 @@ export default function Dashboard() {
 
 	const deleteUser = async() => {
 		try{
-			// await axios.delete(`http://thaonp.work/api/admin/user/${deleteItem.id}`, {
 			await axios.delete(`http://thaonp.work/api/admin/user/${deleteItem.id}`, {
 				headers: {
 					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
@@ -99,6 +96,7 @@ export default function Dashboard() {
 			console.log(res.data)
 			setData(res.data);
 			setDisplay(res.data);
+			setLoading(false);
 		} 
 		catch(error){
 			alert(error);
@@ -147,7 +145,14 @@ export default function Dashboard() {
 	
 	useEffect(() => getData(), []);
 
-	return (
+	if (loading){
+		return(
+			<Grid container justify="center" alignItems="center" style={{height: "100vh"}}>
+				<PulseLoader color={colors.primary_light} loading={loading} size={15} margin={7}/>
+			</Grid>
+		)
+	}
+	else return (
 		<div className={classes.container}>
 			<Navigation dashboard />
 			<Grid container>
@@ -355,7 +360,7 @@ export default function Dashboard() {
 											</TableCell>
 										</TableRow>
 								  ))
-								: null}
+								: null }
 						</TableBody>
 
 						<TableFooter>
