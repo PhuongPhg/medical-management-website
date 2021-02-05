@@ -372,11 +372,12 @@ export default function Dashboard() {
 
 const useStyles = makeStyles((theme) => ({
 	container: {
-		width: 1480,
-	},
-	table: {
 		width: "max-content",
 		minWidth: "100vw",
+		maxWidth: "108vw",
+	},
+	table: {
+		width: "100%",
 	},
 	row: {
 		textTransform: "capitalize",
