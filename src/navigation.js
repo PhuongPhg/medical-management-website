@@ -14,10 +14,10 @@ const UserAccount = () => {
   const anchorRef = React.useRef(null);
   
   const logout = () => {
-    sessionStorage.setItem("userToken", null);
-    sessionStorage.setItem("username", null);
-    sessionStorage.setItem("userID", null);
-    sessionStorage.setItem("role", null);
+    sessionStorage.removeItem("userToken");
+    sessionStorage.removeItem("username");
+    sessionStorage.removeItem("userID");
+    sessionStorage.removeItem("role");
   }
 
   const handleToggle = () => {
