@@ -68,7 +68,7 @@ const UserAccount = () => {
 										onClick={(event) => {
 											handleClose(event);
 											logout();
-											window.open("/login", "_self");
+											window.open("/homepage", "_self");
 										}}
 									>
 										Logout
