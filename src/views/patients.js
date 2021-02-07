@@ -12,9 +12,11 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { SearchBox } from "./SearchBox";
 import PulseLoader from "react-spinners/PulseLoader";
+import { useHistory } from "react-router-dom";
 
 export default function Patients() {
 	const classes = useStyles();
+	const history = useHistory();
 	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState([]);
 	const [page, setPage] = useState(0);
@@ -54,51 +56,85 @@ export default function Patients() {
 		<div className={classes.container}>
 			<Navigation patients />
 			<Grid container alignItems="center">
-				<SearchBox data={data} setDisplay={setDisplay}/>
+				<SearchBox data={data} setDisplay={setDisplay} />
 
 				<TableContainer component={Paper}>
 					<Table className={classes.table} aria-label="sticky table" size="small">
 						<TableHead>
 							<TableRow>
-								<TableCell align="left" className={classes.tableCell}>ID</TableCell>
-								<TableCell align="left" sortDirection={sortDir}
-									onClick={() => setSortDir(sortDir === "asc" ? "desc" : "asc")}
-									className={classes.tableCell}
-								>
+								<TableCell align="left" className={classes.tableCell}>
+									ID
+								</TableCell>
+								<TableCell align="left" sortDirection={sortDir} onClick={() => setSortDir(sortDir === "asc" ? "desc" : "asc")} className={classes.tableCell}>
 									<TableSortLabel direction={sortDir}>Last name</TableSortLabel>
 								</TableCell>
 								<TableCell align="left" className={classes.tableCell}>
 									<TableSortLabel>First name</TableSortLabel>
 								</TableCell>
-								<TableCell align="left" className={classes.tableCell}>Username</TableCell>
-								<TableCell align="left" className={classes.tableCell}>Phone</TableCell>
-								<TableCell align="left" className={classes.tableCell}>Email</TableCell>
-								<TableCell align="left" className={classes.tableCell}>D.O.B</TableCell>
-								<TableCell align="left" className={classes.tableCell}>Sex</TableCell>
-								<TableCell align="left" className={classes.tableCell}>Address</TableCell>
+								<TableCell align="left" className={classes.tableCell}>
+									Username
+								</TableCell>
+								<TableCell align="left" className={classes.tableCell}>
+									Phone
+								</TableCell>
+								<TableCell align="left" className={classes.tableCell}>
+									Email
+								</TableCell>
+								<TableCell align="left" className={classes.tableCell}>
+									D.O.B
+								</TableCell>
+								<TableCell align="left" className={classes.tableCell}>
+									Sex
+								</TableCell>
+								<TableCell align="left" className={classes.tableCell}>
+									Address
+								</TableCell>
 							</TableRow>
 						</TableHead>
 
 						<TableBody>
-							{display ? display.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item) => (
-								<TableRow className={classes.row} key={item.id}>
-									<TableCell align="left" className={classes.tableCell}>{item.id}</TableCell>
-									<TableCell align="left" className={classes.tableCell}>{item.lastname}</TableCell>
-									<TableCell align="left" className={classes.tableCell}>{item.firstname}</TableCell>
-									<TableCell align="left" className={[classes.raw_data, classes.tableCell]} width={100}>
-										{item.username}
-									</TableCell>
-									<TableCell align="left" className={classes.tableCell}>{item.phone}</TableCell>
-									<TableCell align="left" className={[classes.raw_data, classes.tableCell]} width={180}>
-										{item.email}
-									</TableCell>
-									<TableCell align="left" className={classes.tableCell}>{new Date(item.dob).toLocaleDateString()}</TableCell>
-									<TableCell align="left" className={classes.tableCell}>{item.sex}</TableCell>
-									<TableCell align="left" className={classes.tableCell}>
-										{item.address}
-									</TableCell>
-								</TableRow>
-							)) : null}
+							{display
+								? display.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item) => (
+										<TableRow
+											className={classes.row}
+											key={item.id}
+											onClick={() =>
+												history.push({
+													pathname: "/profile",
+													state: { detail: item.id },
+												})
+											}
+										>
+											<TableCell align="left" className={classes.tableCell}>
+												{item.id}
+											</TableCell>
+											<TableCell align="left" className={classes.tableCell}>
+												{item.lastname}
+											</TableCell>
+											<TableCell align="left" className={classes.tableCell}>
+												{item.firstname}
+											</TableCell>
+											<TableCell align="left" className={[classes.raw_data, classes.tableCell]} width={100}>
+												{item.username}
+											</TableCell>
+											<TableCell align="left" className={classes.tableCell}>
+												{item.phone}
+											</TableCell>
+											<TableCell align="left" className={[classes.raw_data, classes.tableCell]} width={180}>
+												{item.email}
+											</TableCell>
+											<TableCell align="left" className={classes.tableCell}>
+												{new Date(item.dob).toLocaleDateString()}
+											</TableCell>
+											<TableCell align="left" className={classes.tableCell}>
+												{item.sex}
+											</TableCell>
+											<TableCell align="left" className={classes.tableCell}>
+												{item.address}
+											</TableCell>
+										</TableRow>
+								  ))
+								: null}
 						</TableBody>
 
 						<TableFooter>
@@ -122,6 +158,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	row: {
 		textTransform: "capitalize",
+		cursor: "pointer",
 		"&:hover": {
 			backgroundColor: colors.highlight,
 		}

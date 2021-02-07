@@ -10,6 +10,7 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
+import { useLocation } from "react-router-dom";
 
 const AppointmentCard = (props) => {
   const styles = useStyles();
@@ -121,11 +122,17 @@ const InfoItem = (props) => {
 
 export default function Profile () {
   const styles = useStyles();
+  const location = useLocation();
+  const [uid, setUID] = useState(null);
   const [newRecord, setOpenNewRecord] = useState(false);
-
 	const [form_open, setFormOpen] = useState(false);
 	const [updateItem, setUpdateItem] = useState(null);
-  
+
+  React.useEffect(() => {
+    setUID(location.state.detail);
+    console.log(location.state.detail);
+  }, []);
+
   return (
 		<div className={styles.container}>
 			<Navigation />
