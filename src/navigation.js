@@ -62,10 +62,13 @@ const UserAccount = () => {
 						<Paper>
 							<ClickAwayListener onClickAway={handleClose}>
 								<MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-									<MenuItem onClick={handleClose} onClick={() => history.push({
-                    pathname: "/profile",
-                    state: { detail: sessionStorage.getItem("userID")}
-                  })}>
+									<MenuItem onClick={handleClose} onClick={() => {
+                    history.push({
+                      pathname: "/profile",
+                      state: { detail: sessionStorage.getItem("userID")}
+                    });
+                    window.location.reload();
+                  }}>
 										Profile
 									</MenuItem>
 									<MenuItem
