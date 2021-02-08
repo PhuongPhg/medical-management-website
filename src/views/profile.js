@@ -178,9 +178,13 @@ export default function Profile () {
 								Medical records
 							</Typography>
 
-							<IconButton onClick={() => setOpenNewRecord(true)}>
-								<AddIcon />
-							</IconButton>
+							{
+                sessionStorage.getItem("role") === "ROLE_DOCTOR" ?
+                <IconButton onClick={() => setOpenNewRecord(true)}>
+								  <AddIcon />
+							  </IconButton>
+                : null
+              }
 						</Grid>
 						<AppointmentCard date="31 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="01/02" />
 						<AppointmentCard date="30 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="31/01" />
