@@ -138,30 +138,31 @@ export default function Profile () {
 			<Navigation />
 			<Grid component="main" spacing={4} className={styles.root}>
 				<Grid xs={3} direction="column" alignItems="center" className={styles.userinfo}>
-        <div style={{marginTop: '30px'}}>
-            <Avatar 
-              alt="User avatar" 
-              style={{height:'200px', width:'200px'}}
-            />
-          </div>
-          <div>
-            <h1 style={{marginBottom: '0'}}>Nguyen Van A</h1>
-            <p style={{marginTop: '0', color: '#6A6A6A', fontSize: '20px'}}>Patient</p>
-          </div>
-          <Grid container direction="column" style={{display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
-            <InfoItem info="username"/>
-            <div style={{display: 'flex', direction: 'row'}}>
-              <InfoItem info="Female"/>
-              <div className={styles.outerBullet} style={{marginLeft: '60px'}}>
-                <div className={styles.bullet} />
-                <p className={styles.bulletText}>51 ans</p>
-              </div>
-            </div>
-            <InfoItem info="0123456789" />
-            <InfoItem info="useremail@email.com" />
-            <InfoItem info="18B Hoang Quoc Viet, Hanoi, Vietnam" />
-            <Button variant="contained" onClick={() => setFormOpen(true)} className={styles.editButton}>EDIT</Button>
-          </Grid>
+					<div style={{ marginTop: "30px" }}>
+						<Avatar alt="User avatar" style={{ height: "200px", width: "200px" }} />
+					</div>
+					<div>
+						<h1 style={{ marginBottom: "0" }}>Nguyen Van A</h1>
+						<p style={{ marginTop: "0", color: "#6A6A6A", fontSize: "20px" }}>Patient</p>
+					</div>
+					<Grid container direction="column" style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start" }}>
+						<InfoItem info="username" />
+						<div style={{ display: "flex", direction: "row" }}>
+							<InfoItem info="Female" />
+							<div className={styles.outerBullet} style={{ marginLeft: "60px" }}>
+								<div className={styles.bullet} />
+								<p className={styles.bulletText}>51 ans</p>
+							</div>
+						</div>
+						<InfoItem info="0123456789" />
+						<InfoItem info="useremail@email.com" />
+						<InfoItem info="18B Hoang Quoc Viet, Hanoi, Vietnam" />
+						{sessionStorage.getItem("userid") === uid ? (
+							<Button variant="contained" onClick={() => setFormOpen(true)} className={styles.editButton}>
+								EDIT
+							</Button>
+						) : null}
+					</Grid>
 				</Grid>
 
 				<Grid xs={9} direction="row" className={styles.records}>
@@ -178,13 +179,11 @@ export default function Profile () {
 								Medical records
 							</Typography>
 
-							{
-                sessionStorage.getItem("role") === "ROLE_DOCTOR" ?
-                <IconButton onClick={() => setOpenNewRecord(true)}>
-								  <AddIcon />
-							  </IconButton>
-                : null
-              }
+							{sessionStorage.getItem("role") === "ROLE_DOCTOR" ? (
+								<IconButton onClick={() => setOpenNewRecord(true)}>
+									<AddIcon />
+								</IconButton>
+							) : null}
 						</Grid>
 						<AppointmentCard date="31 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="01/02" />
 						<AppointmentCard date="30 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="31/01" />
@@ -202,12 +201,12 @@ export default function Profile () {
 								<CloseIcon />
 							</IconButton>
 						</Tooltip>
-            <RegistrationForm />
+						<RegistrationForm />
 					</Grid>
 				</Modal>
 
-        <Modal open={form_open} onClose={() => setFormOpen(false)} className={styles.modal}>
-          <UpdateForm setFormOpen={setFormOpen}/>
+				<Modal open={form_open} onClose={() => setFormOpen(false)} className={styles.modal}>
+					<UpdateForm setFormOpen={setFormOpen} />
 				</Modal>
 			</Grid>
 		</div>
