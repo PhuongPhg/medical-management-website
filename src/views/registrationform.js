@@ -15,8 +15,9 @@ import {
 } from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/core/styles';
 import { colors } from '../helpers/config.js';
+import axios from 'axios';
 
-export default function RegistrationForm() {
+export default function RegistrationForm(props) {
 	const styles = useStyles();
 	// const [part, setPart] = useState(null);
 	const [name, setName] = useState(null);
@@ -24,6 +25,30 @@ export default function RegistrationForm() {
 	const [symptom, setSymptom] = useState(null);
 	const [firstday, setFirstday] = useState(moment().format("DD/MM/YYYY"));
 	const [prescription, setPrescription] = useState(null);
+
+	const createMedicalRecord = async () => {
+		const data = {
+			"date": moment().format("YYYY-MM-DD"),
+			"doctor": props.doctor,
+			"userId": props.userID,
+			"firstname": props.firstname,
+			"lastname": props.lastname,
+			"phone": props.phone,
+			"details": symptom,
+			"prescriptions": prescription
+		}
+
+		try{
+			await axios.post("thaonp.work/api/doctor/medicalRecord", data, {
+				headers: {
+					"Authorization" : `Bearer ${sessionStorage.getItem("userToken")}`
+				}
+			})
+		}
+		catch(error){
+			alert(error);
+		}
+	}
 
 	return (
 		<Grid className={styles.paper}>
