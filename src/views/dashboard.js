@@ -155,7 +155,7 @@ export default function Dashboard() {
 	else return (
 		<div className={classes.container}>
 			<Navigation dashboard />
-			<Grid container>
+			<Grid>
 				<Grid container alignItems="center">
 					<SearchBox data={data} setDisplay={setDisplay} />
 
@@ -376,9 +376,8 @@ export default function Dashboard() {
 }
 
 const useStyles = makeStyles((theme) => ({
-	container: {
-		maxWidth: "max-content",
-		minWidth: "100vw",
+	container: {	
+		width: "max-content",
 	},
 	table: {
 		width: "max-content",
