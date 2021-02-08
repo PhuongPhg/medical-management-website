@@ -232,28 +232,28 @@ export default function Dashboard() {
 											<TableCell align="left" className={classes.tableCell} width={120}>
 												{item.lastname}
 											</TableCell>
-											<TableCell align="left" className={classes.tableCell} width={110}>
+											<TableCell align="left" className={classes.tableCell}>
 												{item.firstname}
 											</TableCell>
-											<TableCell align="left" className={[classes.raw_data, classes.tableCell]} width={100}>
+											<TableCell align="left" className={[classes.raw_data, classes.tableCell]}>
 												{item.username}
 											</TableCell>
-											<TableCell align="left" className={classes.tableCell} width={100}>
+											<TableCell align="left" className={classes.tableCell}>
 												{item.phone}
 											</TableCell>
-											<TableCell align="left" className={[classes.raw_data, classes.tableCell]} width={180}>
+											<TableCell align="left" className={[classes.raw_data, classes.tableCell]}>
 												{item.email}
 											</TableCell>
-											<TableCell align="left" className={classes.tableCell} width={100}>
+											<TableCell align="left" className={classes.tableCell}>
 												{new Date(item.dob).toLocaleDateString()}
 											</TableCell>
-											<TableCell align="left" className={classes.tableCell} width={60}>
+											<TableCell align="left" className={classes.tableCell}>
 												{item.sex}
 											</TableCell>
 											<TableCell align="left" className={classes.tableCell} width={150}>
 												{item.address}
 											</TableCell>
-											<TableCell align="left" className={classes.tableCell} width={100}>
+											<TableCell align="left" className={classes.tableCell}>
 												{item.roles[0].name}
 											</TableCell>
 											<TableCell align="left" className={classes.tableCell}>
@@ -378,9 +378,11 @@ export default function Dashboard() {
 const useStyles = makeStyles((theme) => ({
 	container: {	
 		width: "max-content",
+		minWidth: "100vw"
 	},
 	table: {
 		width: "max-content",
+		minWidth: "100%"
 	},
 	row: {
 		textTransform: "capitalize",
