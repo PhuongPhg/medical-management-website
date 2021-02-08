@@ -157,7 +157,7 @@ export default function Profile () {
 						<InfoItem info="0123456789" />
 						<InfoItem info="useremail@email.com" />
 						<InfoItem info="18B Hoang Quoc Viet, Hanoi, Vietnam" />
-						{sessionStorage.getItem("userid") === uid ? (
+						{sessionStorage.getItem("userID") === uid ? (
 							<Button variant="contained" onClick={() => setFormOpen(true)} className={styles.editButton}>
 								EDIT
 							</Button>
