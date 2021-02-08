@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import axios from 'axios';
 import { colors } from "../helpers/config";
 import Navigation from "../navigation";
-import { Button, Dialog, DialogActions, DialogTitle, InputAdornment, Modal, Table, TableFooter, TableSortLabel, TablePagination, TextField, Typography, Grid, FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogTitle, IconButton, Modal, Table, TableFooter, TableSortLabel, TablePagination, TextField, Typography, Grid, MenuItem, Select } from "@material-ui/core";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -14,20 +14,22 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/picker
 import DateFnsUtils from '@date-io/date-fns';
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
-import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from '@material-ui/icons/Close';
+import { SearchBox } from './SearchBox';
+import PulseLoader from "react-spinners/PulseLoader";
 
 export default function Dashboard() {
 	const classes = useStyles();
+	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState([]);
+	const [display, setDisplay] = useState([]);
 	const [page, setPage] = useState(0);
 	const rowsPerPage = 20;
 	const [sortName, setSortName] = useState("asc");
 	const [sortID, setSortID] = useState("asc");
-	
+
 	const [dialogue_open, setOpen] = useState(false);
 	const [form_open, setFormOpen] = useState(false);
-	const [query, setQuery] = useState(null);
 	const [updateItem, setUpdateItem] = useState(null);
 	const [deleteItem, setDeleteItem] = useState(null);
 
@@ -59,13 +61,11 @@ export default function Dashboard() {
 		};
 
 		try{
-			// await axios.put(`http://thaonp.work/api/admin/user/${updateItem.id}`, formData, {
-			await axios.put(`http://localhost:8080/api/admin/user/${updateItem.id}`, formData, {
+			await axios.put(`http://thaonp.work/api/admin/user/${updateItem.id}`, formData, {
 				headers: {
 					"Authorization" : `Bearer ${sessionStorage.getItem("userToken")}`
 				}
 			});
-			// alert("Updated.");
 		}
 		catch(error){
 			alert(error);
@@ -74,8 +74,7 @@ export default function Dashboard() {
 
 	const deleteUser = async() => {
 		try{
-			// await axios.delete(`http://thaonp.work/api/admin/user/${deleteItem.id}`, {
-			await axios.delete(`http://localhost:8080/api/admin/user/${deleteItem.id}`, {
+			await axios.delete(`http://thaonp.work/api/admin/user/${deleteItem.id}`, {
 				headers: {
 					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
 				}
@@ -89,37 +88,19 @@ export default function Dashboard() {
 
 	const getData = async () => {
 		try{
-			// let res = await axios.get('http://thaonp.work/api/admin/user', {
-			let res = await axios.get('http://localhost:8080/api/admin/user', {
+			let res = await axios.get('http://thaonp.work/api/admin/user', {
 				headers: {
 					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
 				}
 			});
 			console.log(res.data)
 			setData(res.data);
+			setDisplay(res.data);
+			setLoading(false);
 		} 
 		catch(error){
 			alert(error);
 			// throw new Error("Error: ", error);
-		}
-	}
-
-	const searchUser = async (phone) => {
-		try{
-			let res = await axios.get(`http://localhost:8080/api/admin/user/find?phone=${phone}`, {
-				headers: {
-					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
-				}
-			});
-			if (res.data){
-				setData(res.data);
-			}
-			else{
-				setData(null);
-			}
-		}
-		catch(error){
-			alert(error);
 		}
 	}
 
@@ -164,35 +145,19 @@ export default function Dashboard() {
 	
 	useEffect(() => getData(), []);
 
-	return (
+	if (loading){
+		return(
+			<Grid container justify="center" alignItems="center" style={{height: "100vh"}}>
+				<PulseLoader color={colors.primary_light} loading={loading} size={15} margin={7}/>
+			</Grid>
+		)
+	}
+	else return (
 		<div className={classes.container}>
 			<Navigation dashboard />
-			<Grid container>
+			<Grid>
 				<Grid container alignItems="center">
-					<TextField
-						variant="outlined"
-						size="small"
-						placeholder="Search by phone number"
-						InputProps={{
-							startAdornment: (
-								<InputAdornment position="start">
-									<SearchIcon fontSize="small" />
-								</InputAdornment>
-							),
-							classes: {
-								input: classes.searchInput,
-							},
-						}}
-						onChange={(text) => setQuery(text.target.value)}
-						onKeyUp={(event) => {
-							if (!query) {
-								getData();
-							} else if (event.keyCode === 13) {
-								searchUser(query);
-							}
-						}}
-						className={classes.searchBox}
-					/>
+					<SearchBox data={data} setDisplay={setDisplay} />
 
 					<Typography className={classes.tableCell}>Filter by role</Typography>
 					<Select
@@ -200,7 +165,7 @@ export default function Dashboard() {
 						className={classes.selectFilter}
 						onChange={(event) => {
 							if (!event.target.value) {
-								getData();
+								setDisplay(data);
 							} else {
 								applyFilter(event.target.value);
 							}
@@ -258,8 +223,8 @@ export default function Dashboard() {
 						</TableHead>
 
 						<TableBody>
-							{data
-								? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item) => (
+							{display
+								? display.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item) => (
 										<TableRow className={classes.row} key={item.id}>
 											<TableCell align="left" className={classes.tableCell} width={30}>
 												{item.id}
@@ -267,28 +232,28 @@ export default function Dashboard() {
 											<TableCell align="left" className={classes.tableCell} width={120}>
 												{item.lastname}
 											</TableCell>
-											<TableCell align="left" className={classes.tableCell} width={110}>
+											<TableCell align="left" className={classes.tableCell}>
 												{item.firstname}
 											</TableCell>
-											<TableCell align="left" className={[classes.raw_data, classes.tableCell]} width={100}>
+											<TableCell align="left" className={[classes.raw_data, classes.tableCell]}>
 												{item.username}
 											</TableCell>
-											<TableCell align="left" className={classes.tableCell} width={100}>
+											<TableCell align="left" className={classes.tableCell}>
 												{item.phone}
 											</TableCell>
-											<TableCell align="left" className={[classes.raw_data, classes.tableCell]} width={180}>
+											<TableCell align="left" className={[classes.raw_data, classes.tableCell]}>
 												{item.email}
 											</TableCell>
-											<TableCell align="left" className={classes.tableCell} width={100}>
+											<TableCell align="left" className={classes.tableCell}>
 												{new Date(item.dob).toLocaleDateString()}
 											</TableCell>
-											<TableCell align="left" className={classes.tableCell} width={60}>
+											<TableCell align="left" className={classes.tableCell}>
 												{item.sex}
 											</TableCell>
 											<TableCell align="left" className={classes.tableCell} width={150}>
 												{item.address}
 											</TableCell>
-											<TableCell align="left" className={classes.tableCell} width={100}>
+											<TableCell align="left" className={classes.tableCell}>
 												{item.roles[0].name}
 											</TableCell>
 											<TableCell align="left" className={classes.tableCell}>
@@ -309,55 +274,59 @@ export default function Dashboard() {
 
 												{/* Update form */}
 												{updateItem ? (
-													<Modal open={form_open} onClose={() => setFormOpen(false)} aria-labelledby="simple-modal-title" aria-describedby="simple-modal-description">
-														<Grid container justify="center" alignItems="center">
+													<Modal open={form_open} onClose={() => setFormOpen(false)} className={classes.modal}>
+														<Grid item justify="center" alignItems="center">
 															<form className={classes.updateForm}>
-																<CloseIcon
-																	onClick={() => {
-																		// resetValue();
-																		setFormOpen(false);
-																	}}
-																	className={classes.closeButton}
-																/>
-
-																<Grid container spacing={3}>
-																	<Grid item xs={6} sm={5}>
-																		<TextField name="firstName" required={true} fullWidth label={"First name"} value={firstname} onChange={(event) => setFName(event.target.value)} />
-																	</Grid>
-																	<Grid item xs={6} sm={7}>
-																		<TextField name="lastName" required fullWidth label="Last Name" value={lastname} onChange={(event) => setLName(event.target.value)} />
-																	</Grid>
+																<Grid container justify="flex-end">
+																	<IconButton>
+																		<CloseIcon
+																			onClick={() => {
+																				setFormOpen(false);
+																			}}
+																			className={classes.closeButton}
+																		/>
+																	</IconButton>
 																</Grid>
+																<Grid style={{ paddingLeft: 30, paddingRight: 30 }}>
+																	<Grid container spacing={3}>
+																		<Grid item xs={6} sm={5}>
+																			<TextField name="firstName" required={true} fullWidth label={"First name"} value={firstname} onChange={(event) => setFName(event.target.value)} />
+																		</Grid>
+																		<Grid item xs={6} sm={7}>
+																			<TextField name="lastName" required fullWidth label="Last Name" value={lastname} onChange={(event) => setLName(event.target.value)} />
+																		</Grid>
+																	</Grid>
 
-																<TextField margin="normal" required fullWidth label="Address" name="address" value={address} onChange={(event) => setAddress(event.target.value)} />
+																	<TextField margin="normal" required fullWidth label="Address" name="address" value={address} onChange={(event) => setAddress(event.target.value)} />
 
-																<MuiPickersUtilsProvider utils={DateFnsUtils}>
-																	<KeyboardDatePicker
-																		disableToolbar
-																		variant="inline"
-																		format="yyyy-MM-dd"
-																		label="DOB"
-																		value={dob}
+																	<MuiPickersUtilsProvider utils={DateFnsUtils}>
+																		<KeyboardDatePicker
+																			disableToolbar
+																			variant="inline"
+																			format="yyyy-MM-dd"
+																			label="DOB"
+																			value={dob}
+																			fullWidth
+																			onChange={(event) => {
+																				setDOB(event);
+																			}}
+																		/>
+																	</MuiPickersUtilsProvider>
+
+																	<Button
 																		fullWidth
-																		onChange={(event) => {
-																			setDOB(event);
+																		variant="contained"
+																		className={classes.submit}
+																		onClick={(event) => {
+																			event.preventDefault();
+																			updateData();
+																			setFormOpen(false);
+																			setTimeout(() => window.location.reload(), 1000);
 																		}}
-																	/>
-																</MuiPickersUtilsProvider>
-
-																<Button
-																	fullWidth
-																	variant="contained"
-																	className={classes.submit}
-																	onClick={(event) => {
-																		event.preventDefault();
-																		updateData();
-																		setFormOpen(false);
-																		setTimeout(() => window.location.reload(), 1000);
-																	}}
-																>
-																	Save
-																</Button>
+																	>
+																		Save
+																	</Button>
+																</Grid>
 															</form>
 														</Grid>
 													</Modal>
@@ -391,7 +360,7 @@ export default function Dashboard() {
 											</TableCell>
 										</TableRow>
 								  ))
-								: null}
+								: null }
 						</TableBody>
 
 						<TableFooter>
@@ -407,12 +376,13 @@ export default function Dashboard() {
 }
 
 const useStyles = makeStyles((theme) => ({
-	container: {
-		width: 1480,
+	container: {	
+		width: "max-content",
+		minWidth: "100vw"
 	},
 	table: {
 		width: "max-content",
-		minWidth: "100vw",
+		minWidth: "100%"
 	},
 	row: {
 		textTransform: "capitalize",
@@ -444,17 +414,22 @@ const useStyles = makeStyles((theme) => ({
 	searchInput: {
 		fontSize: 16,
 	},
+	modal: {
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center'
+	 },
 	updateForm: {
-		position: "absolute",
-		top: "25%",
 		width: 400,
 		backgroundColor: theme.palette.background.paper,
-		border: "2px solid #000",
+		borderRadius: 7,
 		boxShadow: theme.shadows[5],
-		padding: theme.spacing(2, 4, 3),
+		padding: 10,
 	},
 	submit: {
-		marginTop: 10
+		marginTop: 10,
+		marginBottom: 20,
+		backgroundColor: colors.primary
 	},
 	selectFilter: {
 		fontSize: 14,

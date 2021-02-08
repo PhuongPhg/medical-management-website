@@ -18,9 +18,11 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
 import CloseIcon from '@material-ui/icons/Close';
+import PulseLoader from "react-spinners/PulseLoader";
 
 export default function Schedule(){
   const classes = useStyles();
+  const [loading, setLoading] = useState(false);
   const day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const [data, setData] = useState(
     [{
@@ -87,9 +89,16 @@ export default function Schedule(){
     }])
   }
 
-  return(
+  if (loading){
+		return(
+			<Grid container justify="center" alignItems="center" style={{height: "100vh"}}>
+				<PulseLoader color={colors.primary_light} loading={loading} size={15} margin={7}/>
+			</Grid>
+		)
+	}
+  else return(
     <div>
-      <Navigation Schedule />
+      <Navigation schedule />
       <Grid container className={classes.container}>
         <Grid item xs={3}>
           <Paper className={classes.profile_contain} style={{width: '90%'}} >

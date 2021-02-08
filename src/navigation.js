@@ -12,6 +12,13 @@ const UserAccount = () => {
 
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
+  
+  const logout = () => {
+    sessionStorage.removeItem("userToken");
+    sessionStorage.removeItem("username");
+    sessionStorage.removeItem("userID");
+    sessionStorage.removeItem("role");
+  }
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -44,32 +51,24 @@ const UserAccount = () => {
 
   return (
 		<Grid container>
-			<Typography
-				ref={anchorRef}
-				aria-controls={open ? "menu-list-grow" : undefined}
-				aria-haspopup="true"
-				onMouseOver={handleToggle}
-				className={classes.username}
-			>
+			<Typography ref={anchorRef} aria-controls={open ? "menu-list-grow" : undefined} aria-haspopup="true" onMouseOver={handleToggle} className={classes.username}>
 				Hello {sessionStorage.getItem("username")}!
 			</Typography>
-      
+
 			<Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
 				{({ TransitionProps, placement }) => (
-					<Grow
-						{...TransitionProps}
-						style={{ transformOrigin: placement === "bottom" ? "center top" : "center bottom" }}
-					>
+					<Grow {...TransitionProps} style={{ transformOrigin: placement === "bottom" ? "center top" : "center bottom" }}>
 						<Paper>
 							<ClickAwayListener onClickAway={handleClose}>
 								<MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-									<MenuItem onClick={handleClose}>Profile</MenuItem>
+									<MenuItem onClick={handleClose} onClick={() => window.open("/profile", "_self")}>
+										Profile
+									</MenuItem>
 									<MenuItem
 										onClick={(event) => {
 											handleClose(event);
-											sessionStorage.setItem("userToken", null);
-											sessionStorage.setItem("username", null);
-											window.open("/login", "_self");
+											logout();
+											window.open("/homepage", "_self");
 										}}
 									>
 										Logout
@@ -106,7 +105,7 @@ export default function Navigation(props) {
               <UserAccount/> :
               <Grid item>
                 <Link href="/login" className={classes.navlink}>Login</Link>
-                <Link href="/" className={classes.navlink}>Sign Up</Link>
+                <Link href="/register" className={classes.navlink}>Sign Up</Link>
               </Grid>
           }
           </Grid>

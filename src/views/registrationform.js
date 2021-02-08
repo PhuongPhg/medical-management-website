@@ -27,7 +27,7 @@ export default function RegistrationForm() {
 
 	return (
 		<Grid className={styles.paper}>
-			<Typography variant="h5">Medical Registration Form</Typography>
+			<Typography variant="h5">Medical Record Form</Typography>
 			<form className={styles.form} Validate>
 				<Grid container>
 					<TextField size="small" multiline rows={2} variant="outlined" margin="normal" required fullWidth id="symptom" label="Describe health problems" onTextChange={(text) => setSymptom(text)} />
