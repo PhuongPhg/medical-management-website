@@ -31,7 +31,7 @@ const AppointmentCard = (props) => {
 							</Typography>
 						</Grid>
 					</Grid>
-					<NavigateNextIcon className={styles.nextBtn} />
+					{props.more ? <NavigateNextIcon className={styles.nextBtn} /> : null}
 				</Grid>
 			</CardContent>
 		</Card>
@@ -237,7 +237,7 @@ export default function Profile () {
 						<Typography variant="p" align="left" className={styles.sectionHeader}>
 							Appointments
 						</Typography>
-						<AppointmentCard date="1 Feb" title="Lung examination" desc="8:00 - 10:00 AM" finished={false} />
+						<AppointmentCard date="1 Feb" title="Lung examination" desc="8:00 - 10:00 AM" finished={false} more/>
 
 						{/* Medical records */}
 						<Grid container direction="row" justify="space-between" alignItems="center">
