@@ -16,47 +16,52 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { colors } from '../helpers/config.js';
 import axios from 'axios';
+import { useSnackbar } from 'notistack';
 
 export default function RegistrationForm(props) {
 	const styles = useStyles();
-	// const [part, setPart] = useState(null);
-	const [name, setName] = useState(null);
-	const [id, setId] = useState(null);
+	const setFormOpen = props.setFormOpen;
 	const [symptom, setSymptom] = useState(null);
 	const [firstday, setFirstday] = useState(moment().format("DD/MM/YYYY"));
 	const [prescription, setPrescription] = useState(null);
+	const { enqueueSnackbar } = useSnackbar();
 
 	const createMedicalRecord = async () => {
 		const data = {
 			"date": moment().format("YYYY-MM-DD"),
 			"doctor": props.doctor,
 			"userId": props.userID,
-			"firstname": props.firstname,
-			"lastname": props.lastname,
-			"phone": props.phone,
+			"firstname": props.user.firstname,
+			"lastname": props.user.lastname,
+			"phone": props.user.phone,
 			"details": symptom,
 			"prescriptions": prescription
 		}
 
 		try{
-			await axios.post("thaonp.work/api/doctor/medicalRecord", data, {
+			let res = await axios.post("http://thaonp.work/api/doctor/medicalRecord", data, {
 				headers: {
 					"Authorization" : `Bearer ${sessionStorage.getItem("userToken")}`
 				}
 			})
+			enqueueSnackbar("Created new record.", { variant: "success" });
 		}
 		catch(error){
-			alert(error);
+			enqueueSnackbar(error, { variant: "error" });
 		}
 	}
 
 	return (
 		<Grid className={styles.paper}>
 			<Typography variant="h5">Medical Record Form</Typography>
-			<form className={styles.form} Validate>
+			<form className={styles.form} Validate onSubmit={(event) => {
+				event.preventDefault();
+				createMedicalRecord();
+				setFormOpen(false);
+			}}>
 				<Grid container>
-					<TextField size="small" multiline rows={2} variant="outlined" margin="normal" required fullWidth id="symptom" label="Describe health problems" onTextChange={(text) => setSymptom(text)} />
-					<TextField size="small" multiline rows={4} variant="outlined" margin="normal" required fullWidth label="Prescription" onTextChange={(text) => setPrescription(text)} />
+					<TextField size="small" multiline rows={2} variant="outlined" margin="normal" required fullWidth id="symptom" label="Describe health problems" onChange={(event) => setSymptom(event.target.value)} />
+					<TextField size="small" multiline rows={4} variant="outlined" margin="normal" required fullWidth label="Prescription" onChange={(event) => setPrescription(event.target.value)} />
 					<MuiPickersUtilsProvider utils={DateFnsUtils}>
 						<KeyboardDatePicker
 							style={{ marginTop: "16px" }}

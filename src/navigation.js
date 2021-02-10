@@ -15,10 +15,7 @@ const UserAccount = () => {
   const anchorRef = React.useRef(null);
   
   const logout = () => {
-    sessionStorage.removeItem("userToken");
-    sessionStorage.removeItem("username");
-    sessionStorage.removeItem("userID");
-    sessionStorage.removeItem("role");
+    sessionStorage.clear()
   }
 
   const handleToggle = () => {
@@ -53,7 +50,7 @@ const UserAccount = () => {
   return (
 		<Grid container>
 			<Typography ref={anchorRef} aria-controls={open ? "menu-list-grow" : undefined} aria-haspopup="true" onMouseOver={handleToggle} className={classes.username}>
-				Hello {sessionStorage.getItem("username")}!
+				Hello {sessionStorage.getItem("userFullName")}!
 			</Typography>
 
 			<Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>

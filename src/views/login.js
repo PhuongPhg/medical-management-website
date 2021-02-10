@@ -36,6 +36,7 @@ export default function Login() {
 			sessionStorage.setItem("userToken", res.data.accessToken);
 			sessionStorage.setItem("username", res.data.username);
 			sessionStorage.setItem("userID", res.data.id);
+			sessionStorage.setItem("userFullName", res.data.fullname);
 			sessionStorage.setItem("role", res.data.roles[0]);
 			history.push("/homepage");
 		} catch (error) {

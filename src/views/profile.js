@@ -56,6 +56,13 @@ const UpdateForm = (props) => {
 	const uID = props.userID;
 	const user = props.userInfo;
 
+	const handleUpdateRequest = () => {
+		setLName(user.lastname);
+		setFName(user.firstname);
+		setAddress(user.address);
+		setDOB(user.dob);
+	}
+
 	const updateData = async (userID) => {
 		const formData = {
 			firstname: firstname,
@@ -70,11 +77,14 @@ const UpdateForm = (props) => {
 					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
 				}
 			});
+			sessionStorage.setItem("userFullName", lastname + ' ' + firstname);
 		}
 		catch (error) {
 			alert(error);
 		}
 	}
+
+	React.useEffect(() => handleUpdateRequest(), [])
 
 	return (
 		<Grid container justify="center" alignItems="center">
@@ -91,14 +101,14 @@ const UpdateForm = (props) => {
 				<Grid style={{ paddingLeft: 30, paddingRight: 30 }}>
 					<Grid container spacing={3}>
 						<Grid item xs={6} sm={5}>
-							<TextField name="firstName" required={true} fullWidth label={"First name"} value={user.firstname} onChange={(event) => setFName(event.target.value)} />
+							<TextField name="firstName" required={true} fullWidth label={"First name"} value={firstname} onChange={(event) => setFName(event.target.value)} />
 						</Grid>
 						<Grid item xs={6} sm={7}>
-							<TextField name="lastName" required fullWidth label="Last Name" value={user.lastname} onChange={(event) => setLName(event.target.value)} />
+							<TextField name="lastName" required fullWidth label="Last Name" value={lastname} onChange={(event) => setLName(event.target.value)} />
 						</Grid>
 					</Grid>
 
-					<TextField margin="normal" required fullWidth label="Address" name="address" value={user.address} onChange={(event) => setAddress(event.target.value)} />
+					<TextField margin="normal" required fullWidth label="Address" name="address" value={address} onChange={(event) => setAddress(event.target.value)} />
 
 					<MuiPickersUtilsProvider utils={DateFnsUtils}>
 						<KeyboardDatePicker
@@ -106,7 +116,7 @@ const UpdateForm = (props) => {
 							variant="inline"
 							format="yyyy-MM-dd"
 							label="DOB"
-							value={user.dob}
+							value={dob}
 							fullWidth
 							onChange={(event) => {
 								setDOB(event);
@@ -247,7 +257,7 @@ export default function Profile () {
 								<CloseIcon />
 							</IconButton>
 						</Tooltip>
-						<RegistrationForm />
+						<RegistrationForm setFormOpen={setOpenNewRecord} doctor={sessionStorage.getItem("userFullName")} userID={uid} user={userInfo}/>
 					</Grid>
 				</Modal>
 
