@@ -158,7 +158,7 @@ export default function Profile () {
 	const [form_open, setFormOpen] = useState(false);
 	const [userInfo, setUserInfo] = useState([]);
 	const [userRole, setRole] = useState('ROLE_VOID');
-	const [records, setRecords] = useState([])
+	const [records, setRecords] = useState(null)
 	const numPerPage = 3;
 	const [page, setPage] = useState(0)
 
@@ -188,7 +188,7 @@ export default function Profile () {
 			setRecords(res.data);
 		}
 		catch(error){
-			alert(error);
+			console.log(error);
 		}
 	}
 
@@ -251,9 +251,9 @@ export default function Profile () {
 								</IconButton>
 							) : null}
 						</Grid>
-						{records.slice(numPerPage * page, numPerPage * page + numPerPage).map((item) => (
+						{records ? records.slice(numPerPage * page, numPerPage * page + numPerPage).map((item) => (
 							<AppointmentCard date={new Date(item.date).getUTCDate() + " " + months[new Date(item.date).getMonth()]} title={item.details} desc={item.prescriptions} />
-						))}
+						)) : <Typography className={styles.noRecord}>No record exists.</Typography>}
 					</Grid>
 					<Grid container justify="flex-end">
 						<IconButton onClick={() => setPage(page - 1)}>
@@ -349,12 +349,18 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     width: '100%',
-    marginBottom: 20,
+	 marginTop: 10,
+    marginBottom: 10,
   },
   sectionHeader: {
     fontWeight: 600,
     marginLeft: 10,
-    marginBottom: 10,
+  },
+  noRecord: {
+	 fontSize: 16,
+	 marginLeft: 10,
+	 marginBottom: 5,
+	 color: colors.additional_info
   },
   date: {
     color: colors.date_color,
