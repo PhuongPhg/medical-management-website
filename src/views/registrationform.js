@@ -45,6 +45,7 @@ export default function RegistrationForm(props) {
 				}
 			})
 			enqueueSnackbar("Created new record.", { variant: "success" });
+			window.location.reload();
 		}
 		catch(error){
 			enqueueSnackbar(error, { variant: "error" });

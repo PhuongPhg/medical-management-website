@@ -159,6 +159,8 @@ export default function Profile () {
 	const [userInfo, setUserInfo] = useState([]);
 	const [userRole, setRole] = useState('ROLE_VOID');
 	const [records, setRecords] = useState([])
+	const numPerPage = 3;
+	const [page, setPage] = useState(0)
 
 	const getProfile = async (userID) => {
 		try{
@@ -212,10 +214,10 @@ export default function Profile () {
 					<Grid container direction="column" style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start" }}>
 						<InfoItem info={userInfo.username} />
 						<div style={{ display: "flex", direction: "row" }}>
-							<InfoItem info={userInfo.sex} capitalize/>
+							<InfoItem info={userInfo.sex} capitalize />
 							<div className={styles.outerBullet} style={{ marginLeft: "60px" }}>
 								<div className={styles.bullet} />
-								<p className={styles.bulletText}>{(new Date().getFullYear()) - (new Date(userInfo.dob).getFullYear())} ans</p>
+								<p className={styles.bulletText}>{new Date().getFullYear() - new Date(userInfo.dob).getFullYear()} ans</p>
 							</div>
 						</div>
 						<InfoItem info={userInfo.phone} />
@@ -249,15 +251,18 @@ export default function Profile () {
 								</IconButton>
 							) : null}
 						</Grid>
-						{
-							records.map(item => (
-								<AppointmentCard date={new Date(item.date).getUTCDate() + " " + months[new Date(item.date).getMonth()]} title={item.details} desc={item.prescriptions}/>
-							))
-						}
+						{records.slice(numPerPage * page, numPerPage * page + numPerPage).map((item) => (
+							<AppointmentCard date={new Date(item.date).getUTCDate() + " " + months[new Date(item.date).getMonth()]} title={item.details} desc={item.prescriptions} />
+						))}
 					</Grid>
 					<Grid container justify="flex-end">
-						<NavigateBeforeIcon />
-						<NavigateNextIcon />
+						<IconButton onClick={() => setPage(page - 1)}>
+							<NavigateBeforeIcon />
+						</IconButton>
+
+						<IconButton onClick={() => setPage(page + 1)}>
+							<NavigateNextIcon />
+						</IconButton>
 					</Grid>
 				</Grid>
 
@@ -268,16 +273,16 @@ export default function Profile () {
 								<CloseIcon />
 							</IconButton>
 						</Tooltip>
-						<RegistrationForm setFormOpen={setOpenNewRecord} doctor={sessionStorage.getItem("userFullName")} userID={uid} user={userInfo}/>
+						<RegistrationForm setFormOpen={setOpenNewRecord} doctor={sessionStorage.getItem("userFullName")} userID={uid} user={userInfo} />
 					</Grid>
 				</Modal>
 
 				<Modal open={form_open} onClose={() => setFormOpen(false)} className={styles.modal}>
-					<UpdateForm setFormOpen={setFormOpen} userID={uid} userInfo={userInfo}/>
+					<UpdateForm setFormOpen={setFormOpen} userID={uid} userInfo={userInfo} />
 				</Modal>
 			</Grid>
 		</div>
-  );
+	);
 }
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
