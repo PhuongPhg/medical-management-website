@@ -21,12 +21,9 @@ const AppointmentCard = (props) => {
 			<CardContent>
 				<Grid container justify="space-between" alignItems="center">
 					<Grid item style={{ display: "flex" }} direction="row">
-						{props.date ? (
-							<Grid item className={styles.date}>
-								<Typography align="center">{props.date}</Typography>
-							</Grid>
-						) : null}
-
+						<Grid item className={styles.date}>
+							<Typography align="center">{props.date}</Typography>
+						</Grid>
 						<Grid item>
 							<Typography align="left">{props.title}</Typography>
 							<Typography align="left" className={styles.status}>
@@ -238,7 +235,7 @@ export default function Profile () {
 						<Typography variant="p" align="left" className={styles.sectionHeader}>
 							Appointments
 						</Typography>
-						<AppointmentCard date="1 Feb" title="Lung examination" desc="8:00 - 10:00 AM"/>
+						<AppointmentCard date="1 Feb" title="Lung examination" desc="8:00 - 10:00 AM" finished={false} />
 
 						{/* Medical records */}
 						<Grid container direction="row" justify="space-between" alignItems="center">
@@ -254,7 +251,7 @@ export default function Profile () {
 						</Grid>
 						{
 							records.map(item => (
-								<AppointmentCard title={new Date(item.date).toDateString()} desc={item.details}/>
+								<AppointmentCard date={new Date(item.date).getUTCDate() + " " + months[new Date(item.date).getMonth()]} title={item.details} desc={item.prescriptions}/>
 							))
 						}
 					</Grid>
