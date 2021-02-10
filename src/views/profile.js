@@ -11,6 +11,7 @@ import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import { useLocation } from "react-router-dom";
+import axios from 'axios';
 
 const AppointmentCard = (props) => {
   const styles = useStyles();
@@ -126,9 +127,27 @@ export default function Profile () {
   const [uid, setUID] = useState(null);
   const [newRecord, setOpenNewRecord] = useState(false);
 	const [form_open, setFormOpen] = useState(false);
+	const [userInfo, setUserInfo] = useState([]);
 	const [updateItem, setUpdateItem] = useState(null);
 
+	const getProfile = async () => {
+		try{
+			let res = await axios.get('http://thaonp.work/api/patient/myProfile', {
+				headers: {
+					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
+				}
+			});
+			setUserInfo(res.data);
+			console.log(res.data)
+		} 
+		catch(error){
+			alert(error);
+			// throw new Error("Error: ", error);
+		}
+	}
+
   React.useEffect(() => {
+		getProfile();
     setUID(location.state.detail);
     console.log(location.state.detail);
   }, []);
@@ -142,21 +161,21 @@ export default function Profile () {
 						<Avatar alt="User avatar" style={{ height: "200px", width: "200px" }} />
 					</div>
 					<div>
-						<h1 style={{ marginBottom: "0" }}>Nguyen Van A</h1>
-						<p style={{ marginTop: "0", color: "#6A6A6A", fontSize: "20px" }}>Patient</p>
+						<h1 style={{ marginBottom: "0" }}>{userInfo.firstname + " " + userInfo.lastname}</h1>
+						<p style={{ marginTop: "0", color: "#6A6A6A", fontSize: "20px" }}>{userInfo.roles[0].name.charAt(5).toUpperCase() + userInfo.roles[0].name.substring(6).toLowerCase()}</p>
 					</div>
 					<Grid container direction="column" style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start" }}>
-						<InfoItem info="username" />
+						<InfoItem info={userInfo.username} />
 						<div style={{ display: "flex", direction: "row" }}>
-							<InfoItem info="Female" />
+							<InfoItem info={userInfo.sex} />
 							<div className={styles.outerBullet} style={{ marginLeft: "60px" }}>
 								<div className={styles.bullet} />
-								<p className={styles.bulletText}>51 ans</p>
+								<p className={styles.bulletText}>{(new Date().getFullYear()) - parseInt(userInfo.dob.substring(0, 4))} ans</p>
 							</div>
 						</div>
-						<InfoItem info="0123456789" />
-						<InfoItem info="useremail@email.com" />
-						<InfoItem info="18B Hoang Quoc Viet, Hanoi, Vietnam" />
+						<InfoItem info={userInfo.phone} />
+						<InfoItem info={userInfo.email} />
+						<InfoItem info={userInfo.address} />
 						{sessionStorage.getItem("userID") === uid ? (
 							<Button variant="contained" onClick={() => setFormOpen(true)} className={styles.editButton}>
 								EDIT
