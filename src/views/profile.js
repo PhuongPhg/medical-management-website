@@ -149,6 +149,7 @@ export default function Profile () {
   const [newRecord, setOpenNewRecord] = useState(false);
 	const [form_open, setFormOpen] = useState(false);
 	const [userInfo, setUserInfo] = useState([]);
+	const [userRole, setRole] = useState('ROLE_VOID');
 	const [updateItem, setUpdateItem] = useState(null);
 
 	const getProfile = async (userID) => {
@@ -159,7 +160,8 @@ export default function Profile () {
 				}
 			});
 			setUserInfo(res.data);
-			console.log(res.data)
+			setRole(res.data.roles[0].name);
+			console.log(res.data);
 		} 
 		catch(error){
 			alert(error);
@@ -171,7 +173,6 @@ export default function Profile () {
     setUID(location.state.detail);
     console.log(location.state.detail);
   }, []);
-
   return (
 		<div className={styles.container}>
 			<Navigation />
@@ -182,7 +183,7 @@ export default function Profile () {
 					</div>
 					<div>
 						<h1 style={{ marginBottom: "0" }}>{userInfo.firstname + " " + userInfo.lastname}</h1>
-						{/* <p style={{ marginTop: "0", color: "#6A6A6A", fontSize: "20px" }}>{userInfo.roles[0].name.charAt(5).toUpperCase() + userInfo.roles[0].name.substring(6).toLowerCase()}</p> */}
+						<p style={{ marginTop: "0", color: "#6A6A6A", fontSize: "20px" }}>{userRole.charAt(5).toUpperCase() + userRole.substring(6).toLowerCase()}</p>
 					</div>
 					<Grid container direction="column" style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start" }}>
 						<InfoItem info={userInfo.username} />
