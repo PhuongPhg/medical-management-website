@@ -46,13 +46,13 @@ const AppointmentCard = (props) => {
 }
 
 const UpdateForm = (props) => {
-  const styles = useStyles();
+	const styles = useStyles();
 
-  const setFormOpen = props.setFormOpen;
-  const [firstname, setFName] = useState(null);
+	const setFormOpen = props.setFormOpen;
+	const [firstname, setFName] = useState(null);
 	const [lastname, setLName] = useState(null);
 	const [address, setAddress] = useState(null);
-  const [dob, setDOB] = useState(null);
+	const [dob, setDOB] = useState(null);
 	const uID = props.userID;
 
 	const updateData = async (userID) => {
@@ -63,22 +63,22 @@ const UpdateForm = (props) => {
 			dob: dob,
 		};
 
-		try{
+		try {
 			await axios.put(`http://thaonp.work/api/public/user/${userID}`, formData, {
 				headers: {
-					"Authorization" : `Bearer ${sessionStorage.getItem("userToken")}`
+					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
 				}
 			});
 		}
-		catch(error){
+		catch (error) {
 			alert(error);
 		}
 	}
 
-  return (
+	return (
 		<Grid container justify="center" alignItems="center">
 			<form className={styles.updateForm}>
-        <Grid container justify="flex-end">
+				<Grid container justify="flex-end">
 					<IconButton>
 						<CloseIcon
 							onClick={() => {
@@ -87,66 +87,70 @@ const UpdateForm = (props) => {
 						/>
 					</IconButton>
 				</Grid>
-        <Grid style={{paddingLeft:30, paddingRight:30}}>			
-        <Grid container spacing={3}>
-					<Grid item xs={6} sm={5}>
-						<TextField name="firstName" required={true} fullWidth label={"First name"} value={firstname} onChange={(event) => setFName(event.target.value)} />
+				<Grid style={{ paddingLeft: 30, paddingRight: 30 }}>
+					<Grid container spacing={3}>
+						<Grid item xs={6} sm={5}>
+							<TextField name="firstName" required={true} fullWidth label={"First name"} value={firstname} onChange={(event) => setFName(event.target.value)} />
+						</Grid>
+						<Grid item xs={6} sm={7}>
+							<TextField name="lastName" required fullWidth label="Last Name" value={lastname} onChange={(event) => setLName(event.target.value)} />
+						</Grid>
 					</Grid>
-					<Grid item xs={6} sm={7}>
-						<TextField name="lastName" required fullWidth label="Last Name" value={lastname} onChange={(event) => setLName(event.target.value)} />
-					</Grid>
-				</Grid>
 
-				<TextField margin="normal" required fullWidth label="Address" name="address" value={address} onChange={(event) => setAddress(event.target.value)} />
+					<TextField margin="normal" required fullWidth label="Address" name="address" value={address} onChange={(event) => setAddress(event.target.value)} />
 
-				<MuiPickersUtilsProvider utils={DateFnsUtils}>
-					<KeyboardDatePicker
-						disableToolbar
-						variant="inline"
-						format="yyyy-MM-dd"
-						label="DOB"
-						value={dob}
+					<MuiPickersUtilsProvider utils={DateFnsUtils}>
+						<KeyboardDatePicker
+							disableToolbar
+							variant="inline"
+							format="yyyy-MM-dd"
+							label="DOB"
+							value={dob}
+							fullWidth
+							onChange={(event) => {
+								setDOB(event);
+							}}
+						/>
+					</MuiPickersUtilsProvider>
+
+					<Button
 						fullWidth
-						onChange={(event) => {
-							setDOB(event);
+						variant="contained"
+						className={styles.submit}
+						onClick={(event) => {
+							event.preventDefault();
+							updateData(uID);
+							setFormOpen(false);
+							setTimeout(() => window.location.reload(), 1000);
 						}}
-					/>
-				</MuiPickersUtilsProvider>
-
-				<Button
-					fullWidth
-					variant="contained"
-					className={styles.submit}
-					onClick={(event) => {
-						event.preventDefault();
-						updateData(uID);
-						setFormOpen(false);
-						setTimeout(() => window.location.reload(), 1000);
-					}}
-				>
-					Save
+					>
+						Save
 				</Button>
-        </Grid>
+				</Grid>
 			</form>
 		</Grid>
-  );
+	);
 }
 
 const InfoItem = (props) => {
   const styles = useStyles();
+  const toCapitalize = (text) => {
+	return text.charAt(0).toUpperCase() + text.slice(1)
+  }
+
   return (
     <div className={styles.outerBullet}>
       <div className={styles.bullet} />
-      <p className={styles.bulletText}>{props.info}</p>
+      <p className={styles.bulletText}>{props.capitalize ? toCapitalize(props.info) : props.info}</p>
     </div>
   );
 }
 
 export default function Profile () {
-  const styles = useStyles();
+	const styles = useStyles();
 	const location = useLocation();
-  const [uid, setUID] = useState(null);
-  const [newRecord, setOpenNewRecord] = useState(false);
+	const [uid, setUID] = useState(null)
+	const [newRecord, setOpenNewRecord] = useState(false);
 	const [form_open, setFormOpen] = useState(false);
 	const [userInfo, setUserInfo] = useState([]);
 	const [userRole, setRole] = useState('ROLE_VOID');
@@ -154,7 +158,7 @@ export default function Profile () {
 
 	const getProfile = async (userID) => {
 		try{
-				let res = await axios.get(`http://thaonp.work/api/public/user/${userID}`, {
+			let res = await axios.get(`http://thaonp.work/api/public/user/${userID}`, {
 				headers: {
 					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
 				}
@@ -168,12 +172,13 @@ export default function Profile () {
 		}
 	}
 
-  React.useEffect(() => {
+	React.useEffect(() => {
 		getProfile(location.state.detail);
-    setUID(location.state.detail);
-    console.log(location.state.detail);
-  }, []);
-  return (
+		setUID(location.state.detail);
+		console.log(location.state.detail);
+	}, []);
+
+	return (
 		<div className={styles.container}>
 			<Navigation />
 			<Grid component="main" spacing={4} className={styles.root}>
@@ -188,7 +193,7 @@ export default function Profile () {
 					<Grid container direction="column" style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start" }}>
 						<InfoItem info={userInfo.username} />
 						<div style={{ display: "flex", direction: "row" }}>
-							<InfoItem info={userInfo.sex} />
+							<InfoItem info={userInfo.sex} capitalize/>
 							<div className={styles.outerBullet} style={{ marginLeft: "60px" }}>
 								<div className={styles.bullet} />
 								<p className={styles.bulletText}>{(new Date().getFullYear()) - (new Date(userInfo.dob).getFullYear())} ans</p>
