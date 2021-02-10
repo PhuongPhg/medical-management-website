@@ -141,7 +141,7 @@ const InfoItem = (props) => {
   return (
     <div className={styles.outerBullet}>
       <div className={styles.bullet} />
-      <p className={styles.bulletText}>{props.capitalize ? toCapitalize(props.info) : props.info}</p>
+      <p className={styles.bulletText}>{props.capitalize ? toCapitalize(String(props.info)) : props.info}</p>
     </div>
   );
 }
