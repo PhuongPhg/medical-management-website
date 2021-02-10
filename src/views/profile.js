@@ -53,8 +53,9 @@ const UpdateForm = (props) => {
 	const [lastname, setLName] = useState(null);
 	const [address, setAddress] = useState(null);
   const [dob, setDOB] = useState(null);
+	const uID = props.userID;
 
-	const updateData = async () => {
+	const updateData = async (userID) => {
 		const formData = {
 			firstname: firstname,
 			lastname: lastname,
@@ -63,7 +64,7 @@ const UpdateForm = (props) => {
 		};
 
 		try{
-			await axios.put(`http://thaonp.work/api/patient/myProfile`, formData, {
+			await axios.put(`http://thaonp.work/api/public/user/${userID}`, formData, {
 				headers: {
 					"Authorization" : `Bearer ${sessionStorage.getItem("userToken")}`
 				}
@@ -118,7 +119,7 @@ const UpdateForm = (props) => {
 					className={styles.submit}
 					onClick={(event) => {
 						event.preventDefault();
-						updateData();
+						updateData(uID);
 						setFormOpen(false);
 						setTimeout(() => window.location.reload(), 1000);
 					}}
@@ -143,16 +144,16 @@ const InfoItem = (props) => {
 
 export default function Profile () {
   const styles = useStyles();
-  const location = useLocation();
+	const location = useLocation();
   const [uid, setUID] = useState(null);
   const [newRecord, setOpenNewRecord] = useState(false);
 	const [form_open, setFormOpen] = useState(false);
 	const [userInfo, setUserInfo] = useState([]);
 	const [updateItem, setUpdateItem] = useState(null);
 
-	const getProfile = async () => {
+	const getProfile = async (userID) => {
 		try{
-			let res = await axios.get('http://thaonp.work/api/patient/myProfile', {
+				let res = await axios.get(`http://thaonp.work/api/public/user/${userID}`, {
 				headers: {
 					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
 				}
@@ -166,7 +167,7 @@ export default function Profile () {
 	}
 
   React.useEffect(() => {
-		getProfile();
+		getProfile(location.state.detail);
     setUID(location.state.detail);
     console.log(location.state.detail);
   }, []);
@@ -181,7 +182,7 @@ export default function Profile () {
 					</div>
 					<div>
 						<h1 style={{ marginBottom: "0" }}>{userInfo.firstname + " " + userInfo.lastname}</h1>
-						<p style={{ marginTop: "0", color: "#6A6A6A", fontSize: "20px" }}>{userInfo.roles[0].name.charAt(5).toUpperCase() + userInfo.roles[0].name.substring(6).toLowerCase()}</p>
+						{/* <p style={{ marginTop: "0", color: "#6A6A6A", fontSize: "20px" }}>{userInfo.roles[0].name.charAt(5).toUpperCase() + userInfo.roles[0].name.substring(6).toLowerCase()}</p> */}
 					</div>
 					<Grid container direction="column" style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start" }}>
 						<InfoItem info={userInfo.username} />
@@ -244,7 +245,7 @@ export default function Profile () {
 				</Modal>
 
 				<Modal open={form_open} onClose={() => setFormOpen(false)} className={styles.modal}>
-					<UpdateForm setFormOpen={setFormOpen} />
+					<UpdateForm setFormOpen={setFormOpen} userID={uid}/>
 				</Modal>
 			</Grid>
 		</div>
