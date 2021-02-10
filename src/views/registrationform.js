@@ -71,7 +71,7 @@ export default function RegistrationForm(props) {
 							inputVariant="outlined"
 							format="MM/dd/yyyy"
 							id="date-picker-inline"
-							label="Set appointment date"
+							label="Date"
 							value={firstday}
 							onChange={(val) => {
 								setFirstday(val);

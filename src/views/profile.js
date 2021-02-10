@@ -21,24 +21,20 @@ const AppointmentCard = (props) => {
 			<CardContent>
 				<Grid container justify="space-between" alignItems="center">
 					<Grid item style={{ display: "flex" }} direction="row">
-						<Grid item className={styles.date}>
-							<Typography align="center">{props.date}</Typography>
-						</Grid>
+						{props.date ? (
+							<Grid item className={styles.date}>
+								<Typography align="center">{props.date}</Typography>
+							</Grid>
+						) : null}
+
 						<Grid item>
 							<Typography align="left">{props.title}</Typography>
 							<Typography align="left" className={styles.status}>
-								{props.time}
+								{props.desc}
 							</Typography>
 						</Grid>
 					</Grid>
-					<Grid item direction="row">
-						{props.finished ? (
-							<Typography component="span" className={styles.status}>
-								Finished and reschedule in {props.nextApm}
-							</Typography>
-						) : null}
-						<NavigateNextIcon className={styles.nextBtn} />
-					</Grid>
+					<NavigateNextIcon className={styles.nextBtn} />
 				</Grid>
 			</CardContent>
 		</Card>
@@ -165,7 +161,7 @@ export default function Profile () {
 	const [form_open, setFormOpen] = useState(false);
 	const [userInfo, setUserInfo] = useState([]);
 	const [userRole, setRole] = useState('ROLE_VOID');
-	const [updateItem, setUpdateItem] = useState(null);
+	const [records, setRecords] = useState([])
 
 	const getProfile = async (userID) => {
 		try{
@@ -183,8 +179,23 @@ export default function Profile () {
 		}
 	}
 
+	const getRecords = async (userID) => {
+		try{
+			let res = await axios.get(`http://thaonp.work/api/doctor/medicalRecord/${userID}`, {
+				headers: {
+					"Authorization" : `Bearer ${sessionStorage.getItem("userToken")}`
+				}
+			})
+			setRecords(res.data);
+		}
+		catch(error){
+			alert(error);
+		}
+	}
+
 	React.useEffect(() => {
 		getProfile(location.state.detail);
+		getRecords(location.state.detail);
 		setUID(location.state.detail);
 		console.log(location.state.detail);
 	}, []);
@@ -198,7 +209,7 @@ export default function Profile () {
 						<Avatar alt="User avatar" style={{ height: "200px", width: "200px" }} />
 					</div>
 					<div>
-						<h1 style={{ marginBottom: "0" }}>{userInfo.firstname + " " + userInfo.lastname}</h1>
+						<h1 style={{ marginBottom: "0" }}>{userInfo.lastname + " " + userInfo.firstname}</h1>
 						<p style={{ marginTop: "0", color: "#6A6A6A", fontSize: "20px" }}>{userRole.charAt(5).toUpperCase() + userRole.substring(6).toLowerCase()}</p>
 					</div>
 					<Grid container direction="column" style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start" }}>
@@ -227,7 +238,7 @@ export default function Profile () {
 						<Typography variant="p" align="left" className={styles.sectionHeader}>
 							Appointments
 						</Typography>
-						<AppointmentCard date="1 Feb" title="Lung examination" time="8:00 - 10:00 AM" finished={false} />
+						<AppointmentCard date="1 Feb" title="Lung examination" desc="8:00 - 10:00 AM"/>
 
 						{/* Medical records */}
 						<Grid container direction="row" justify="space-between" alignItems="center">
@@ -235,14 +246,17 @@ export default function Profile () {
 								Medical records
 							</Typography>
 
-							{sessionStorage.getItem("role") === "ROLE_DOCTOR" ? (
+							{sessionStorage.getItem("role") === "ROLE_DOCTOR" && sessionStorage.getItem("userID") !== uid ? (
 								<IconButton onClick={() => setOpenNewRecord(true)}>
 									<AddIcon />
 								</IconButton>
 							) : null}
 						</Grid>
-						<AppointmentCard date="31 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="01/02" />
-						<AppointmentCard date="30 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="31/01" />
+						{
+							records.map(item => (
+								<AppointmentCard title={new Date(item.date).toDateString()} desc={item.details}/>
+							))
+						}
 					</Grid>
 					<Grid container justify="flex-end">
 						<NavigateBeforeIcon />
@@ -268,6 +282,8 @@ export default function Profile () {
 		</div>
   );
 }
+
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const useStyles = makeStyles((theme) => ({
   root: {
