@@ -54,6 +54,26 @@ const UpdateForm = (props) => {
 	const [address, setAddress] = useState(null);
   const [dob, setDOB] = useState(null);
 
+	const updateData = async () => {
+		const formData = {
+			firstname: firstname,
+			lastname: lastname,
+			address: address,
+			dob: dob,
+		};
+
+		try{
+			await axios.put(`http://thaonp.work/api/patient/myProfile`, formData, {
+				headers: {
+					"Authorization" : `Bearer ${sessionStorage.getItem("userToken")}`
+				}
+			});
+		}
+		catch(error){
+			alert(error);
+		}
+	}
+
   return (
 		<Grid container justify="center" alignItems="center">
 			<form className={styles.updateForm}>
@@ -98,7 +118,7 @@ const UpdateForm = (props) => {
 					className={styles.submit}
 					onClick={(event) => {
 						event.preventDefault();
-						// updateData();
+						updateData();
 						setFormOpen(false);
 						setTimeout(() => window.location.reload(), 1000);
 					}}
@@ -142,7 +162,6 @@ export default function Profile () {
 		} 
 		catch(error){
 			alert(error);
-			// throw new Error("Error: ", error);
 		}
 	}
 
@@ -170,7 +189,7 @@ export default function Profile () {
 							<InfoItem info={userInfo.sex} />
 							<div className={styles.outerBullet} style={{ marginLeft: "60px" }}>
 								<div className={styles.bullet} />
-								<p className={styles.bulletText}>{(new Date().getFullYear()) - parseInt(userInfo.dob.substring(0, 4))} ans</p>
+								<p className={styles.bulletText}>{(new Date().getFullYear()) - (new Date(userInfo.dob).getFullYear())} ans</p>
 							</div>
 						</div>
 						<InfoItem info={userInfo.phone} />
