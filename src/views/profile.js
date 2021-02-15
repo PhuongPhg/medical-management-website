@@ -160,6 +160,7 @@ export default function Profile () {
 	const [userRole, setRole] = useState('ROLE_VOID');
 	const [records, setRecords] = useState(null)
 	const numPerPage = 3;
+	const [noPage, setNoPage] = useState(0)
 	const [page, setPage] = useState(0)
 
 	const getProfile = async (userID) => {
@@ -186,6 +187,7 @@ export default function Profile () {
 				}
 			})
 			setRecords(res.data);
+			setNoPage(res.data.length/numPerPage);
 		}
 		catch(error){
 			console.log(error);
@@ -256,11 +258,11 @@ export default function Profile () {
 						)) : <Typography className={styles.noRecord}>No record exists.</Typography>}
 					</Grid>
 					<Grid container justify="flex-end">
-						<IconButton onClick={() => setPage(page - 1)}>
+						<IconButton onClick={() => setPage(page - 1)} disabled={page - 1 < 0}>
 							<NavigateBeforeIcon />
 						</IconButton>
 
-						<IconButton onClick={() => setPage(page + 1)}>
+						<IconButton onClick={() => setPage(page + 1)} disabled={page + 1 > noPage}>
 							<NavigateNextIcon />
 						</IconButton>
 					</Grid>
