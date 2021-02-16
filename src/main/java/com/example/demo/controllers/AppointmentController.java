@@ -36,38 +36,21 @@ public class AppointmentController {
     public Optional<Appointment> findById(@PathVariable Long appointmentId) {
         return appointmentService.findById(appointmentId);
     }
-	
+
     // GET request to return appointments with specific doctorId
-	@GetMapping("/doctor/{doctorId}")
 	@PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN', 'PATIENT')")
-	public ResponseEntity<List<Appointment>> getAppointmentByDoctorId(@PathVariable("doctorId") long doctorId){
-		List<Appointment> appointment = new ArrayList<Appointment>();
-		appointmentRepository.findByDoctorId(doctorId).forEach(appointment::add);
-		try {
-			if (appointment.isEmpty()) {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
-			return new ResponseEntity<>(appointment, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
-		} 
-	}
+    @RequestMapping(path = "/doctor/{doctorId}", method = RequestMethod.GET)
+    public List<Appointment> findByDoctorId(@PathVariable long doctorId) {
+        return appointmentService.findByDoctorId(doctorId);
+    }
+
+    // GET request to return appointments with specific patientId
+	@PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN', 'PATIENT')")
+    @RequestMapping(path = "/patient/{patientId}", method = RequestMethod.GET)
+    public List<Appointment> findByPatientId(@PathVariable long patientId) {
+        return appointmentService.findByPatientId(patientId);
+    }
 	
-	// GET request to return appointments with specific patientId
-	@GetMapping("/patient/{patientId}")
-	@PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN', 'PATIENT')")
-	public ResponseEntity<List<Appointment>> getAppointmentByPatientId(@PathVariable("patientId") long patientId){
-		List<Appointment> appointment = new ArrayList<Appointment>();
-		appointmentRepository.findByDoctorId(patientId).forEach(appointment::add);
-		try {
-			if (appointment.isEmpty()) {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
-			return new ResponseEntity<>(appointment, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
-		} 
-	}
 
     // GET request to return all appointments 
 	@PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN', 'PATIENT')")
