@@ -4,18 +4,18 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
-import java.sql.Time;
+
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "appointments")
 public class Appointment {
     private @Id @GeneratedValue Long id;
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
-    private LocalDate appointmentDate;
-    private Time appointmentStartTime;
-    private Time appointmentEndTime;
+    private LocalDateTime appointmentStartTime;
+    private LocalDateTime appointmentEndTime;
     private String subject;
     private String notes;
     private String description;
@@ -29,12 +29,13 @@ public class Appointment {
     
 	private AppointmentStatus status = AppointmentStatus.SCHEDULED;
     private BigDecimal price;
+	private LocalDate appointmentDate;
     
     public Appointment() {
 
     }
 
-    public Appointment(Timestamp createdAt, long doctorId, long patientId, String subject, LocalDate appointmentDate, Time appointmentStartTime, Time appointmentEndTime, String nameOfDoctor, AppointmentStatus status, String notes, String description, BigDecimal price) {
+    public Appointment(Timestamp createdAt, long doctorId, long patientId, String subject, LocalDate appointmentDate, LocalDateTime appointmentStartTime, LocalDateTime appointmentEndTime, String nameOfDoctor, AppointmentStatus status, String notes, String description, BigDecimal price) {
         this.createdAt = createdAt;
         this.doctorId = doctorId;
         this.patientId = patientId;
@@ -49,7 +50,7 @@ public class Appointment {
         this.price = price;
     }
 
-    public Appointment(LocalDate appointmentDate, Time appointmentStartTime, Time appointmentEndTime, String nameOfDoctor, BigDecimal price) {
+    public Appointment(LocalDate appointmentDate, LocalDateTime appointmentStartTime, LocalDateTime appointmentEndTime, String nameOfDoctor, BigDecimal price) {
         this.appointmentDate = appointmentDate;
         this.appointmentStartTime = appointmentStartTime;
         this.appointmentEndTime = appointmentEndTime;
@@ -100,27 +101,23 @@ public class Appointment {
         this.createdAt = createdAt;
     }
 
-    public LocalDate getAppointmentDate() {
-        return appointmentDate;
-    }
-
     public void setAppointmentDate(LocalDate appointmentDate) {
         this.appointmentDate = appointmentDate;
     }
 
-    public Time getAppointmentStartTime() {
+    public LocalDateTime getAppointmentStartTime() {
         return appointmentStartTime;
     }
 
-    public void setAppointmentStartTime(Time appointmentStartTime) {
+    public void setAppointmentStartTime(LocalDateTime appointmentStartTime) {
         this.appointmentStartTime = appointmentStartTime;
     }
 
-    public Time getAppointmentEndTime() {
+    public LocalDateTime getAppointmentEndTime() {
         return appointmentEndTime;
     }
 
-    public void setAppointmentEndTime(Time appointmentEndTime) {
+    public void setAppointmentEndTime(LocalDateTime appointmentEndTime) {
         this.appointmentEndTime = appointmentEndTime;
     }
 
