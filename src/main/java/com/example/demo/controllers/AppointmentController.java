@@ -5,6 +5,7 @@ import com.example.demo.security.services.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -25,47 +26,54 @@ public class AppointmentController {
         this.appointmentService = appointmentService;
     }
 
-    // GET request to return specific appointments 
+    // GET request to return specific appointments
+	@PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN', 'PATIENT')")
     @RequestMapping(path = "/{appointmentId}", method = RequestMethod.GET)
     public Optional<Appointment> findById(@PathVariable Long appointmentId) {
         return appointmentService.findById(appointmentId);
     }
 
     // GET request to return all appointments 
-    @RequestMapping(path = "/", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN', 'PATIENT')")
+	@RequestMapping(path = "/", method = RequestMethod.GET)
     List<Appointment> findAll() {
         return appointmentService.findAll();
     }
 
     // GET request to return all appointments based on a date range and ordered by price 
-    @RequestMapping(method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN', 'PATIENT')")
+	@RequestMapping(method = RequestMethod.GET)
     public List<Appointment> findByDateRangeSortedByPrice(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam("startDate") LocalDate startDate,
                                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam("endDate") LocalDate endDate) {
         return appointmentService.findByDateRangeSortedByPrice(startDate, endDate);
     }
 
-    // POST request to add new appointments 
+    // POST request to add new appointments
+	@PreAuthorize("hasAnyRole('DOCTOR', 'PATIENT')")
     @RequestMapping(method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public Appointment create(@RequestBody Appointment appointment) {
         return appointmentService.create(appointment);
     }
 
-    // PUT request to update appointments 
+    // PUT request to update appointments
+	@PreAuthorize("hasAnyRole('DOCTOR', 'PATIENT')")
     @RequestMapping(path = "/{appointmentId}", method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public Appointment update(@PathVariable Long appointmentId, @RequestBody Appointment appointment) {
         return appointmentService.update(appointmentId, appointment);
     }
 
-    // PATCH request to update status of an appointment 
+    // PATCH request to update status of an appointment
+	@PreAuthorize("hasAnyRole('DOCTOR', 'PATIENT')")
     @RequestMapping(path = "/{appointmentId}", method = RequestMethod.PATCH, produces = "application/json", consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public Appointment updateStatus(@PathVariable Long appointmentId, @RequestBody Appointment appointment) {
         return appointmentService.updateStatus(appointmentId, appointment);
     }
 
-    // DELETE request to delete specific appointments 
+    // DELETE request to delete specific appointments
+	@PreAuthorize("hasAnyRole('DOCTOR', 'PATIENT')")
     @RequestMapping(path = "/{appointmentId}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     void deleteById(@PathVariable Long appointmentId) {
