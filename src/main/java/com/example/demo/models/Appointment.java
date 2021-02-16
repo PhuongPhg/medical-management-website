@@ -1,6 +1,8 @@
 package com.example.demo.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+
 import java.math.BigDecimal;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -18,6 +20,13 @@ public class Appointment {
     private String notes;
     private String description;
     private String nameOfDoctor;
+
+    @NotBlank
+	private long doctorId;
+    
+    @NotBlank
+	private long patientId;
+    
 	private AppointmentStatus status = AppointmentStatus.SCHEDULED;
     private BigDecimal price;
     
@@ -25,8 +34,10 @@ public class Appointment {
 
     }
 
-    public Appointment(Timestamp createdAt, String subject, LocalDate appointmentDate, Time appointmentStartTime, Time appointmentEndTime, String nameOfDoctor, AppointmentStatus status, String notes, String description, BigDecimal price) {
+    public Appointment(Timestamp createdAt, long doctorId, long patientId, String subject, LocalDate appointmentDate, Time appointmentStartTime, Time appointmentEndTime, String nameOfDoctor, AppointmentStatus status, String notes, String description, BigDecimal price) {
         this.createdAt = createdAt;
+        this.doctorId = doctorId;
+        this.patientId = patientId;
         this.subject = subject;
         this.notes = notes;
         this.description = description;
@@ -65,6 +76,22 @@ public class Appointment {
         this.id = id;
     }
 
+	public long getPatientId() {
+		return patientId;
+	}
+
+	public void setPatientId(long patientId) {
+		this.patientId = patientId;
+	}
+	
+	public long getDoctorId() {
+		return doctorId;
+	}
+
+	public void setDoctorId(long doctorId) {
+		this.doctorId = doctorId;
+	}
+	
     public Timestamp getCreatedAt() {
         return createdAt;
     }
@@ -136,6 +163,7 @@ public class Appointment {
     public void setStatus(AppointmentStatus status) {
         this.status = status;
     }
+    
 
     public BigDecimal getPrice() {
         return price;

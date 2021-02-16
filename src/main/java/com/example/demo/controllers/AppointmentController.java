@@ -1,13 +1,16 @@
 package com.example.demo.controllers;
 
 import com.example.demo.models.Appointment;
+import com.example.demo.repository.AppointmentRepository;
 import com.example.demo.security.services.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +21,7 @@ public class AppointmentController {
 
     @Autowired
     private AppointmentService appointmentService;
+	private AppointmentRepository appointmentRepository;
 
     public AppointmentController() {
     }
@@ -32,6 +36,38 @@ public class AppointmentController {
     public Optional<Appointment> findById(@PathVariable Long appointmentId) {
         return appointmentService.findById(appointmentId);
     }
+	
+    // GET request to return appointments with specific doctorId
+	@GetMapping("/doctor/{doctorId}")
+	@PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN', 'PATIENT')")
+	public ResponseEntity<List<Appointment>> getAppointmentByDoctorId(@PathVariable("doctorId") long doctorId){
+		List<Appointment> appointment = new ArrayList<Appointment>();
+		appointmentRepository.findByDoctorId(doctorId).forEach(appointment::add);
+		try {
+			if (appointment.isEmpty()) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity<>(appointment, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+		} 
+	}
+	
+	// GET request to return appointments with specific patientId
+	@GetMapping("/patient/{patientId}")
+	@PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN', 'PATIENT')")
+	public ResponseEntity<List<Appointment>> getAppointmentByPatientId(@PathVariable("patientId") long patientId){
+		List<Appointment> appointment = new ArrayList<Appointment>();
+		appointmentRepository.findByDoctorId(patientId).forEach(appointment::add);
+		try {
+			if (appointment.isEmpty()) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity<>(appointment, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+		} 
+	}
 
     // GET request to return all appointments 
 	@PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN', 'PATIENT')")
@@ -49,7 +85,7 @@ public class AppointmentController {
     }
 
     // POST request to add new appointments
-	@PreAuthorize("hasAnyRole('DOCTOR', 'PATIENT')")
+	@PreAuthorize("hasRole('PATIENT')")
     @RequestMapping(method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public Appointment create(@RequestBody Appointment appointment) {
