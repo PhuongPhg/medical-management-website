@@ -101,7 +101,7 @@ public class AdminController {
 	}
 	
 	@GetMapping(value = "/admin/role/doctor")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN', 'PATIENT', 'DOCTOR')")
 	public ResponseEntity<List<User>> getUserByRoleDoctor(){
 		try {
 			List<User> users = new ArrayList<User>();
