@@ -3,6 +3,10 @@ package com.example.demo.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.math.BigDecimal;
 
 import java.sql.Timestamp;
@@ -14,11 +18,22 @@ import java.time.LocalDateTime;
 public class Appointment {
     private @Id @GeneratedValue Long id;
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
+    
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime appointmentStartTime;
+    
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime appointmentEndTime;
+    
+//    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+//    private LocalDateTime canceledAt;
+
     private String subject;
+    
     private String notes;
+    
     private String description;
+    
     private String nameOfDoctor;
 
     @NotBlank
@@ -28,7 +43,9 @@ public class Appointment {
 	private long patientId;
     
 	private AppointmentStatus status = AppointmentStatus.SCHEDULED;
-    private BigDecimal price;
+    
+	private BigDecimal price;
+	
 	private LocalDate appointmentDate;
     
     public Appointment() {

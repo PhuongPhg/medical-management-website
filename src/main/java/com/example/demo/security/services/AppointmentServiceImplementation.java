@@ -68,6 +68,20 @@ public class AppointmentServiceImplementation implements AppointmentService {
         }
         return null;
     }
+    
+    @Override
+    public Appointment cancel(Long appointmentId, Appointment appointment) {
+
+        Optional<Appointment> appointmentList = appointmentRepository.findById(appointmentId);
+
+        if(appointmentList.isPresent()){
+            if(appointment.getStatus() != null){
+                appointmentList.get().setStatus(appointment.getStatus().CANCELED);
+            }
+            return appointmentRepository.save(appointmentList.get());
+        }
+        return null;
+    }
 
     @Override
     public void deleteById(Long appointmentId) {

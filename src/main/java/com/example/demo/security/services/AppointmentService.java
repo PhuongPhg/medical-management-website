@@ -18,11 +18,13 @@ public interface AppointmentService {
     List<Appointment> findAll();
     
     List<Appointment> findByDateRangeSortedByPrice(LocalDate startDate, LocalDate endDate);
-
+    
     Appointment create(Appointment appointment);
-
+    
     Appointment update(Long appointmentId, Appointment appointment);
-
+    
+    Appointment cancel(Long appointmentId, Appointment appointment);
+    
     Appointment updateStatus(Long appointmentId, Appointment appointment);
 
     void deleteById(Long appointmentId);

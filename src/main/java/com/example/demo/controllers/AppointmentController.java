@@ -58,7 +58,7 @@ public class AppointmentController {
     List<Appointment> findAll() {
         return appointmentService.findAll();
     }
-
+	
     // GET request to return all appointments based on a date range and ordered by price 
 	@PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN', 'PATIENT')")
 	@RequestMapping(method = RequestMethod.GET)
