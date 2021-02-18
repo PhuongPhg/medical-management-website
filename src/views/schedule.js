@@ -21,6 +21,10 @@ import CloseIcon from '@material-ui/icons/Close';
 import PulseLoader from "react-spinners/PulseLoader";
 import axios from 'axios';
 import { setDate } from 'date-fns';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 
 export default function Schedule(){
   const classes = useStyles();
@@ -42,6 +46,13 @@ export default function Schedule(){
   const [symptom, setSymptom] = useState('');
   const [firstday, setFirstday] = useState(moment().format('yyyy-MM-DDTkk:mm'));
   const [title, setTitle] = useState('');
+  const [note, setNote] = useState('')
+
+  const [doctor, setDoctor] = useState([])
+  const [chooseDoctor, setChooseDoctor]= useState({
+    doctorId: null,
+    nameOfDoctor: ''
+  })
 
   const [openCreate, setOpenCreate] = useState(false);
   const handleOpenCreate = () => setOpenCreate(true);
@@ -64,47 +75,92 @@ export default function Schedule(){
         EndTime: item.EndTime,
         description: item.Description ? item.Description : 'None',
         status: item.status ? item.status : 'None',
-        Notes: ''
+        Notes: item.Note ? item.Note : ''
       });
     setOpenDetail(true)
   };
   const handleCloseDetail = () => setOpenDetail(false);
-  
-  // useEffect(()=>{
-  //   console.log(data);
-  //   // console.log(moment(firstday).add(120, 'minutes').format('yyyy-MM-DDTkk:mm'))
-  // },[data])
 
-  const onSubmit = () => {
-    let max = 0;
-    data.forEach(e => {
-      if(e.Id > max){
-        max = e.Id;
-      }
-    });
-    console.log(firstday)
-    setData(pre => [...pre, {
-      Id: max+1,
-      Subject: title,
-      StartTime: new Date(moment(firstday)),
-      EndTime: new Date(moment(firstday).add(120, 'minutes').format('yyyy-MM-DDTkk:mm')),
-      Description: symptom
-    }])
+  const onSubmit = async () => {
+    // let max = 0;
+    // data.forEach(e => {
+    //   if(e.Id > max){
+    //     max = e.Id;
+    //   }
+    // });
+
+    // setData(pre => [...pre, {
+    //   Subject: title,
+    //   StartTime: new Date(moment(firstday)),
+    //   EndTime: new Date(moment(firstday).add(120, 'minutes').format('yyyy-MM-DDTkk:mm')),
+    //   Description: symptom
+    // }])
+
+    let newApp = {
+      subject: title,
+      appointmentStartTime: new Date(moment(firstday)),
+      appointmentEndTime:  new Date(moment(firstday).add(60, 'minutes').format('yyyy-MM-DDTkk:mm')),
+      notes: note,
+      description: symptom,
+      doctorId: chooseDoctor.doctorId,
+      nameOfDoctor: chooseDoctor.nameOfDoctor,
+      // "patientId": 2,
+      // "status": "SCHEDULED",
+      // "price": 70.00
+    }
   }
 
   const getData = async () => {
-    if (sessionStorage.getItem("username") == null){
+    if (sessionStorage.getItem("username") != null){
       try{
-        let res = await axios.get(`http://thaonp.work/api/appointments/`);
-        console.log(res.data)
-        // setData(res.data)
+        let res = await axios.get(`http://thaonp.work/api/appointments/`, {
+          headers: {"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`}
+        });
+        let newData = res.data
+        newData = newData.map(item => {
+          return {
+            Id: item.id,
+            StartTime: new Date(moment(item.appointmentStartTime)),
+            EndTime: new Date(moment(item.appointmentEndTime)),
+            Subject: item.subject,
+            Note: item.notes,
+            Description: item.description,
+            nameOfDoctor: item.nameOfDoctor,
+            doctorId: item.doctorId,
+            status: item.status,
+          }
+        })
+        setData(newData)
       }
       catch(error){
         console.log(error);
       }
     }
   }
-  useEffect(() => getData(), [])
+  const getAllDoctor = async () => {
+    try{
+      let res = await axios.get(`http://thaonp.work/api/admin/role/doctor`, {
+        headers: {"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`}
+      })
+      let listDoc = res.data
+      listDoc = listDoc.map(item => {
+        return{
+          nameOfDoctor: item.firstname + ' '+ item.lastname,
+          doctorId: item.id,
+        }
+      })
+      setDoctor(listDoc)
+      console.log(doctor)
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+  useEffect(() => {
+    getData()
+    getAllDoctor()
+  }, [])
+
   if (loading){
 		return(
 			<Grid container justify="center" alignItems="center" style={{height: "100vh"}}>
@@ -197,8 +253,8 @@ export default function Schedule(){
             Medical Registration Form
           </Typography>
           <form className={classes.form} noValidate>
-            <Grid container style={{marginBottom: 10}}>
-            <Grid item xs={12} sm={6}>
+            <Grid container>
+            <Grid xs={12} sm={6}>
               <TextField 
                 margin="normal"
                 required
@@ -213,7 +269,7 @@ export default function Schedule(){
                 style={{marginRight: '4px'}}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid xs={12} sm={6}>
               <TextField 
                 margin="normal"
                 required
@@ -227,10 +283,10 @@ export default function Schedule(){
                 value={sessionStorage.getItem("userID")}
                 style={{marginLeft: '4px'}}
               />
+              </Grid>
             </Grid>
+            <Grid container spacing={1}>
             <TextField 
-              multiline
-              rows={2}
               variant="outlined"
               margin="normal"
               required
@@ -240,9 +296,9 @@ export default function Schedule(){
               value={title}
               onChange={text => setTitle(text.target.value)}
             />
-            <TextField 
+            <TextField
               multiline
-              rows={3}
+              rows={2}
               variant="outlined"
               margin="normal"
               required
@@ -252,19 +308,53 @@ export default function Schedule(){
               label="Describe your health problems"
               onChange = {text => setSymptom(text.target.value)}
             />
-            <TextField
-              id="datetime-local"
-              label="Date and Time"
-              type="datetime-local"
-              // format='yyyy-MM-ddThh:mm'
+            <Grid xs={12} sm={6}>
+                <TextField
+                variant = "outlined"
+                id="datetime-local"
+                label="Date and Time"
+                type="datetime-local"
+                // format='yyyy-MM-ddThh:mm'
+                fullWidth
+                defaultValue={firstday}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={txt => setFirstday(txt.target.value)}
+                style={{marginRight: '4px'}}
+                />
+              </Grid>
+              <Grid xs={12} sm={6}>
+                <FormControl variant="outlined" fullWidth required >
+                  <InputLabel>Doctor</InputLabel>
+                  <Select
+                    id="Doctor"
+                    value={chooseDoctor}
+                    onChange={e => setChooseDoctor(e.target.value)}
+                    label="Doctor"
+                    >
+                    {doctor ? doctor.map((item) => {
+                      return (
+                        <MenuItem value={item}>{item.nameOfDoctor}</MenuItem>
+                      )
+                    }): <MenuItem value={null}><em>None</em></MenuItem>}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <TextField
+              multiline
+              rows={2}
+              variant="outlined"
+              margin="normal"
               fullWidth
-              defaultValue={firstday}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={txt => setFirstday(txt.target.value)}
+              value={note}
+              id="Note"
+              label="Note"
+              onChange = {text => setNote(text.target.value)}
             />
             </Grid>
+            
+            {/* </Grid> */}
             <Grid container spacing={1}>
               <Grid item xs={12} sm={6}>
                 <Button
