@@ -11,6 +11,7 @@ import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import { useLocation } from "react-router-dom";
+import axios from 'axios';
 
 const AppointmentCard = (props) => {
   const styles = useStyles();
@@ -26,18 +27,11 @@ const AppointmentCard = (props) => {
 						<Grid item>
 							<Typography align="left">{props.title}</Typography>
 							<Typography align="left" className={styles.status}>
-								{props.time}
+								{props.desc}
 							</Typography>
 						</Grid>
 					</Grid>
-					<Grid item direction="row">
-						{props.finished ? (
-							<Typography component="span" className={styles.status}>
-								Finished and reschedule in {props.nextApm}
-							</Typography>
-						) : null}
-						<NavigateNextIcon className={styles.nextBtn} />
-					</Grid>
+					{props.more ? <NavigateNextIcon className={styles.nextBtn} /> : null}
 				</Grid>
 			</CardContent>
 		</Card>
@@ -45,18 +39,50 @@ const AppointmentCard = (props) => {
 }
 
 const UpdateForm = (props) => {
-  const styles = useStyles();
+	const styles = useStyles();
 
-  const setFormOpen = props.setFormOpen;
-  const [firstname, setFName] = useState(null);
+	const setFormOpen = props.setFormOpen;
+	const [firstname, setFName] = useState(null);
 	const [lastname, setLName] = useState(null);
 	const [address, setAddress] = useState(null);
-  const [dob, setDOB] = useState(null);
+	const [dob, setDOB] = useState(null);
+	const uID = props.userID;
+	const user = props.userInfo;
 
-  return (
+	const handleUpdateRequest = () => {
+		setLName(user.lastname);
+		setFName(user.firstname);
+		setAddress(user.address);
+		setDOB(user.dob);
+	}
+
+	const updateData = async (userID) => {
+		const formData = {
+			firstname: firstname,
+			lastname: lastname,
+			address: address,
+			dob: dob,
+		};
+
+		try {
+			await axios.put(`http://thaonp.work/api/public/user/${userID}`, formData, {
+				headers: {
+					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
+				}
+			});
+			sessionStorage.setItem("userFullName", lastname + ' ' + firstname);
+		}
+		catch (error) {
+			alert(error);
+		}
+	}
+
+	React.useEffect(() => handleUpdateRequest(), [])
+
+	return (
 		<Grid container justify="center" alignItems="center">
 			<form className={styles.updateForm}>
-        <Grid container justify="flex-end">
+				<Grid container justify="flex-end">
 					<IconButton>
 						<CloseIcon
 							onClick={() => {
@@ -65,103 +91,146 @@ const UpdateForm = (props) => {
 						/>
 					</IconButton>
 				</Grid>
-        <Grid style={{paddingLeft:30, paddingRight:30}}>			
-        <Grid container spacing={3}>
-					<Grid item xs={6} sm={5}>
-						<TextField name="firstName" required={true} fullWidth label={"First name"} value={firstname} onChange={(event) => setFName(event.target.value)} />
+				<Grid style={{ paddingLeft: 30, paddingRight: 30 }}>
+					<Grid container spacing={3}>
+						<Grid item xs={6} sm={5}>
+							<TextField name="firstName" required={true} fullWidth label={"First name"} value={firstname} onChange={(event) => setFName(event.target.value)} />
+						</Grid>
+						<Grid item xs={6} sm={7}>
+							<TextField name="lastName" required fullWidth label="Last Name" value={lastname} onChange={(event) => setLName(event.target.value)} />
+						</Grid>
 					</Grid>
-					<Grid item xs={6} sm={7}>
-						<TextField name="lastName" required fullWidth label="Last Name" value={lastname} onChange={(event) => setLName(event.target.value)} />
-					</Grid>
-				</Grid>
 
-				<TextField margin="normal" required fullWidth label="Address" name="address" value={address} onChange={(event) => setAddress(event.target.value)} />
+					<TextField margin="normal" required fullWidth label="Address" name="address" value={address} onChange={(event) => setAddress(event.target.value)} />
 
-				<MuiPickersUtilsProvider utils={DateFnsUtils}>
-					<KeyboardDatePicker
-						disableToolbar
-						variant="inline"
-						format="yyyy-MM-dd"
-						label="DOB"
-						value={dob}
+					<MuiPickersUtilsProvider utils={DateFnsUtils}>
+						<KeyboardDatePicker
+							disableToolbar
+							variant="inline"
+							format="yyyy-MM-dd"
+							label="DOB"
+							value={dob}
+							fullWidth
+							onChange={(event) => {
+								setDOB(event);
+							}}
+						/>
+					</MuiPickersUtilsProvider>
+
+					<Button
 						fullWidth
-						onChange={(event) => {
-							setDOB(event);
+						variant="contained"
+						className={styles.submit}
+						onClick={(event) => {
+							event.preventDefault();
+							updateData(uID);
+							setFormOpen(false);
+							setTimeout(() => window.location.reload(), 1000);
 						}}
-					/>
-				</MuiPickersUtilsProvider>
-
-				<Button
-					fullWidth
-					variant="contained"
-					className={styles.submit}
-					onClick={(event) => {
-						event.preventDefault();
-						// updateData();
-						setFormOpen(false);
-						setTimeout(() => window.location.reload(), 1000);
-					}}
-				>
-					Save
+					>
+						Save
 				</Button>
-        </Grid>
+				</Grid>
 			</form>
 		</Grid>
-  );
+	);
 }
 
 const InfoItem = (props) => {
   const styles = useStyles();
+  const toCapitalize = (text) => {
+	return text.charAt(0).toUpperCase() + text.slice(1)
+  }
+
   return (
     <div className={styles.outerBullet}>
       <div className={styles.bullet} />
-      <p className={styles.bulletText}>{props.info}</p>
+      <p className={styles.bulletText}>{props.capitalize ? toCapitalize(String(props.info)) : props.info}</p>
     </div>
   );
 }
 
 export default function Profile () {
-  const styles = useStyles();
-  const location = useLocation();
-  const [uid, setUID] = useState(null);
-  const [newRecord, setOpenNewRecord] = useState(false);
+	const styles = useStyles();
+	const location = useLocation();
+	const [uid, setUID] = useState(null)
+	const [newRecord, setOpenNewRecord] = useState(false);
 	const [form_open, setFormOpen] = useState(false);
-	const [updateItem, setUpdateItem] = useState(null);
+	const [userInfo, setUserInfo] = useState([]);
+	const [userRole, setRole] = useState('ROLE_VOID');
+	const [records, setRecords] = useState(null)
+	const numPerPage = 3;
+	const [noPage, setNoPage] = useState(0)
+	const [page, setPage] = useState(0)
 
-  React.useEffect(() => {
-    setUID(location.state.detail);
-    console.log(location.state.detail);
-  }, []);
+	const getProfile = async (userID) => {
+		try{
+			let res = await axios.get(`http://thaonp.work/api/public/user/${userID}`, {
+				headers: {
+					"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`
+				}
+			});
+			setUserInfo(res.data);
+			setRole(res.data.roles[0].name);
+			console.log(res.data);
+		} 
+		catch(error){
+			alert(error);
+		}
+	}
 
-  return (
+	const getRecords = async (userID) => {
+		try{
+			let res = await axios.get(`http://thaonp.work/api/doctor/medicalRecord/${userID}`, {
+				headers: {
+					"Authorization" : `Bearer ${sessionStorage.getItem("userToken")}`
+				}
+			})
+			setRecords(res.data);
+			setNoPage(res.data.length/numPerPage);
+		}
+		catch(error){
+			console.log(error);
+		}
+	}
+
+	React.useEffect(() => {
+		getProfile(location.state.detail);
+		getRecords(location.state.detail);
+		setUID(location.state.detail);
+		console.log(location.state.detail);
+	}, []);
+
+	return (
 		<div className={styles.container}>
 			<Navigation />
 			<Grid component="main" spacing={4} className={styles.root}>
 				<Grid xs={3} direction="column" alignItems="center" className={styles.userinfo}>
-        <div style={{marginTop: '30px'}}>
-            <Avatar 
-              alt="User avatar" 
-              style={{height:'200px', width:'200px'}}
-            />
-          </div>
-          <div>
-            <h1 style={{marginBottom: '0'}}>Nguyen Van A</h1>
-            <p style={{marginTop: '0', color: '#6A6A6A', fontSize: '20px'}}>Patient</p>
-          </div>
-          <Grid container direction="column" style={{display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
-            <InfoItem info="username"/>
-            <div style={{display: 'flex', direction: 'row'}}>
-              <InfoItem info="Female"/>
-              <div className={styles.outerBullet} style={{marginLeft: '60px'}}>
-                <div className={styles.bullet} />
-                <p className={styles.bulletText}>51 ans</p>
-              </div>
-            </div>
-            <InfoItem info="0123456789" />
-            <InfoItem info="useremail@email.com" />
-            <InfoItem info="18B Hoang Quoc Viet, Hanoi, Vietnam" />
-            <Button variant="contained" onClick={() => setFormOpen(true)} className={styles.editButton}>EDIT</Button>
-          </Grid>
+					<div style={{ marginTop: "30px" }}>
+						<Avatar alt="User avatar" style={{ height: "200px", width: "200px" }} />
+					</div>
+					<div>
+						<h1 style={{ marginBottom: "0" }}>{userInfo.lastname + " " + userInfo.firstname}</h1>
+						<p style={{ marginTop: "0", color: "#6A6A6A", fontSize: "20px" }}>{userRole.charAt(5).toUpperCase() + userRole.substring(6).toLowerCase()}</p>
+					</div>
+					<Grid container direction="column" style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start" }}>
+						<InfoItem info={userInfo.username} />
+						<div style={{ display: "flex", direction: "row" }}>
+							<InfoItem info={userInfo.sex} capitalize />
+							<div className={styles.outerBullet} style={{ marginLeft: "60px" }}>
+								<div className={styles.bullet} />
+								<p className={styles.bulletText}>{new Date().getFullYear() - new Date(userInfo.dob).getFullYear()} ans</p>
+							</div>
+						</div>
+						<InfoItem info={userInfo.phone} />
+						<InfoItem info={userInfo.email} />
+						<InfoItem info={userInfo.address} />
+						{sessionStorage.getItem("userID") === uid ? (
+							<Button variant="contained" onClick={() => setFormOpen(true)} className={styles.editButton}>
+								EDIT
+							</Button>
+						) : null}
+					</Grid>
 				</Grid>
 
 				<Grid xs={9} direction="row" className={styles.records}>
@@ -170,7 +239,7 @@ export default function Profile () {
 						<Typography variant="p" align="left" className={styles.sectionHeader}>
 							Appointments
 						</Typography>
-						<AppointmentCard date="1 Feb" title="Lung examination" time="8:00 - 10:00 AM" finished={false} />
+						<AppointmentCard date="1 Feb" title="Lung examination" desc="8:00 - 10:00 AM" finished={false} more/>
 
 						{/* Medical records */}
 						<Grid container direction="row" justify="space-between" alignItems="center">
@@ -178,16 +247,24 @@ export default function Profile () {
 								Medical records
 							</Typography>
 
-							<IconButton onClick={() => setOpenNewRecord(true)}>
-								<AddIcon />
-							</IconButton>
+							{sessionStorage.getItem("role") === "ROLE_DOCTOR" && sessionStorage.getItem("userID") !== uid ? (
+								<IconButton onClick={() => setOpenNewRecord(true)}>
+									<AddIcon />
+								</IconButton>
+							) : null}
 						</Grid>
-						<AppointmentCard date="31 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="01/02" />
-						<AppointmentCard date="30 Jan" title="Lung examination" time="8:00 - 10:00 AM" finished={true} nextApm="31/01" />
+						{records ? records.slice(numPerPage * page, numPerPage * page + numPerPage).map((item) => (
+							<AppointmentCard date={new Date(item.date).getUTCDate() + " " + months[new Date(item.date).getMonth()]} title={item.details} desc={item.prescriptions} />
+						)) : <Typography className={styles.noRecord}>No record exists.</Typography>}
 					</Grid>
 					<Grid container justify="flex-end">
-						<NavigateBeforeIcon />
-						<NavigateNextIcon />
+						<IconButton onClick={() => setPage(page - 1)} disabled={page - 1 < 0}>
+							<NavigateBeforeIcon />
+						</IconButton>
+
+						<IconButton onClick={() => setPage(page + 1)} disabled={page + 1 > noPage}>
+							<NavigateNextIcon />
+						</IconButton>
 					</Grid>
 				</Grid>
 
@@ -198,17 +275,19 @@ export default function Profile () {
 								<CloseIcon />
 							</IconButton>
 						</Tooltip>
-            <RegistrationForm />
+						<RegistrationForm setFormOpen={setOpenNewRecord} doctor={sessionStorage.getItem("userFullName")} userID={uid} user={userInfo} />
 					</Grid>
 				</Modal>
 
-        <Modal open={form_open} onClose={() => setFormOpen(false)} className={styles.modal}>
-          <UpdateForm setFormOpen={setFormOpen}/>
+				<Modal open={form_open} onClose={() => setFormOpen(false)} className={styles.modal}>
+					<UpdateForm setFormOpen={setFormOpen} userID={uid} userInfo={userInfo} />
 				</Modal>
 			</Grid>
 		</div>
-  );
+	);
 }
+
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -272,12 +351,18 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     width: '100%',
-    marginBottom: 20,
+	 marginTop: 10,
+    marginBottom: 10,
   },
   sectionHeader: {
     fontWeight: 600,
     marginLeft: 10,
-    marginBottom: 10,
+  },
+  noRecord: {
+	 fontSize: 16,
+	 marginLeft: 10,
+	 marginBottom: 5,
+	 color: colors.additional_info
   },
   date: {
     color: colors.date_color,

@@ -5,23 +5,7 @@ import SearchIcon from "@material-ui/icons/Search";
 
 export const SearchBox = (props) => {
 	const classes = useStyles();
-   const [query, setQuery] = useState(null);
-	const data = props.data;
-	const setDisplay = props.setDisplay;
-
-	const search = () => {
-		if (query){
-			setDisplay(data.filter(item => 
-				item.firstname.includes(query) ||
-				item.phone.includes(query) ||
-				item.username.includes(query) ||
-				item.email.includes(query)
-			));
-		}
-		else{
-			setDisplay(data);
-		}
-	};
+   const setQuery = props.setQuery;
 
 	return(
       <TextField
@@ -39,7 +23,6 @@ export const SearchBox = (props) => {
 			}
 		}}
 		onChange={(text) => setQuery(text.target.value)}
-		onKeyUp={() => search()}
 		className={classes.searchBox} />
    )
 }

@@ -6,18 +6,16 @@ import styles from './button_effect.css'
 import { Route, Router } from 'react-router-dom'
 import { AppBar, ClickAwayListener, Grid, Link, MenuList, MenuItem, Typography, Popper, Grow, Paper } from '@material-ui/core';
 import { colors } from './helpers/config';
+import { useHistory } from 'react-router-dom';
 
 const UserAccount = () => {
   const classes = useStyles();
-
+  const history = useHistory();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
   
   const logout = () => {
-    sessionStorage.removeItem("userToken");
-    sessionStorage.removeItem("username");
-    sessionStorage.removeItem("userID");
-    sessionStorage.removeItem("role");
+    sessionStorage.clear()
   }
 
   const handleToggle = () => {
@@ -52,7 +50,7 @@ const UserAccount = () => {
   return (
 		<Grid container>
 			<Typography ref={anchorRef} aria-controls={open ? "menu-list-grow" : undefined} aria-haspopup="true" onMouseOver={handleToggle} className={classes.username}>
-				Hello {sessionStorage.getItem("username")}!
+				Hello {sessionStorage.getItem("userFullName")}!
 			</Typography>
 
 			<Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
@@ -61,7 +59,13 @@ const UserAccount = () => {
 						<Paper>
 							<ClickAwayListener onClickAway={handleClose}>
 								<MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-									<MenuItem onClick={handleClose} onClick={() => window.open("/profile", "_self")}>
+									<MenuItem onClick={handleClose} onClick={() => {
+                    history.push({
+                      pathname: "/profile",
+                      state: { detail: sessionStorage.getItem("userID")}
+                    });
+                    window.location.reload();
+                  }}>
 										Profile
 									</MenuItem>
 									<MenuItem
