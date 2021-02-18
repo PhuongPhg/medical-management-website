@@ -286,29 +286,33 @@ export default function Schedule(){
               </Grid>
             </Grid>
             <Grid container spacing={1}>
-            <TextField 
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="title"
-              label="Title"
-              value={title}
-              onChange={text => setTitle(text.target.value)}
-            />
-            <TextField
-              multiline
-              rows={2}
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              value={symptom}
-              id="symptom"
-              label="Describe your health problems"
-              onChange = {text => setSymptom(text.target.value)}
-            />
-            <Grid xs={12} sm={6}>
+              <Grid item xs={12}>
+                <TextField 
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="title"
+                label="Title"
+                value={title}
+                onChange={text => setTitle(text.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                multiline
+                rows={2}
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                value={symptom}
+                id="symptom"
+                label="Describe your health problems"
+                onChange = {text => setSymptom(text.target.value)}
+                />
+              </Grid>
+            <Grid item xs={12} sm={6}>
                 <TextField
                 variant = "outlined"
                 id="datetime-local"
@@ -324,7 +328,7 @@ export default function Schedule(){
                 style={{marginRight: '4px'}}
                 />
               </Grid>
-              <Grid xs={12} sm={6}>
+              <Grid item xs={12} sm={6}>
                 <FormControl variant="outlined" fullWidth required >
                   <InputLabel>Doctor</InputLabel>
                   <Select
@@ -341,20 +345,21 @@ export default function Schedule(){
                   </Select>
                 </FormControl>
               </Grid>
-              <TextField
-              multiline
-              rows={2}
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              value={note}
-              id="Note"
-              label="Note"
-              onChange = {text => setNote(text.target.value)}
-            />
+              <Grid item xs={12}>
+                <TextField
+                multiline
+                rows={2}
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                value={note}
+                id="Note"
+                label="Note"
+                onChange = {text => setNote(text.target.value)}
+                />
+              </Grid>
             </Grid>
             
-            {/* </Grid> */}
             <Grid container spacing={1}>
               <Grid item xs={12} sm={6}>
                 <Button
