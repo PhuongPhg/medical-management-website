@@ -19,6 +19,8 @@ import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
 import CloseIcon from '@material-ui/icons/Close';
 import PulseLoader from "react-spinners/PulseLoader";
+import axios from 'axios';
+import { setDate } from 'date-fns';
 
 export default function Schedule(){
   const classes = useStyles();
@@ -36,6 +38,7 @@ export default function Schedule(){
   },
   
 ], )
+  
   const [symptom, setSymptom] = useState('');
   const [firstday, setFirstday] = useState(moment().format('yyyy-MM-DDTkk:mm'));
   const [title, setTitle] = useState('');
@@ -89,6 +92,19 @@ export default function Schedule(){
     }])
   }
 
+  const getData = async () => {
+    if (sessionStorage.getItem("username") == null){
+      try{
+        let res = await axios.get(`http://thaonp.work/api/appointments/`);
+        console.log(res.data)
+        // setData(res.data)
+      }
+      catch(error){
+        console.log(error);
+      }
+    }
+  }
+  useEffect(() => getData(), [])
   if (loading){
 		return(
 			<Grid container justify="center" alignItems="center" style={{height: "100vh"}}>
