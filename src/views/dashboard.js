@@ -22,7 +22,7 @@ export default function Dashboard() {
 	const classes = useStyles();
 	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState([]);
-	const [display, setDisplay] = useState([]);
+	const [query, setQuery] = useState('');
 	const [page, setPage] = useState(0);
 	const rowsPerPage = 20;
 	const [sortName, setSortName] = useState("asc");
@@ -37,7 +37,7 @@ export default function Dashboard() {
 	const [lastname, setLName] = useState(null);
 	const [address, setAddress] = useState(null);
 	const [dob, setDOB] = useState(null);
-	
+
 	const handleUpdateRequest = (item) => {
 		setUpdateItem(item);
 		setFName(item.firstname);
@@ -95,7 +95,6 @@ export default function Dashboard() {
 			});
 			console.log(res.data)
 			setData(res.data);
-			setDisplay(res.data);
 			setLoading(false);
 		} 
 		catch(error){
@@ -103,6 +102,12 @@ export default function Dashboard() {
 			// throw new Error("Error: ", error);
 		}
 	}
+
+	const search = (item) => {
+		if (item.firstname.includes(query) || item.phone.includes(query) || item.username.includes(query) || item.email.includes(query)) {
+			return true;
+		}
+	};
 
 	const applyFilter = async (type) => {
 		try{
@@ -157,7 +162,7 @@ export default function Dashboard() {
 			<Navigation dashboard />
 			<Grid>
 				<Grid container alignItems="center">
-					<SearchBox data={data} setDisplay={setDisplay} />
+					<SearchBox setQuery={setQuery} />
 
 					<Typography className={classes.tableCell}>Filter by role</Typography>
 					<Select
@@ -165,7 +170,7 @@ export default function Dashboard() {
 						className={classes.selectFilter}
 						onChange={(event) => {
 							if (!event.target.value) {
-								setDisplay(data);
+								getData(data);
 							} else {
 								applyFilter(event.target.value);
 							}
@@ -223,8 +228,8 @@ export default function Dashboard() {
 						</TableHead>
 
 						<TableBody>
-							{display
-								? display.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item) => (
+							{data
+								? data.filter(item => search(item)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item) => (
 										<TableRow className={classes.row} key={item.id}>
 											<TableCell align="left" className={classes.tableCell} width={30}>
 												{item.id}

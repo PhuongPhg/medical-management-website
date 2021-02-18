@@ -22,8 +22,7 @@ export default function Patients() {
 	const [page, setPage] = useState(0);
 	const rowsPerPage = 20;
 	const [sortDir, setSortDir] = useState("asc");
-
-	const [display, setDisplay] = useState(null);
+	const [query, setQuery] = useState('');
 
 	const getData = async () => {
 		try{
@@ -34,7 +33,6 @@ export default function Patients() {
 			});
 			console.log(res.data)
 			setData(res.data);
-			setDisplay(res.data);
 			setLoading(false);
 		} 
 		catch(error){
@@ -42,6 +40,12 @@ export default function Patients() {
 			// throw new Error("Error: ", error);
 		}
 	}
+
+	const search = (item) => {
+		if (item.firstname.includes(query) || item.phone.includes(query) || item.username.includes(query) || item.email.includes(query)) {
+			return true;
+		}
+	};
 
 	useEffect(() => getData(), []);
 
@@ -56,7 +60,7 @@ export default function Patients() {
 		<div className={classes.container}>
 			<Navigation patients />
 			<Grid container alignItems="center">
-				<SearchBox data={data} setDisplay={setDisplay} />
+				<SearchBox setQuery={setQuery} />
 
 				<TableContainer component={Paper}>
 					<Table className={classes.table} aria-label="sticky table" size="small">
@@ -93,8 +97,8 @@ export default function Patients() {
 						</TableHead>
 
 						<TableBody>
-							{display
-								? display.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item) => (
+							{data
+								? data.filter(item => search(item)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item) => (
 										<TableRow
 											className={classes.row}
 											key={item.id}
