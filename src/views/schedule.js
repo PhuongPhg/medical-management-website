@@ -96,17 +96,26 @@ export default function Schedule(){
     //   Description: symptom
     // }])
 
-    let newApp = {
+    const newApp = {
       subject: title,
-      appointmentStartTime: new Date(moment(firstday)),
-      appointmentEndTime:  new Date(moment(firstday).add(60, 'minutes').format('yyyy-MM-DDTkk:mm')),
+      appointmentStartTime: moment(firstday).format('yyyy-MM-DDTkk:mm:ss'),
+      appointmentEndTime:  moment(firstday).add(60, 'minutes').format('yyyy-MM-DDTkk:mm:ss'),
       notes: note,
       description: symptom,
       doctorId: chooseDoctor.doctorId,
       nameOfDoctor: chooseDoctor.nameOfDoctor,
-      // "patientId": 2,
-      // "status": "SCHEDULED",
-      // "price": 70.00
+      patientId: sessionStorage.getItem("userID")
+    }
+    console.dir(JSON.stringify(newApp))
+    try{
+      let res = await axios.post(`http://thaonp.work/api/appointments/`, newApp, {
+        headers: {"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`}
+      });
+      console.log(res.data)
+      getData()
+    }
+    catch(error){
+      console.log(error)
     }
   }
 
@@ -150,7 +159,6 @@ export default function Schedule(){
         }
       })
       setDoctor(listDoc)
-      console.log(doctor)
     }
     catch(error){
       console.log(error);
