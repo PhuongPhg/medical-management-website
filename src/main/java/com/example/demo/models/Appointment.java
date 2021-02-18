@@ -19,10 +19,10 @@ public class Appointment {
     private @Id @GeneratedValue Long id;
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
     
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime appointmentStartTime;
     
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime appointmentEndTime;
     
 //    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
