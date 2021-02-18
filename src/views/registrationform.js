@@ -22,7 +22,7 @@ export default function RegistrationForm(props) {
 	const styles = useStyles();
 	const setFormOpen = props.setFormOpen;
 	const [symptom, setSymptom] = useState(null);
-	const [firstday, setFirstday] = useState(moment().format("DD/MM/YYYY"));
+	const [firstday, setFirstday] = useState(moment());
 	const [prescription, setPrescription] = useState(null);
 	const { enqueueSnackbar } = useSnackbar();
 
