@@ -128,10 +128,10 @@ export default function Dashboard() {
 			if (isNaN(a[comparator])) {
 				return a[comparator].localeCompare(b[comparator]);
 			} else {
-				if (a[comparator] > b[comparator]) {
+				if (a[comparator] < b[comparator]) {
 					return -1;
 				}
-				if (a[comparator] < b[comparator]) {
+				if (a[comparator] > b[comparator]) {
 					return 1;
 				}
 				return 0;
@@ -141,14 +141,14 @@ export default function Dashboard() {
 	};
 
 	const sortData = (comparator, sortDir, setSortDir) => {
-		if (sortDir === "asc"){
+		if (sortDir === "desc"){
 			setData(customSort(data, comparator));
-			setSortDir("desc");
+			setSortDir("asc");
 		}
 		else{
 			let sortedData = customSort(data, comparator);
 			setData(sortedData.reverse());
-			setSortDir("asc");
+			setSortDir("desc");
 		}
 	}
 	
