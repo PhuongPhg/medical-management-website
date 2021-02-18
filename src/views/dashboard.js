@@ -124,14 +124,18 @@ export default function Dashboard() {
 	}
 	
 	const customSort = (array, comparator) => {
-		let sortedArray = array.sort((a,b) => {
-			if (a[comparator] > b[comparator]) {
-				return -1;
-			 }
-			 if (a[comparator] < b[comparator]) {
-				return 1;
-			 }
-			 return 0;
+		let sortedArray = array.sort((a, b) => {
+			if (isNaN(a[comparator])) {
+				return a[comparator].localeCompare(b[comparator]);
+			} else {
+				if (a[comparator] > b[comparator]) {
+					return -1;
+				}
+				if (a[comparator] < b[comparator]) {
+					return 1;
+				}
+				return 0;
+			}
 		});
 		return sortedArray;
 	};
