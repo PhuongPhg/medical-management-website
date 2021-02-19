@@ -27,8 +27,10 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Pagination from '@material-ui/lab/Pagination';
 import Box from '@material-ui/core/Box';
+import { SnackbarProvider, useSnackbar } from 'notistack';
 
 export default function Schedule(){
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -120,16 +122,26 @@ export default function Schedule(){
   }
 
   const onCancel = async () => {
-    console.log(tempDetail)
-    const statusCan= {status: "CANCELED"}
-    try{
-      let res = await axios.patch(`http://thaonp.work/api/appointments/${tempDetail.id}`, statusCan , {
-      headers: {"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`}})
-      getData()
+    let HOUR = 60 * 60 * 1000*24;
+    let temp = tempDetail.StartTime - new Date();
+    let checkedHour = (temp < HOUR && temp > 0) ? false : true;
+    console.log(checkedHour)
+    const statusCan= {status: "SCHEDULED"}
+
+    if(checkedHour == true){
+      try{
+        let res = await axios.patch(`http://thaonp.work/api/appointments/${tempDetail.id}`, statusCan , {
+        headers: {"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`}})
+        if (res.status == 200) enqueueSnackbar("Success cancel appointment!", { variant: "success" });
+        setTimeout(function () {
+          window.location.reload();
+        }, 200);
+      }
+      catch(error){
+        console.log(error)
+      }
     }
-    catch(error){
-      console.log(error)
-    }
+    else enqueueSnackbar("Cannot be canceled 24 hours prior to the appointment!", { variant: "error" });
   }
   const getData = async () => {
       try{
