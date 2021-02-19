@@ -27,7 +27,13 @@ public class AppointmentController {
     public AppointmentController(AppointmentService appointmentService) {
         this.appointmentService = appointmentService;
     }
-
+    
+    // GET request to return all appointments 
+	@RequestMapping(path = "/all", method = RequestMethod.GET)
+    List<Appointment> findAll() {
+        return appointmentService.findAll();
+    }
+	
     // GET request to return specific appointments
 	@PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN', 'PATIENT')")
     @RequestMapping(path = "/{appointmentId}", method = RequestMethod.GET)
@@ -49,12 +55,6 @@ public class AppointmentController {
         return appointmentService.findByPatientId(patientId);
     }
 	
-
-    // GET request to return all appointments 
-	@RequestMapping(path = "/all", method = RequestMethod.GET)
-    List<Appointment> findAll() {
-        return appointmentService.findAll();
-    }
 	
     // GET request to return all appointments based on a date range and ordered by price 
 	@PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN', 'PATIENT')")
