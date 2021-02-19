@@ -51,7 +51,6 @@ public class AppointmentController {
 	
 
     // GET request to return all appointments 
-	@PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN', 'PATIENT')")
 	@RequestMapping(path = "/", method = RequestMethod.GET)
     List<Appointment> findAll() {
         return appointmentService.findAll();
