@@ -5,6 +5,7 @@ import com.example.demo.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Component("appointmentService")
@@ -54,7 +55,16 @@ public class AppointmentServiceImplementation implements AppointmentService {
     public Appointment update(Long appointmentId, Appointment appointment) {
         return appointmentRepository.save(appointment);
     }
-
+    
+    @Override
+    public void updateAllAppointmentsStatuses() {
+        appointmentRepository.findScheduledWithEndBeforeDate(LocalDateTime.now())
+                .forEach(appointment -> {
+                    appointment.setStatus(appointment.getStatus().FINISHED);
+                    create(appointment);
+                });
+    }
+    
     @Override
     public Appointment updateStatus(Long appointmentId, Appointment appointment) {
 
@@ -71,7 +81,6 @@ public class AppointmentServiceImplementation implements AppointmentService {
     
     @Override
     public Appointment cancel(Long appointmentId, Appointment appointment) {
-
         Optional<Appointment> appointmentList = appointmentRepository.findById(appointmentId);
 
         if(appointmentList.isPresent()){
