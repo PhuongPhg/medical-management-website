@@ -203,10 +203,10 @@ export default function Schedule(){
             {
               data ? data.slice((page-1)*6, page*6).map((item)=>{
                 return(
-                  <Paper className={classes.listAppoint} key={item.Id} onClick={() => handleOpenDetail(item)} >
+                  <Paper className={classes.listAppoint} style={item.StartTime.getDate() < new Date().getDate() ? {backgroundColor: '#f6f5f5', color: colors.additional_info} : {backgroundColor: 'white'}} key={item.Id} onClick={() => handleOpenDetail(item)} >
                     <Grid container spacing={3}>
-                      <Grid item  xs={6} sm={3} className={classes.dateBox} style={isToday(item.StartTime) ? {color: colors.primary} : {color: colors.grey}}>
-                        <div style={{display:'flex', flexDirection: 'column', fontSize: 14}}>
+                      <Grid item  xs={6} sm={3} className={classes.dateBox} style={ isToday(item.StartTime) ? {color: colors.primary} : {color: colors.grey}} >
+                        <div className={classes.dateBoxDiv} style={item.StartTime.getDate() < new Date().getDate() ? {color: colors.additional_info} : {}}>
                           <div style={{flex: 2, textAlign: 'center', padding: 2}}>{item.StartTime.getDate()}</div>
                           <div style={{flex:1, textAlign:'center', padding: 2}}>{month[item.StartTime.getMonth()]}</div>
                         </div>
@@ -214,7 +214,7 @@ export default function Schedule(){
                       <Grid item  xs={12} sm={9} style={{textAlign: 'left'}}>
                         <div style={{display:'flex', flexDirection: 'column'}}>
                           <div style={{flex: 2, padding: 2}}>{item.Subject}</div>
-                          <div style={{flex:1, padding: 2, fontSize: 12, color: colors.grey }}>{item.StartTime.getHours() < 10 ? '0' : ''}{item.StartTime.getHours()}:{item.StartTime.getMinutes() < 10 ? '0': ''}{item.StartTime.getMinutes()} - {item.EndTime.getHours() < 10 ? '0':''}{item.EndTime.getHours()}:{item.EndTime.getMinutes() < 10 ? '0': ''}{item.EndTime.getMinutes()}</div>
+                          <div style={item.StartTime.getDate() < new Date().getDate() ? {flex:1, padding: 2, fontSize: 12, color: colors.additional_info} : { flex:1, padding: 2, fontSize: 12, color: colors.grey}}>{item.StartTime.getHours() < 10 ? '0' : ''}{item.StartTime.getHours()}:{item.StartTime.getMinutes() < 10 ? '0': ''}{item.StartTime.getMinutes()} - {item.EndTime.getHours() < 10 ? '0':''}{item.EndTime.getHours()}:{item.EndTime.getMinutes() < 10 ? '0': ''}{item.EndTime.getMinutes()}</div>
                         </div>
                       </Grid>
                     </Grid>
@@ -531,5 +531,10 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 15, 
     justifySelf: 'center', 
     alignSelf: 'center'
+  },
+  dateBoxDiv: {
+    display:'flex', 
+    flexDirection: 'column', 
+    fontSize: 14
   }
 }));
