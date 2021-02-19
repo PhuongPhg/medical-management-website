@@ -54,6 +54,7 @@ export default function Schedule(){
   const handleCloseCreate = () => setOpenCreate(false);
 
   const[tempDetail, setTempDetail] = useState({
+    id: null,
     title: '',
     StartTime: new Date(),
     EndTime: new Date(),
@@ -67,6 +68,7 @@ export default function Schedule(){
   const handleOpenDetail = (item) => { 
     setTempDetail(
       {
+        id: item.Id,
         title: item.Subject,
         StartTime: item.StartTime,
         EndTime: item.EndTime,
@@ -117,6 +119,18 @@ export default function Schedule(){
     handleCloseDetail()
   }
 
+  const onCancel = async () => {
+    console.log(tempDetail)
+    const statusCan= {status: "CANCELED"}
+    try{
+      let res = await axios.patch(`http://thaonp.work/api/appointments/${tempDetail.id}`, statusCan , {
+      headers: {"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`}})
+      getData()
+    }
+    catch(error){
+      console.log(error)
+    }
+  }
   const getData = async () => {
       try{
         let res = null;
@@ -202,11 +216,13 @@ export default function Schedule(){
             <div style={{ whiteSpace: 'wrap', height: '100%'}}>
             {
               data ? data.slice((page-1)*6, page*6).map((item)=>{
+                let checked = false
+                if (item.StartTime.getDate() < new Date().getDate() || item.status == "CANCELED")  checked = true
                 return(
-                  <Paper className={classes.listAppoint} style={item.StartTime.getDate() < new Date().getDate() ? {backgroundColor: '#f6f5f5', color: colors.additional_info} : {backgroundColor: 'white'}} key={item.Id} onClick={() => handleOpenDetail(item)} >
+                  <Paper className={classes.listAppoint} style={checked ? {backgroundColor: '#f6f5f5', color: colors.additional_info} : {backgroundColor: 'white'}} key={item.Id} onClick={() => handleOpenDetail(item)} >
                     <Grid container spacing={3}>
                       <Grid item  xs={6} sm={3} className={classes.dateBox} style={ isToday(item.StartTime) ? {color: colors.primary} : {color: colors.grey}} >
-                        <div className={classes.dateBoxDiv} style={item.StartTime.getDate() < new Date().getDate() ? {color: colors.additional_info} : {}}>
+                        <div className={classes.dateBoxDiv} style={checked ? {color: colors.additional_info} : {}}>
                           <div style={{flex: 2, textAlign: 'center', padding: 2}}>{item.StartTime.getDate()}</div>
                           <div style={{flex:1, textAlign:'center', padding: 2}}>{month[item.StartTime.getMonth()]}</div>
                         </div>
@@ -450,6 +466,19 @@ export default function Schedule(){
                 <Typography align='left' style={{marginBottom: 5}}>Notes</Typography>
                 <TextField fullWidth id="filled-basic" variant="filled" value={tempDetail.Notes} rows={3}  multiline style={{paddingBottom: 10}}/>
               </Grid>
+              {sessionStorage.getItem("role") == "ROLE_PATIENT" || sessionStorage.getItem("role") == "ROLE_DOCTOR" ? 
+                <Grid item xs={12}>
+                  <Button
+                  fullWidth
+                  variant="contained"
+                  className={classes.submit}
+                  style={{backgroundColor: colors.primary}}
+                  onClick={onCancel}
+                  >
+                    Cancel Appointment
+                  </Button>
+                </Grid> 
+              : null}
             </Grid>
             
         </div>
