@@ -51,7 +51,7 @@ public class AppointmentController {
 	
 
     // GET request to return all appointments 
-	@RequestMapping(path = "/", method = RequestMethod.GET)
+	@RequestMapping(path = "/all", method = RequestMethod.GET)
     List<Appointment> findAll() {
         return appointmentService.findAll();
     }
