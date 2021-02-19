@@ -73,7 +73,7 @@ public class AppointmentController {
     }
 
     // PUT request to update appointments
-	@PreAuthorize("hasAnyRole('DOCTOR', 'PATIENT')")
+	@PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN')")
     @RequestMapping(path = "/{appointmentId}", method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public Appointment update(@PathVariable Long appointmentId, @RequestBody Appointment appointment) {
@@ -89,7 +89,7 @@ public class AppointmentController {
     }
 
     // DELETE request to delete specific appointments
-	@PreAuthorize("hasAnyRole('DOCTOR', 'PATIENT')")
+	@PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN')")
     @RequestMapping(path = "/{appointmentId}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     void deleteById(@PathVariable Long appointmentId) {
