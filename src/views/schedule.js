@@ -25,6 +25,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import Pagination from '@material-ui/lab/Pagination';
 
 export default function Schedule(){
   const classes = useStyles();
@@ -40,7 +41,6 @@ export default function Schedule(){
       Description: 'Hurt and hard breath'
       // Priority: 'High'
   },
-  
 ], )
   
   const [symptom, setSymptom] = useState('');
@@ -186,13 +186,14 @@ export default function Schedule(){
               <Grid item xs={12} sm={6} className={classes.textInBar}>
                 Upcoming
               </Grid>
+              {sessionStorage.getItem("role") == "ROLE_PATIENT" ?
               <Grid item xs={12} sm={6} style={{textAlign: 'right', }}>
                 <Tooltip title="Create an appointment">
                   <IconButton aria-label="create" onClick={handleOpenCreate}>
                     <AddIcon />
                   </IconButton>
                 </Tooltip>
-              </Grid>
+              </Grid>: null }
             </Grid>
             <div style={{overflowY: 'scroll', whiteSpace: 'wrap', height: '100%'}}>
             {
@@ -216,6 +217,7 @@ export default function Schedule(){
                   </Paper>
                   )}) : null
                 }
+                <Pagination count={data.length} classes={{ ul: classes.ul }} />
                 </div>
           </Paper>
         </Grid>
@@ -226,7 +228,7 @@ export default function Schedule(){
             Subject: { name: 'Subject' }, 
             StartTime: { name: 'StartTime' }, 
             EndTime: { name: 'EndTime' } 
-        }}}
+          }}}
             actionComplete={()=> console.log(data)}
             cssClass='custom-class'
             >
@@ -453,6 +455,11 @@ const useStyles = makeStyles((theme) => ({
     alignContent: 'center',
     alignItems: 'center',
     marginTop: 20
+  },
+  ul: {
+    "& .Mui-selected": {
+      backgroundColor: colors.primary,
+    }
   },
   profile_contain: {
     backgroundColor: '#F8F8F8',
