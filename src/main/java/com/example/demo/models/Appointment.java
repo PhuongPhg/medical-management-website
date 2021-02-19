@@ -36,6 +36,8 @@ public class Appointment {
     
     private String nameOfDoctor;
 
+    private String nameOfPatient;
+
     @NotBlank
 	private long doctorId;
     
@@ -52,7 +54,7 @@ public class Appointment {
 
     }
 
-    public Appointment(Timestamp createdAt, long doctorId, long patientId, String subject, LocalDate appointmentDate, LocalDateTime appointmentStartTime, LocalDateTime appointmentEndTime, String nameOfDoctor, AppointmentStatus status, String notes, String description, BigDecimal price) {
+    public Appointment(Timestamp createdAt, long doctorId, long patientId, String subject, LocalDate appointmentDate, LocalDateTime appointmentStartTime, LocalDateTime appointmentEndTime, String nameOfDoctor, String nameOfPatient, AppointmentStatus status, String notes, String description, BigDecimal price) {
         this.createdAt = createdAt;
         this.doctorId = doctorId;
         this.patientId = patientId;
@@ -63,6 +65,7 @@ public class Appointment {
         this.appointmentStartTime = appointmentStartTime;
         this.appointmentEndTime = appointmentEndTime;
         this.nameOfDoctor = nameOfDoctor;
+        this.nameOfPatient = nameOfPatient;
         this.status = status;
         this.price = price;
     }
@@ -144,6 +147,14 @@ public class Appointment {
 
     public void setNameOfDoctor(String nameOfDoctor) {
         this.nameOfDoctor = nameOfDoctor;
+    }
+    
+    public String getNameOfPatient() {
+        return nameOfPatient;
+    }
+
+    public void setNameOfPatient(String nameOfPatient) {
+        this.nameOfPatient = nameOfPatient;
     }
     
     public String getSubject() {
