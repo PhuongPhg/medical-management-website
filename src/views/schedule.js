@@ -20,28 +20,20 @@ import moment from 'moment';
 import CloseIcon from '@material-ui/icons/Close';
 import PulseLoader from "react-spinners/PulseLoader";
 import axios from 'axios';
-import { setDate } from 'date-fns';
+import { isToday, setDate } from 'date-fns';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Pagination from '@material-ui/lab/Pagination';
+import Box from '@material-ui/core/Box';
 
 export default function Schedule(){
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const [data, setData] = useState(
-    [{
-      Id: 1,
-      Subject: 'Lung Examination',
-      StartTime: new Date(2021, 0, 31, 10, 0),
-      EndTime: new Date(2021, 0, 31, 12, 30),
-      Status: 'Completed',
-      Description: 'Hurt and hard breath'
-      // Priority: 'High'
-  },
-], )
+  const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const [data, setData] = useState([])
   
   const [symptom, setSymptom] = useState('');
   const [firstday, setFirstday] = useState(moment().format('yyyy-MM-DDTkk:mm'));
@@ -54,8 +46,11 @@ export default function Schedule(){
     nameOfDoctor: ''
   })
 
+  const [page, setPage] = useState(1)
+
   const [openCreate, setOpenCreate] = useState(false);
-  const handleOpenCreate = () => setOpenCreate(true);
+  
+  const handleOpenCreate = () => { getAllDoctor(); setOpenCreate(true)};
   const handleCloseCreate = () => setOpenCreate(false);
 
   const[tempDetail, setTempDetail] = useState({
@@ -64,7 +59,9 @@ export default function Schedule(){
     EndTime: new Date(),
     description: '',
     status: '',
-    Notes: ''
+    Notes: '',
+    patient: '',
+    doctor: '',
   });
   const [openDetail, setOpenDetail] = useState(false);
   const handleOpenDetail = (item) => { 
@@ -75,20 +72,20 @@ export default function Schedule(){
         EndTime: item.EndTime,
         description: item.Description ? item.Description : 'None',
         status: item.status ? item.status : 'None',
-        Notes: item.Note ? item.Note : ''
+        Notes: item.Note ? item.Note : '',
+        patient: item.nameOfPatient,
+        doctor: item.nameOfDoctor,
       });
     setOpenDetail(true)
   };
-  const handleCloseDetail = () => setOpenDetail(false);
-
+  const handleCloseDetail = () => {
+    setOpenDetail(false);
+    setSymptom('');
+    setFirstday(moment().format('yyyy-MM-DDTkk:mm'));
+    setTitle('');
+    setNote('')
+  }
   const onSubmit = async () => {
-    // let max = 0;
-    // data.forEach(e => {
-    //   if(e.Id > max){
-    //     max = e.Id;
-    //   }
-    // });
-
     // setData(pre => [...pre, {
     //   Subject: title,
     //   StartTime: new Date(moment(firstday)),
@@ -104,27 +101,33 @@ export default function Schedule(){
       description: symptom,
       doctorId: chooseDoctor.doctorId,
       nameOfDoctor: chooseDoctor.nameOfDoctor,
-      patientId: sessionStorage.getItem("userID")
+      patientId: sessionStorage.getItem("userID"),
+      nameOfPatient: sessionStorage.getItem("userFullName")
     }
     console.dir(JSON.stringify(newApp))
     try{
       let res = await axios.post(`http://thaonp.work/api/appointments/`, newApp, {
         headers: {"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`}
       });
-      console.log(res.data)
       getData()
     }
     catch(error){
       console.log(error)
     }
+    handleCloseDetail()
   }
 
   const getData = async () => {
-    if (sessionStorage.getItem("username") != null){
       try{
-        let res = await axios.get(`http://thaonp.work/api/appointments/`, {
-          headers: {"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`}
-        });
+        let res = null;
+        if (sessionStorage.getItem("username") != null && sessionStorage.getItem("role") != "ROLE_ADMIN"){
+          let role = sessionStorage.getItem("role") == "ROLE_PATIENT" ? "patient" : "doctor"
+          res = await axios.get(`http://thaonp.work/api/appointments/${role}/${sessionStorage.getItem("userID")}`, {
+            headers: {"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`}
+          });
+        } else {
+          res = await axios.get(`http://thaonp.work/api/appointments/all`);
+        }
         let newData = res.data
         newData = newData.map(item => {
           return {
@@ -137,15 +140,17 @@ export default function Schedule(){
             nameOfDoctor: item.nameOfDoctor,
             doctorId: item.doctorId,
             status: item.status,
+            nameOfPatient: item.nameOfPatient
           }
         })
+        console.log(newData[1].StartTime.getMonth())
         setData(newData)
+        console.log(data)
       }
       catch(error){
         console.log(error);
       }
     }
-  }
   const getAllDoctor = async () => {
     try{
       let res = await axios.get(`http://thaonp.work/api/admin/role/doctor`, {
@@ -166,7 +171,6 @@ export default function Schedule(){
   }
   useEffect(() => {
     getData()
-    getAllDoctor()
   }, [])
 
   if (loading){
@@ -177,11 +181,11 @@ export default function Schedule(){
 		)
 	}
   else return(
-    <div>
+    <div >
       <Navigation schedule />
       <Grid container className={classes.container}>
         <Grid item xs={3}>
-          <Paper className={classes.profile_contain} style={{width: '90%'}} >
+          <Paper className={classes.profile_contain} style={{width: '90%' }} >
             <Grid container spacing={3} className={classes.bar} >
               <Grid item xs={12} sm={6} className={classes.textInBar}>
                 Upcoming
@@ -195,16 +199,16 @@ export default function Schedule(){
                 </Tooltip>
               </Grid>: null }
             </Grid>
-            <div style={{overflowY: 'scroll', whiteSpace: 'wrap', height: '100%'}}>
+            <div style={{ whiteSpace: 'wrap', height: '100%'}}>
             {
-              data ? data.map((item)=>{
+              data ? data.slice((page-1)*6, page*6).map((item)=>{
                 return(
                   <Paper className={classes.listAppoint} key={item.Id} onClick={() => handleOpenDetail(item)} >
                     <Grid container spacing={3}>
-                      <Grid item  xs={6} sm={3} style={{color: colors.primary, fontSize: 15}}>
+                      <Grid item  xs={6} sm={3} className={classes.dateBox} style={isToday(item.StartTime) ? {color: colors.primary} : {color: colors.grey}}>
                         <div style={{display:'flex', flexDirection: 'column', fontSize: 14}}>
                           <div style={{flex: 2, textAlign: 'center', padding: 2}}>{item.StartTime.getDate()}</div>
-                          <div style={{flex:1, textAlign:'center', padding: 2}}>{day[item.StartTime.getDay()]}</div>
+                          <div style={{flex:1, textAlign:'center', padding: 2}}>{month[item.StartTime.getMonth()]}</div>
                         </div>
                       </Grid>
                       <Grid item  xs={12} sm={9} style={{textAlign: 'left'}}>
@@ -217,8 +221,10 @@ export default function Schedule(){
                   </Paper>
                   )}) : null
                 }
-                <Pagination count={data.length} classes={{ ul: classes.ul }} />
-                </div>
+              <Box justifyContent="center" display="flex" >
+                <Pagination count={Math.ceil(data.length/6)} page={page} classes={{ ul: classes.ul }} onChange={(e, v) => setPage(v)} />
+              </Box>
+            </div>
           </Paper>
         </Grid>
         <Grid item xs={9}>
@@ -229,7 +235,6 @@ export default function Schedule(){
             StartTime: { name: 'StartTime' }, 
             EndTime: { name: 'EndTime' } 
           }}}
-            actionComplete={()=> console.log(data)}
             cssClass='custom-class'
             >
           <ViewsDirective>
@@ -415,22 +420,29 @@ export default function Schedule(){
         <Fade in={openDetail}>
           <div className={classes.paper}>
             <Grid container justify='space-between' direction='row'>
-              <Grid item direction='column' style={{display: 'flex', marginBottom: 15}}>
-                <Grid item>
+              <Grid item direction='column' style={{display: 'flex', marginBottom: 15, }} xs={10}>
+                <Grid item xs={12}>
                   <Typography align="left" variant="h5">{tempDetail.title}</Typography>
                 </Grid>
-                <Grid item>
+                <Grid item fullWidth>
                   <Typography align="left" varient="h6" style={{color: colors.grey}}>
                     {day[tempDetail.StartTime.getDay()]} at {tempDetail.StartTime.getHours()}:{tempDetail.StartTime.getMinutes()} to {tempDetail.EndTime.getHours()}:{tempDetail.EndTime.getMinutes()}</Typography>
                 </Grid>
               </Grid>
-              {/* <Typography align="right">Doctor: Unknow</Typography> */}
               <Tooltip title="Close" onClick={handleCloseDetail}>
                 <IconButton aria-label="closeDetail" style={{width: 40, height: 40, margin: 0}}>
                   <CloseIcon style={{color: colors.primary}} />
                 </IconButton>
               </Tooltip>
               <Grid item xs={12} spacing={2}>
+              <Grid container >
+                  <Grid item xs={6}>
+                    <Box fontFamily="fontFamily" align="left">Patient: {tempDetail.patient}</Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography align="left">Doctor: {tempDetail.doctor}</Typography>
+                  </Grid>
+                </Grid>
                 <Grid item style={{marginBottom: 15, color: colors.grey}}>
                   <Typography align="left">Description: {tempDetail.description}</Typography>
                   <Typography align="left">Status: {tempDetail.status}</Typography>
@@ -498,7 +510,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 20,
     marginRight: 20,
     marginTop: 10,
-    padding: 5,
+    padding: 11,
   },
   modal: {
     display: 'flex',
@@ -515,4 +527,9 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     marginTop: theme.spacing(1),
   },
+  dateBox: {
+    fontSize: 15, 
+    justifySelf: 'center', 
+    alignSelf: 'center'
+  }
 }));
