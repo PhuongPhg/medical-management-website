@@ -169,7 +169,15 @@ export default function Schedule(){
             nameOfPatient: item.nameOfPatient
           }
         })
-        console.log(newData[1].StartTime.getMonth())
+        newData = newData.sort((a,b) => a.StartTime - b.StartTime)
+        if(newData != null){
+          let point = newData.indexOf(newData.find(day => day.StartTime > new Date()))
+          let first = newData.splice(0, point)
+          let canApp = newData.filter(x => x.status === "CANCELED")
+          first.concat(canApp)
+          canApp.forEach( x => newData.splice(newData.indexOf(x), 1))
+          newData = newData.concat(first)
+        }
         setData(newData)
         console.log(data)
       }
@@ -229,7 +237,7 @@ export default function Schedule(){
             {
               data ? data.slice((page-1)*6, page*6).map((item)=>{
                 let checked = false
-                if (item.StartTime.getDate() < new Date().getDate() || item.status == "CANCELED")  checked = true
+                if (item.StartTime < new Date() || item.status == "CANCELED")  checked = true
                 return(
                   <Paper className={classes.listAppoint} style={checked ? {backgroundColor: '#f6f5f5', color: colors.additional_info} : {backgroundColor: 'white'}} key={item.Id} onClick={() => handleOpenDetail(item)} >
                     <Grid container spacing={3}>
@@ -242,7 +250,7 @@ export default function Schedule(){
                       <Grid item  xs={12} sm={9} style={{textAlign: 'left'}}>
                         <div style={{display:'flex', flexDirection: 'column'}}>
                           <div style={{flex: 2, padding: 2}}>{item.Subject}</div>
-                          <div style={item.StartTime.getDate() < new Date().getDate() ? {flex:1, padding: 2, fontSize: 12, color: colors.additional_info} : { flex:1, padding: 2, fontSize: 12, color: colors.grey}}>{item.StartTime.getHours() < 10 ? '0' : ''}{item.StartTime.getHours()}:{item.StartTime.getMinutes() < 10 ? '0': ''}{item.StartTime.getMinutes()} - {item.EndTime.getHours() < 10 ? '0':''}{item.EndTime.getHours()}:{item.EndTime.getMinutes() < 10 ? '0': ''}{item.EndTime.getMinutes()}</div>
+                          <div style={((item.StartTime.getDate() < new Date().getDate()) || checked == true) ? {flex:1, padding: 2, fontSize: 12, color: colors.additional_info} : { flex:1, padding: 2, fontSize: 12, color: colors.grey}}>{item.StartTime.getHours() < 10 ? '0' : ''}{item.StartTime.getHours()}:{item.StartTime.getMinutes() < 10 ? '0': ''}{item.StartTime.getMinutes()} - {item.EndTime.getHours() < 10 ? '0':''}{item.EndTime.getHours()}:{item.EndTime.getMinutes() < 10 ? '0': ''}{item.EndTime.getMinutes()}</div>
                         </div>
                       </Grid>
                     </Grid>
