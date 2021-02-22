@@ -163,7 +163,7 @@ export default function Profile () {
 	const [userInfo, setUserInfo] = useState([]);
 	const [userRole, setRole] = useState('ROLE_VOID');
 	const [records, setRecords] = useState(null);
-	const [apm, setApm] = useState(null);
+	const [apm, setApm] = useState([]);
 	const numPerPage = 3;
 	const [noPage, setNoPage] = useState(0)
 	const [noPageApm, setNoPageApm] = useState(0)
@@ -267,26 +267,42 @@ export default function Profile () {
 							</Typography>
 						</Grid>
 
-						{apm ? (
+						{apm.length > 0 ? (
 							apm
 								.slice(numPerPage * pageApm, numPerPage * pageApm + numPerPage)
-								.map((item) => <AppointmentCard
-									date={new Date(item.appointmentStartTime).getUTCDate() + " " + months[new Date(item.appointmentStartTime).getMonth()]} title={item.subject}
-									desc={new Date(item.appointmentStartTime).getHours() + ":" + new Date(item.appointmentStartTime).getMinutes() + `${new Date(item.appointmentStartTime).getMinutes() > 10 ? "" : "0"}` + " - " + new Date(item.appointmentEndTime).getHours() + ":" + new Date(item.appointmentEndTime).getMinutes() + `${new Date(item.appointmentEndTime).getMinutes() > 10 ? "" : "0"}`} 
-									more />)
+								.map((item) => (
+									<AppointmentCard
+										date={new Date(item.appointmentStartTime).getUTCDate() + " " + months[new Date(item.appointmentStartTime).getMonth()]}
+										title={item.subject}
+										desc={
+											new Date(item.appointmentStartTime).getHours() +
+											":" +
+											new Date(item.appointmentStartTime).getMinutes() +
+											`${new Date(item.appointmentStartTime).getMinutes() > 10 ? "" : "0"}` +
+											" - " +
+											new Date(item.appointmentEndTime).getHours() +
+											":" +
+											new Date(item.appointmentEndTime).getMinutes() +
+											`${new Date(item.appointmentEndTime).getMinutes() > 10 ? "" : "0"}`
+										}
+										more
+									/>
+								))
 						) : (
 							<Typography className={styles.noRecord}>No appointment exists.</Typography>
 						)}
-						<Grid container justify="flex-end">
-							<IconButton onClick={() => setPageApm(pageApm - 1)} disabled={pageApm - 1 < 0}>
-								<NavigateBeforeIcon />
-							</IconButton>
 
-							<IconButton onClick={() => setPageApm(pageApm + 1)} disabled={!(pageApm + 1 < noPageApm)}>
-								<NavigateNextIcon />
-							</IconButton>
-						</Grid>
-						{/* <AppointmentCard date="1 Feb" title="Lung examination" desc="8:00 - 10:00 AM" finished={false} more/> */}
+						{apm.length > 0 ? (
+							<Grid container justify="flex-end">
+								<IconButton onClick={() => setPageApm(pageApm - 1)} disabled={pageApm - 1 < 0}>
+									<NavigateBeforeIcon />
+								</IconButton>
+
+								<IconButton onClick={() => setPageApm(pageApm + 1)} disabled={!(pageApm + 1 < noPageApm)}>
+									<NavigateNextIcon />
+								</IconButton>
+							</Grid>
+						) : null}
 
 						{/* Medical records */}
 						<Grid container direction="row" justify="space-between" alignItems="center">
@@ -306,15 +322,18 @@ export default function Profile () {
 							<Typography className={styles.noRecord}>No record exists.</Typography>
 						)}
 					</Grid>
-					<Grid container justify="flex-end">
-						<IconButton onClick={() => setPage(page - 1)} disabled={page - 1 < 0}>
-							<NavigateBeforeIcon />
-						</IconButton>
 
-						<IconButton onClick={() => setPage(page + 1)} disabled={!(page + 1 < noPage)}>
-							<NavigateNextIcon />
-						</IconButton>
-					</Grid>
+					{records ? (
+						<Grid container justify="flex-end">
+							<IconButton onClick={() => setPage(page - 1)} disabled={page - 1 < 0}>
+								<NavigateBeforeIcon />
+							</IconButton>
+
+							<IconButton onClick={() => setPage(page + 1)} disabled={!(page + 1 < noPage)}>
+								<NavigateNextIcon />
+							</IconButton>
+						</Grid>
+					) : null}
 				</Grid>
 
 				<Modal open={newRecord} onClose={() => setOpenNewRecord(false)} className={styles.modal}>
@@ -415,6 +434,7 @@ const useStyles = makeStyles((theme) => ({
   noRecord: {
 	 fontSize: 16,
 	 marginLeft: 10,
+	 marginTop: 10,
 	 marginBottom: 5,
 	 color: colors.additional_info
   },
