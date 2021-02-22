@@ -209,12 +209,15 @@ export default function Profile () {
 					"Authorization" : `Bearer ${sessionStorage.getItem("userToken")}`
 				}
 			})
-			let active = res.data.filter(item => item.status !== "CANCELED");
-			let inactive = res.data.filter(item => !active.includes(item));
+		
+			let inactive = res.data.filter(item => (item.status === "CANCELED") | new Date().getTime() > new Date(item.appointmentStartTime).getTime());
+			let active = res.data.filter(item => !inactive.includes(item));
+
 			let sortedActive = active.sort((a,b) => 
 				new Date(a.appointmentStartTime).getTime() - new Date(b.appointmentStartTime).getTime())
 			let sortedInactive = inactive.sort((a,b) => 
 				new Date(a.appointmentStartTime).getTime() - new Date(b.appointmentStartTime).getTime())
+			
 			setApm(sortedActive.concat(sortedInactive));
 			setNoPageApm(Math.ceil(res.data.length/numPerPage));
 		}
@@ -289,7 +292,7 @@ export default function Profile () {
 											new Date(item.appointmentEndTime).getMinutes() +
 											`${new Date(item.appointmentEndTime).getMinutes() > 10 ? "" : "0"}`
 										}
-										inactive={item.status === "CANCELED"}
+										inactive={(item.status === "CANCELED") | (new Date().getTime() > new Date(item.appointmentStartTime).getTime())}
 										more
 									/>
 								))
