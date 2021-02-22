@@ -31,7 +31,11 @@ const AppointmentCard = (props) => {
 							</Typography>
 						</Grid>
 					</Grid>
-					{props.more ? <NavigateNextIcon className={styles.nextBtn} /> : null}
+					{props.more ? (
+						<IconButton>
+							<NavigateNextIcon className={styles.nextBtn} />
+						</IconButton>
+					) : null}
 				</Grid>
 			</CardContent>
 		</Card>
@@ -158,10 +162,13 @@ export default function Profile () {
 	const [form_open, setFormOpen] = useState(false);
 	const [userInfo, setUserInfo] = useState([]);
 	const [userRole, setRole] = useState('ROLE_VOID');
-	const [records, setRecords] = useState(null)
+	const [records, setRecords] = useState(null);
+	const [apm, setApm] = useState(null);
 	const numPerPage = 3;
 	const [noPage, setNoPage] = useState(0)
+	const [noPageApm, setNoPageApm] = useState(0)
 	const [page, setPage] = useState(0)
+	const [pageApm, setPageApm] = useState(0)
 
 	const getProfile = async (userID) => {
 		try{
@@ -172,6 +179,7 @@ export default function Profile () {
 			});
 			setUserInfo(res.data);
 			setRole(res.data.roles[0].name);
+			getApm(res.data.roles[0].name, userID);
 			console.log(res.data);
 		} 
 		catch(error){
@@ -187,7 +195,23 @@ export default function Profile () {
 				}
 			})
 			setRecords(res.data);
-			setNoPage(res.data.length/numPerPage);
+			setNoPage(Math.ceil(res.data.length/numPerPage));
+		}
+		catch(error){
+			console.log(error);
+		}
+	}
+
+	const getApm = async (role, userID) => {
+		try{
+			let res = await axios.get(`http://thaonp.work/api/appointments/${roles[role]}/${userID}`, {
+				headers: {
+					"Authorization" : `Bearer ${sessionStorage.getItem("userToken")}`
+				}
+			})
+			console.log(`http://thaonp.work/api/appointments/${roles[role]}/${userID}`);
+			setApm(res.data);
+			setNoPageApm(Math.ceil(res.data.length/numPerPage));
 		}
 		catch(error){
 			console.log(error);
@@ -236,10 +260,32 @@ export default function Profile () {
 				<Grid xs={9} direction="row" className={styles.records}>
 					<Grid container>
 						{/* Appointments */}
-						<Typography variant="p" align="left" className={styles.sectionHeader}>
-							Appointments
-						</Typography>
-						<AppointmentCard date="1 Feb" title="Lung examination" desc="8:00 - 10:00 AM" finished={false} more/>
+						<Grid container>
+							<Typography variant="p" align="left" className={styles.sectionHeader}>
+								Appointments
+							</Typography>
+						</Grid>
+
+						{apm ? (
+							apm
+								.slice(numPerPage * pageApm, numPerPage * pageApm + numPerPage)
+								.map((item) => <AppointmentCard
+									date={new Date(item.appointmentStartTime).getUTCDate() + " " + months[new Date(item.appointmentStartTime).getMonth()]} title={item.subject}
+									desc={new Date(item.appointmentStartTime).getHours() + ":" + new Date(item.appointmentStartTime).getMinutes() + `${new Date(item.appointmentStartTime).getMinutes() > 10 ? "" : "0"}` + " - " + new Date(item.appointmentEndTime).getHours() + ":" + new Date(item.appointmentEndTime).getMinutes() + `${new Date(item.appointmentEndTime).getMinutes() > 10 ? "" : "0"}`} 
+									more />)
+						) : (
+							<Typography className={styles.noRecord}>No appointment exists.</Typography>
+						)}
+						<Grid container justify="flex-end">
+							<IconButton onClick={() => setPageApm(pageApm - 1)} disabled={pageApm - 1 < 0}>
+								<NavigateBeforeIcon />
+							</IconButton>
+
+							<IconButton onClick={() => setPageApm(pageApm + 1)} disabled={!(pageApm + 1 < noPageApm)}>
+								<NavigateNextIcon />
+							</IconButton>
+						</Grid>
+						{/* <AppointmentCard date="1 Feb" title="Lung examination" desc="8:00 - 10:00 AM" finished={false} more/> */}
 
 						{/* Medical records */}
 						<Grid container direction="row" justify="space-between" alignItems="center">
@@ -253,16 +299,18 @@ export default function Profile () {
 								</IconButton>
 							) : null}
 						</Grid>
-						{records ? records.slice(numPerPage * page, numPerPage * page + numPerPage).map((item) => (
-							<AppointmentCard date={new Date(item.date).getUTCDate() + " " + months[new Date(item.date).getMonth()]} title={item.details} desc={item.prescriptions} />
-						)) : <Typography className={styles.noRecord}>No record exists.</Typography>}
+						{records ? (
+							records.slice(numPerPage * page, numPerPage * page + numPerPage).map((item) => <AppointmentCard date={new Date(item.date).getUTCDate() + " " + months[new Date(item.date).getMonth()]} title={item.details} desc={item.prescriptions} />)
+						) : (
+							<Typography className={styles.noRecord}>No record exists.</Typography>
+						)}
 					</Grid>
 					<Grid container justify="flex-end">
 						<IconButton onClick={() => setPage(page - 1)} disabled={page - 1 < 0}>
 							<NavigateBeforeIcon />
 						</IconButton>
 
-						<IconButton onClick={() => setPage(page + 1)} disabled={page + 1 > noPage}>
+						<IconButton onClick={() => setPage(page + 1)} disabled={!(page + 1 < noPage)}>
 							<NavigateNextIcon />
 						</IconButton>
 					</Grid>
@@ -288,6 +336,11 @@ export default function Profile () {
 }
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const roles = {
+	"ROLE_DOCTOR":"doctor",
+	"ROLE_ADMIN":"admin",
+	"ROLE_PATIENT":"patient"
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
