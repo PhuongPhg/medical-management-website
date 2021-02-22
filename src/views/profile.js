@@ -17,11 +17,11 @@ const AppointmentCard = (props) => {
   const styles = useStyles();
 
   return (
-		<Card className={styles.card}>
+		<Card className={props.inactive ? [styles.card, styles.inactive] : styles.card}>
 			<CardContent>
 				<Grid container justify="space-between" alignItems="center">
 					<Grid item style={{ display: "flex" }} direction="row">
-						<Grid item className={styles.date}>
+						<Grid item className={props.inactive ? [styles.date, styles.inactive] : styles.date}>
 							<Typography align="center">{props.date}</Typography>
 						</Grid>
 						<Grid item>
@@ -209,9 +209,13 @@ export default function Profile () {
 					"Authorization" : `Bearer ${sessionStorage.getItem("userToken")}`
 				}
 			})
-			let sortedApm = res.data.sort((a,b) => 
+			let active = res.data.filter(item => item.status !== "CANCELED");
+			let inactive = res.data.filter(item => !active.includes(item));
+			let sortedActive = active.sort((a,b) => 
 				new Date(a.appointmentStartTime).getTime() - new Date(b.appointmentStartTime).getTime())
-			setApm(sortedApm);
+			let sortedInactive = inactive.sort((a,b) => 
+				new Date(a.appointmentStartTime).getTime() - new Date(b.appointmentStartTime).getTime())
+			setApm(sortedActive.concat(sortedInactive));
 			setNoPageApm(Math.ceil(res.data.length/numPerPage));
 		}
 		catch(error){
@@ -285,6 +289,7 @@ export default function Profile () {
 											new Date(item.appointmentEndTime).getMinutes() +
 											`${new Date(item.appointmentEndTime).getMinutes() > 10 ? "" : "0"}`
 										}
+										inactive={item.status === "CANCELED"}
 										more
 									/>
 								))
@@ -473,4 +478,8 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 20,
     backgroundColor: colors.primary
 	},
+	inactive: {
+		backgroundColor: "#f6f5f5",
+		color: colors.additional_info
+	}
 }));
