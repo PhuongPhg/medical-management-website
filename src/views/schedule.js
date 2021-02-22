@@ -90,13 +90,6 @@ export default function Schedule(){
     setNote('')
   }
   const onSubmit = async () => {
-    // setData(pre => [...pre, {
-    //   Subject: title,
-    //   StartTime: new Date(moment(firstday)),
-    //   EndTime: new Date(moment(firstday).add(120, 'minutes').format('yyyy-MM-DDTkk:mm')),
-    //   Description: symptom
-    // }])
-
     const newApp = {
       subject: title,
       appointmentStartTime: moment(firstday).format('yyyy-MM-DDTkk:mm:ss'),
@@ -118,7 +111,7 @@ export default function Schedule(){
     catch(error){
       console.log(error)
     }
-    handleCloseDetail()
+    handleCloseCreate()
   }
 
   const onCancel = async () => {
@@ -126,23 +119,28 @@ export default function Schedule(){
     let temp = tempDetail.StartTime - new Date();
     let checkedHour = (temp < HOUR && temp > 0) ? false : true;
     console.log(checkedHour)
-    const statusCan= {status: "SCHEDULED"}
+    const statusCan= {status: "CANCELED"}
 
-    if(checkedHour == true){
-      try{
-        let res = await axios.patch(`http://thaonp.work/api/appointments/${tempDetail.id}`, statusCan , {
-        headers: {"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`}})
-        if (res.status == 200) enqueueSnackbar("Success cancel appointment!", { variant: "success" });
-        setTimeout(function () {
-          window.location.reload();
-        }, 200);
+    if(tempDetail.status == "SCHEDULED"){
+      if(checkedHour == true){
+        try{
+          let res = await axios.patch(`http://thaonp.work/api/appointments/${tempDetail.id}`, statusCan , {
+          headers: {"Authorization": `Bearer ${sessionStorage.getItem("userToken")}`}})
+          if (res.status == 200) enqueueSnackbar("Success cancel appointment!", { variant: "success" });
+          setTimeout(function () {
+            window.location.reload();
+          }, 200);
+        }
+        catch(error){
+          console.log(error)
+        }
       }
-      catch(error){
-        console.log(error)
-      }
-    }
-    else enqueueSnackbar("Cannot be canceled 24 hours prior to the appointment!", { variant: "error" });
+      else enqueueSnackbar("Cannot be canceled 24 hours prior to the appointment!", { variant: "error" });
+    } else enqueueSnackbar(`This appointment had been ${tempDetail.status.toLowerCase()}`, { variant: "error" })
+    
+    handleCloseDetail()
   }
+
   const getData = async () => {
       try{
         let res = null;
@@ -237,7 +235,7 @@ export default function Schedule(){
             {
               data ? data.slice((page-1)*6, page*6).map((item)=>{
                 let checked = false
-                if (item.StartTime < new Date() || item.status == "CANCELED")  checked = true
+                if (item.EndTime < new Date() || item.status == "CANCELED")  checked = true
                 return(
                   <Paper className={classes.listAppoint} style={checked ? {backgroundColor: '#f6f5f5', color: colors.additional_info} : {backgroundColor: 'white'}} key={item.Id} onClick={() => handleOpenDetail(item)} >
                     <Grid container spacing={3}>
@@ -257,8 +255,10 @@ export default function Schedule(){
                   </Paper>
                   )}) : null
                 }
-              <Box justifyContent="center" display="flex" >
-                <Pagination count={Math.ceil(data.length/6)} page={page} classes={{ ul: classes.ul }} onChange={(e, v) => setPage(v)} />
+                <Box justifyContent="center" display="flex" >
+                {data.length !== 0 ? (
+                  <Pagination count={Math.ceil(data.length/6)} page={page} classes={{ ul: classes.ul }} onChange={(e, v) => setPage(v)} />
+                ) : "No appointment!"}
               </Box>
             </div>
           </Paper>
