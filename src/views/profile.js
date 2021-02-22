@@ -209,8 +209,9 @@ export default function Profile () {
 					"Authorization" : `Bearer ${sessionStorage.getItem("userToken")}`
 				}
 			})
-			console.log(`http://thaonp.work/api/appointments/${roles[role]}/${userID}`);
-			setApm(res.data);
+			let sortedApm = res.data.sort((a,b) => 
+				new Date(a.appointmentStartTime).getTime() - new Date(b.appointmentStartTime).getTime())
+			setApm(sortedApm);
 			setNoPageApm(Math.ceil(res.data.length/numPerPage));
 		}
 		catch(error){
