@@ -55,6 +55,7 @@ export default function Register(){
   city.length > 0 &&
   username.length > 0 &&
   password.length > 0;
+  
   async function OnSignUp(e) {
     setLoading(true);
 		try {
