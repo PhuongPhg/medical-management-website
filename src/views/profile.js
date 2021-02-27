@@ -256,7 +256,10 @@ export default function Profile () {
 						</div>
 						<InfoItem info={userInfo.phone} />
 						<InfoItem info={userInfo.email} />
-						<InfoItem info={userInfo.address} />
+						<div className={styles.outerBullet} style={{ marginBottom: "20px" }}>
+								<div className={styles.bullet} />
+								<p className={styles.bulletText}>{userInfo.address}</p>
+							</div>
 						{sessionStorage.getItem("userID") === uid ? (
 							<Button variant="contained" onClick={() => setFormOpen(true)} className={styles.editButton}>
 								EDIT
@@ -410,8 +413,7 @@ const useStyles = makeStyles((theme) => ({
   },
   editButton: {
     backgroundColor:'#96C3D9', 
-    width: '179px', 
-    marginTop:'20px', 
+    width: '179px',  
     marginBottom:'20px', 
     fontSize:'20px', 
     color:'#555555', 
