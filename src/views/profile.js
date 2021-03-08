@@ -5,6 +5,7 @@ import { colors } from '../helpers/config';
 import { Button, Card, CardContent, Modal, TextField, Tooltip, Typography, makeStyles, IconButton, Avatar } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import DateFnsUtils from '@date-io/date-fns';
+import Box from '@material-ui/core/Box';
 import RegistrationForm from './registrationform';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
@@ -15,6 +16,7 @@ import axios from 'axios';
 
 const AppointmentCard = (props) => {
   const styles = useStyles();
+	const [mdopen, setmdopen] = useState(false)
 
   return (
 		<Card className={props.inactive ? [styles.card, styles.inactive] : styles.card}>
@@ -32,11 +34,47 @@ const AppointmentCard = (props) => {
 						</Grid>
 					</Grid>
 					{props.more ? (
-						<IconButton>
+						<IconButton onClick={() => setmdopen(true)}>
 							<NavigateNextIcon className={styles.nextBtn} />
 						</IconButton>
 					) : null}
 				</Grid>
+				<Modal className={styles.modal} open={mdopen} onClose={() => setmdopen(false)}>
+          <div className={styles.apmInfoForm}>
+            <Grid container justify='space-between' direction='row'>
+              <Grid item direction='column' style={{display: 'flex', marginBottom: 15, }} xs={10}>
+                <Grid item xs={12}>
+                  <Typography align="left" variant="h5">{props.title}</Typography>
+                </Grid>
+                <Grid item fullWidth>
+                  <Typography align="left" varient="h6" style={{color: colors.grey}}>
+                    {props.dayz} at {props.desc}</Typography>
+                </Grid>
+              </Grid>
+              <Tooltip title="Close" onClick={() => setmdopen(false)}>
+                <IconButton aria-label="closeDetail" style={{width: 40, height: 40, margin: 0}}>
+                  <CloseIcon style={{color: colors.primary}} />
+                </IconButton>
+              </Tooltip>
+              <Grid item xs={12} spacing={2}>
+              <Grid container >
+                  <Grid item xs={6}>
+                    <Box fontFamily="fontFamily" align="left">Patient: {props.patient}</Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography align="left">Doctor: {props.doctor}</Typography>
+                  </Grid>
+                </Grid>
+                <Grid item style={{marginBottom: 15, color: colors.grey}}>
+                  <Typography align="left">Description: {props.description}</Typography>
+                  <Typography align="left">Status: {props.status}</Typography>
+                </Grid>
+                <Typography align='left' style={{marginBottom: 5}}>Notes</Typography>
+                <TextField fullWidth id="filled-basic" variant="filled" value={props.notes} rows={3}  multiline style={{paddingBottom: 10}}/>
+              </Grid>
+            </Grid>
+        </div>
+      </Modal>
 			</CardContent>
 		</Card>
   );
@@ -220,6 +258,7 @@ export default function Profile () {
 			
 			setApm(sortedActive.concat(sortedInactive));
 			setNoPageApm(Math.ceil(res.data.length/numPerPage));
+			// console.log(sortedActive.concat(sortedInactive));
 		}
 		catch(error){
 			console.log(error);
@@ -282,6 +321,12 @@ export default function Profile () {
 								.slice(numPerPage * pageApm, numPerPage * pageApm + numPerPage)
 								.map((item) => (
 									<AppointmentCard
+										dayz={nichis[new Date(item.appointmentStartTime).getDay()]}
+										patient={item.nameOfPatient}
+										doctor={item.nameOfDoctor}
+										description={item.description}
+										status={item.status}
+										notes={item.notes}
 										date={new Date(item.appointmentStartTime).getUTCDate() + " " + months[new Date(item.appointmentStartTime).getMonth()]}
 										title={item.subject}
 										desc={
@@ -367,6 +412,8 @@ export default function Profile () {
 }
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+const nichis = ["Getsuyoubi", "Kayoubi", "Suiyoubi", "Mokuyoubi", "Kinyoubi", "Doyoubi", "Nichiyoubi"];
 const roles = {
 	"ROLE_DOCTOR":"doctor",
 	"ROLE_ADMIN":"admin",
@@ -478,6 +525,15 @@ const useStyles = makeStyles((theme) => ({
 		boxShadow: theme.shadows[5],
 		padding: 10,
   },
+	apmInfoForm: {
+		backgroundColor: theme.palette.background.paper,
+		padding: 20,
+		borderRadius: 7,
+		outline: 'none',
+		width: '40%',
+		margin: 'auto',
+		alignContent: 'center',
+	},
   submit: {
     marginTop: 10,
     marginBottom: 20,
