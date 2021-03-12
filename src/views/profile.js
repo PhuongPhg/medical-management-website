@@ -290,7 +290,7 @@ export default function Profile () {
 							<InfoItem info={userInfo.sex} capitalize />
 							<div className={styles.outerBullet} style={{ marginLeft: "60px" }}>
 								<div className={styles.bullet} />
-								<p className={styles.bulletText}>{new Date().getFullYear() - new Date(userInfo.dob).getFullYear()} ans</p>
+								<p className={styles.bulletText}>{new Date().getFullYear() - new Date(userInfo.dob).getFullYear()} years old</p>
 							</div>
 						</div>
 						<InfoItem info={userInfo.phone} />
@@ -321,7 +321,7 @@ export default function Profile () {
 								.slice(numPerPage * pageApm, numPerPage * pageApm + numPerPage)
 								.map((item) => (
 									<AppointmentCard
-										dayz={nichis[new Date(item.appointmentStartTime).getDay()]}
+										dayz={days[new Date(item.appointmentStartTime).getDay()]}
 										patient={item.nameOfPatient}
 										doctor={item.nameOfDoctor}
 										description={item.description}
@@ -412,8 +412,7 @@ export default function Profile () {
 }
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-const nichis = ["Getsuyoubi", "Kayoubi", "Suiyoubi", "Mokuyoubi", "Kinyoubi", "Doyoubi", "Nichiyoubi"];
+const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const roles = {
 	"ROLE_DOCTOR":"doctor",
 	"ROLE_ADMIN":"admin",
@@ -454,7 +453,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#C4C4C4'
   },
   bulletText: {
-    fontSize: '20px', 
+    fontSize: '16px', 
     margin: '0px',
     textAlign: 'start'
   },
