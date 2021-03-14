@@ -290,7 +290,7 @@ export default function Profile () {
 							<InfoItem info={userInfo.sex} capitalize />
 							<div className={styles.outerBullet} style={{ marginLeft: "60px" }}>
 								<div className={styles.bullet} />
-								<p className={styles.bulletText}>{new Date().getFullYear() - new Date(userInfo.dob).getFullYear()} years old</p>
+								<p className={styles.bulletText}>Age: {new Date().getFullYear() - new Date(userInfo.dob).getFullYear()}</p>
 							</div>
 						</div>
 						<InfoItem info={userInfo.phone} />
