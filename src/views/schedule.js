@@ -169,7 +169,7 @@ export default function Schedule(){
         })
         newData = newData.sort((a,b) => a.StartTime - b.StartTime)
         if(newData != null){
-          let point = newData.indexOf(newData.find(day => day.StartTime > new Date()))
+          let point = newData.indexOf(newData.find(day => day.EndTime > new Date()))
           let first = newData.splice(0, point)
           let canApp = newData.filter(x => x.status === "CANCELED")
           first.concat(canApp)
