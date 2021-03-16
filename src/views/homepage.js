@@ -26,7 +26,7 @@ export default function Homepage () {
               <Button
               variant="contained" 
               className={styles.register}
-              href="/registrationform">
+              href="/schedule">
               Make an appointment
             </Button>
             </Grid>
