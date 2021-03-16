@@ -202,7 +202,7 @@ export default function Register(){
                     >
                     <MenuItem value={"patient"}>Patient</MenuItem>
                     <MenuItem value={'doctor'}>Doctor</MenuItem>
-                    <MenuItem value={'admin'}>Admin</MenuItem>
+//                     <MenuItem value={'admin'}>Admin</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
